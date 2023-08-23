@@ -1,0 +1,35 @@
+name: Push to main
+
+on:
+  push:
+    branches: [main]
+
+env:
+  NODE_VERSION: "18.x"
+
+concurrency:
+  group: ${{ github.ref }}-on-main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 5
+    steps:
+      - name: Install OS dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install xz-utils procps
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install dependencies
+        run: |
+          npm i
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Markdown lint
+        run: npm run lint:markdown
