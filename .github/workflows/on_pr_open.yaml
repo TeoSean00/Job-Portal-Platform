@@ -76,7 +76,7 @@ jobs:
   lint-fastapi:
     runs-on: ubuntu-latest
     continue-on-error: false
-    timeout-minutes: 
+    timeout-minutes: 5
     strategy:
       matrix:
         python-version: ["3.9"]
