@@ -120,7 +120,7 @@ jobs:
       - name: Build FastAPI
         run: |
           cd api
-          $(pipenv --venv)/bin/uvicorn main:app --reload
+          pipenv uvicorn main:app --reload
   
   unit-test-fastapi:
     runs-on: ubuntu-latest

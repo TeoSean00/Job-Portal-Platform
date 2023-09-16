@@ -91,6 +91,7 @@ jobs:
           pipenv install --dev
       - name: Lint with flake8
         run: |
+          cd api
           pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
@@ -114,7 +115,9 @@ jobs:
           cd api 
           pipenv install --dev
       - name: Build FastAPI
-        run: uvicorn main:app --reload
+        run: |
+          cd api
+          pipenv uvicorn main:app --reload
   
   unit-test-fastapi:
     runs-on: ubuntu-latest
@@ -136,4 +139,6 @@ jobs:
           cd api  
           pipenv install --dev
       - name: Run unit tests
-        run: pipenv run pytest
+        run: |
+          cd api
+          pipenv run pytest
