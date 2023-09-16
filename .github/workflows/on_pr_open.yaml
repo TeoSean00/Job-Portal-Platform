@@ -120,7 +120,9 @@ jobs:
       - name: Build FastAPI
         run: |
           cd api
-          pipenv run uvicorn main:app --reload
+          pipenv run uvicorn main:app &  # Start in background
+          sleep 5  # Wait for 5 seconds
+          kill $!  # Kill the background process
   
   unit-test-fastapi:
     runs-on: ubuntu-latest
