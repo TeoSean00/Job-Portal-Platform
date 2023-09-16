@@ -1,2 +1,4 @@
 fastapi==0.100.1
 uvicorn[standard]==0.23.2
+pytest==7.4.2
+flake8==6.1.0
