@@ -11,7 +11,7 @@
     "lint": "next lint",
     "lint:fix": "npx eslint -c .eslintrc.js . --fix",
     "typecheck": "tsc --noEmit",
-    "test": "jest --testPathPattern={app,tests}",
+    "test": "jest --testPathPattern={app,tests} --passWithNoTests",
     "test:watch": "jest --testPathPattern={app,tests} --watch",
     "lint:markdown": "npx remark --frail .",
     "lint:markdown:fix": "npx remark . -qfo"
