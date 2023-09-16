@@ -86,12 +86,14 @@ jobs:
       - name: Install pipenv
         uses: dschep/install-pipenv-action@v1
       - name: Install dependencies
-        run: pipenv install --dev
+        run: |
+          cd api
+          pipenv install --dev
       - name: Lint with flake8
         run: |
           pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-  
+
   build-fastapi:
     runs-on: ubuntu-latest
     continue-on-error: false
@@ -108,10 +110,12 @@ jobs:
       - name: Install pipenv
         uses: dschep/install-pipenv-action@v1
       - name: Install dependencies
-        run: pipenv install --dev
+        run: |
+          cd api 
+          pipenv install --dev
       - name: Build FastAPI
         run: uvicorn main:app --reload
-
+  
   unit-test-fastapi:
     runs-on: ubuntu-latest
     continue-on-error: false
@@ -128,6 +132,8 @@ jobs:
       - name: Install pipenv
         uses: dschep/install-pipenv-action@v1
       - name: Install dependencies
-        run: pipenv install --dev
+        run: |
+          cd api  
+          pipenv install --dev
       - name: Run unit tests
         run: pipenv run pytest
