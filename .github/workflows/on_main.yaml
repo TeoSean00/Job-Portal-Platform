@@ -11,7 +11,7 @@ concurrency:
   group: ${{ github.ref }}-on-main
 
 jobs:
-  lint:
+  lint-next:
     runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 5
@@ -34,7 +34,7 @@ jobs:
       - name: Markdown lint
         run: npm run lint:markdown
 
-  build:
+  build-next:
     runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 5
@@ -53,7 +53,7 @@ jobs:
       - name: Build
         run: npm run build
   
-  unit-test:
+  unit-test-next:
     runs-on: ubuntu-latest
     container:
       image: public.ecr.aws/docker/library/ubuntu:latest
@@ -69,3 +69,65 @@ jobs:
           npm ci
       - name: Run unit tests
         run: npm run test
+
+  lint-fastapi:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pipenv
+        uses: dschep/install-pipenv-action@v1
+      - name: Install dependencies
+        run: pipenv install --dev
+      - name: Lint with flake8
+        run: |
+          pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+  
+  build-fastapi:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pipenv
+        uses: dschep/install-pipenv-action@v1
+      - name: Install dependencies
+        run: pipenv install --dev
+      - name: Build FastAPI
+        run: uvicorn main:app --reload
+
+  unit-test-fastapi:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pipenv
+        uses: dschep/install-pipenv-action@v1
+      - name: Install dependencies
+        run: pipenv install --dev
+      - name: Run unit tests
+        run: pipenv run pytest
