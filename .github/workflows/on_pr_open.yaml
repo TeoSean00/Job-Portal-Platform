@@ -63,7 +63,10 @@ jobs:
         run: |
           npm ci
       - name: Build
-        run: npm run build
+        run: | 
+          npm run build
+          sleep 5  # Wait for 5 seconds
+          kill $!  # Kill the background process
   
   unit-test-next:
     runs-on: ubuntu-latest
