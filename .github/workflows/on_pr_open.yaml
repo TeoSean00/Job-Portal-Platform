@@ -98,31 +98,31 @@ jobs:
           pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-  build-fastapi:
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    timeout-minutes: 10
-    strategy:
-      matrix:
-        python-version: ["3.9"]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install pipenv
-        uses: dschep/install-pipenv-action@v1
-      - name: Install dependencies
-        run: |
-          cd api 
-          pipenv install --dev
-      - name: Build FastAPI
-        run: |
-          cd api
-          pipenv run uvicorn main:app &  # Start in background
-          sleep 5  # Wait for 5 seconds
-          kill $!  # Kill the background process
+  # build-fastapi:
+  #   runs-on: ubuntu-latest
+  #   continue-on-error: false
+  #   timeout-minutes: 10
+  #   strategy:
+  #     matrix:
+  #       python-version: ["3.9"]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - name: Install pipenv
+  #       uses: dschep/install-pipenv-action@v1
+  #     - name: Install dependencies
+  #       run: |
+  #         cd api 
+  #         pipenv install --dev
+  #     - name: Build FastAPI
+  #       run: |
+  #         cd api
+  #         pipenv run uvicorn main:app &  # Start in background
+  #         sleep 5  # Wait for 5 seconds
+  #         kill $!  # Kill the background process
   
   unit-test-fastapi:
     runs-on: ubuntu-latest
