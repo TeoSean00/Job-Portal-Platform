@@ -1,4 +1,4 @@
-[Jira link](jira-link-here) <!-- Remove this link if no relevant Jira link -->
+[Linear link](Linear-link-here) <!-- Remove this link if no relevant Jira link -->
 
 This PR adds... <!-- A brief description of what your PR does -->
 
@@ -10,4 +10,4 @@ This PR adds... <!-- A brief description of what your PR does -->
 -   [ ] I've requested reviews from 1-2 reviewers
 -   [ ] I've added/updated unit tests
 -   [ ] I've added/updated e2e tests
--   [ ] I've added documentation in README/[Jira](insertlinkhere.com)
+-   [ ] I've added documentation in README/[Linear](insertlinkhere.com)
