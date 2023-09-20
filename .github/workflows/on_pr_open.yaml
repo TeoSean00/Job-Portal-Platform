@@ -14,7 +14,7 @@ concurrency:
   group: ${{ github.ref }}-on-pr-open # The branch or tag ref that triggered the workflow run.
 
 jobs:
-  lint:
+  lint-next:
     runs-on: ubuntu-latest
     continue-on-error: false
     timeout-minutes: 5
@@ -27,10 +27,6 @@ jobs:
           # personal access tokens in secrets will not be accessible in
           # pipeline for external user PRs
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-      - name: Install OS dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install xz-utils procps
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -44,3 +40,110 @@ jobs:
         run: npm run typecheck
       - name: Markdown lint
         run: npm run lint:markdown
+  
+  build-next:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install dependencies
+        run: |
+          npm ci
+      - name: Build
+        run: npm run build
+  
+  unit-test-next:
+    runs-on: ubuntu-latest
+    container:
+      image: public.ecr.aws/docker/library/ubuntu:latest
+    continue-on-error: false
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install dependencies
+        run: |
+          npm ci
+      - name: Run unit tests
+        run: npm run test
+  
+  lint-fastapi:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pipenv
+        uses: dschep/install-pipenv-action@v1
+      - name: Install dependencies
+        run: |
+          cd api
+          pipenv install --dev
+      - name: Lint with flake8
+        run: |
+          cd api
+          pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  build-fastapi:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pipenv
+        uses: dschep/install-pipenv-action@v1
+      - name: Install dependencies
+        run: |
+          cd api 
+          pipenv install --dev
+      - name: Build FastAPI
+        run: |
+          cd api
+          pipenv run uvicorn main:app &  # Start in background
+          sleep 5  # Wait for 5 seconds
+          kill $!  # Kill the background process
+  
+  unit-test-fastapi:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install pipenv
+        uses: dschep/install-pipenv-action@v1
+      - name: Install dependencies
+        run: |
+          cd api  
+          pipenv install --dev
+      - name: Run unit tests
+        run: |
+          cd api
+          pipenv run pytest
