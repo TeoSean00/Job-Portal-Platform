@@ -42,3 +42,15 @@ The FastApi server will be running on http://127.0.0.1:8000 – feel free to cha
 5. When opening or merging a PR, make sure to include the Linear issue ID in the title, e.g. `Completed spm-4: Connect GitHub or GitLab`.
 
 6. An auto-generated URL to the Linear issue should have been automatically added to the PR description. The Linear issue will be automatically updated accordingly with the new timeline and URL to the Github PR too.
+
+## Icons
+
+We are using [Radix icons](https://www.radix-ui.com/icons) or [Lucide](https://lucide.dev/) for our icons.
+
+## Theming System
+
+We are using shadcn's [theme](https://ui.shadcn.com/themes) for convenience.
+
+Refer to `tailwind.config.ts` for list of classes (under `theme.extend.colors`) that can be used to style the components. e.g. `bg-primary`.
+
+Do not use the default tailwind classes (e.g. `bg-blue-500`).

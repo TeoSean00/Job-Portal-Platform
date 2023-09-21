@@ -110,9 +110,6 @@ module.exports = {
       { checksVoidReturn: false },
     ],
     "arrow-body-style": ["error", "as-needed"],
-
-    // Keeps code maintainable & clear where we are importing from
-    "import/no-relative-parent-imports": "error",
   },
   overrides: [
     {
