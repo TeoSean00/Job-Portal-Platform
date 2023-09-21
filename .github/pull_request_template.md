@@ -1,4 +1,4 @@
-[Linear link](Linear-link-here) <!-- Remove this link if no relevant Jira link -->
+[Linear link](Linear-link-here) <!-- Remove this link if no relevant Linear link -->
 
 This PR adds... <!-- A brief description of what your PR does -->
 
