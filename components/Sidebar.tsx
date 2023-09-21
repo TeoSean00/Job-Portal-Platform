@@ -33,7 +33,7 @@ const Sidebar = () => {
       <div
         className={`${
           open ? "w-52" : "w-fit"
-        }  relative hidden h-screen border-r border-border  p-2 pr-3 pt-4 sm:block`}
+        }  relative hidden h-screen border-r border-border px-3 pt-4 sm:block`}
       >
         <div
           className="absolute -right-6 top-7 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-border bg-border p-2"
