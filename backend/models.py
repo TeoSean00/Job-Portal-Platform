@@ -6,18 +6,6 @@ import datetime as dt
 
 Base = declarative_base()
 
-class StaffDetails(Base):
-    __tablename__ = 'STAFF_DETAILS'
-
-    staff_id = Column(Integer, primary_key=True)
-    fname = Column(String(50))
-    lname = Column(String(50))
-    dept = Column(String(50))
-    email = Column(String(50))
-    phone = Column(String(20))
-    biz_address = Column(String(255))
-    sys_role = Column(Enum('staff', 'hr', 'manager', 'inactive'))
-
 class StaffReportingOfficer(Base):
     __tablename__ = 'STAFF_REPORTING_OFFICER'
 
