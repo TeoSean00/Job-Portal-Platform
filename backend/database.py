@@ -1,15 +1,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+import os
 
-SQLALCHEMY_DATABASE_URL = "spm-db.cjppbalamrlo.ap-southeast-1.rds.amazonaws.com"
-PORT = 3306
-USERNAME = "spm_g8"
-PASSWORD = "chowkongming"
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
+load_dotenv()
+
+AWS_RDS_MYSQL_URL = os.getenv("AWS_RDS_MYSQL_URL")
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL
+    AWS_RDS_MYSQL_URL
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

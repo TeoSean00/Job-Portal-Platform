@@ -31,3 +31,4 @@ uvloop==0.17.0
 virtualenv==20.24.5
 watchfiles==0.20.0
 websockets==11.0.3
+pymysql==1.1.0

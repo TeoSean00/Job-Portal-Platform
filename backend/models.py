@@ -1,6 +1,8 @@
-from sqlalchemy import create_engine, Column, Integer, String, Enum, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Enum, ForeignKey, Date, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+
+import datetime as dt
 
 Base = declarative_base()
 
@@ -74,9 +76,9 @@ class RoleListings(Base):
     role_listing_close = Column(Date)
     role_listing_hide = Column(Date)
     role_listing_creator = Column(Integer, ForeignKey('STAFF_DETAILS.staff_id'))
-    role_listing_ts_create = Column(DateTime, default=datetime.datetime.utcnow)
+    role_listing_ts_create = Column(DateTime, default=dt.datetime.utcnow)
     role_listing_updater = Column(Integer, ForeignKey('STAFF_DETAILS.staff_id'))
-    role_listing_ts_update = Column(DateTime, default=datetime.datetime.utcnow)
+    role_listing_ts_update = Column(DateTime, default=dt.datetime.utcnow)
 
     role = relationship('RoleDetails', backref='listings')
     source_staff = relationship('StaffDetails', foreign_keys=[role_listing_source])
@@ -90,7 +92,7 @@ class RoleApplications(Base):
     role_listing_id = Column(Integer, ForeignKey('ROLE_LISTINGS.role_listing_id'))
     staff_id = Column(Integer, ForeignKey('STAFF_DETAILS.staff_id'))
     role_app_status = Column(Enum('applied', 'withdrawn'))
-    role_app_ts_create = Column(DateTime, default=datetime.datetime.utcnow)
+    role_app_ts_create = Column(DateTime, default=dt.datetime.utcnow)
 
     role_listing = relationship('RoleListings', backref='applications')
     staff = relationship('StaffDetails', backref='applications')
