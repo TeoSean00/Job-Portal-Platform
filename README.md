@@ -15,9 +15,17 @@ Automated Doc with [Swagger UI](https://fastapi.tiangolo.com/features/) has been
 
 ## Getting Started
 
+Optional, setting up a virtual environment
+
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
 First, install the dependencies
 ```bash
 npm install
+pip install -r requirements.txt
 ```
 
 Then, run the development server:
