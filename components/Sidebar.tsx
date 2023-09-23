@@ -13,12 +13,12 @@ import { cn } from "@/lib/utils";
 const sidebarLinks: SidebarNavItem[] = [
   {
     title: "Profile",
-    href: "/profile",
+    href: "/dashboard/profile",
     icon: <UserCircle />,
   },
   {
     title: "Roles",
-    href: "/roles",
+    href: "/dashboard/roles",
     icon: <List />,
   },
 ];
@@ -29,7 +29,7 @@ const Sidebar = () => {
 
   const location = usePathname();
   return (
-    <div className="">
+    <div>
       <div
         className={`${
           open ? "w-52" : "w-fit"
@@ -43,7 +43,7 @@ const Sidebar = () => {
         </div>
 
         <ul className="flex flex-col gap-y-3 px-2">
-          <div>
+          <Link href="/dashboard">
             <h1
               className={cn(
                 poppins.className,
@@ -52,7 +52,7 @@ const Sidebar = () => {
             >
               Portal
             </h1>
-          </div>
+          </Link>
           {sidebarLinks.map((link, index) => (
             <Link
               key={index}
@@ -79,7 +79,7 @@ const Sidebar = () => {
         </ul>
       </div>
       {/* Mobile Menu */}
-      <div className="pt-3">
+      <div>
         <HamburgerToggle
           mobileMenu={mobileMenu}
           setMobileMenu={setMobileMenu}

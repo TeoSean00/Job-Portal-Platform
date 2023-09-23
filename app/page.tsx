@@ -1,14 +1,18 @@
-import Link from "next/link";
+import { SignedOut, SignInButton } from "@clerk/nextjs";
+
+import { Button } from "@/components/ui";
 
 export default function Home() {
   return (
-    <main className="flex h-full items-center justify-center">
-      Get started by editing&nbsp;
-      <Link href={`/api/python`}>
-        <code className="rounded-lg border border-border p-2 font-bold">
-          /api/index
-        </code>
-      </Link>
+    <main className="flex h-screen flex-col items-center justify-center gap-y-5">
+      <h1 className="text-4xl font-bold">
+        Welcome to <span className=" text-primary">Portal</span>
+      </h1>
+      <SignedOut>
+        <SignInButton>
+          <Button variant={"outline"}> Sign in</Button>
+        </SignInButton>
+      </SignedOut>
     </main>
   );
 }
