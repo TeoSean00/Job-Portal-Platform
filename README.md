@@ -15,21 +15,21 @@ Automated Doc with [Swagger UI](https://fastapi.tiangolo.com/features/) has been
 
 ## Getting Started
 
-Optional, setting up a virtual environment
-
+setting up pipenv on Windows
 ```bash
-python -m venv venv
-source venv/bin/activate
+pip install pipenv
+```
+for MacOS
+```bash
+brew install pipenv
 ```
 
 First, install the dependencies
 ```bash
-npm install
-pip install -r requirements.txt
+npm i
 ```
 
 Then, run the development server:
-
 ```bash
 npm run dev
 ```
