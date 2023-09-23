@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-
 import "./globals.scss";
+
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { inter } from "@/fonts";
@@ -35,5 +35,6 @@ export default function RootLayout({
         </body>
       </html>
     </ClerkProvider>
+
   );
 }
