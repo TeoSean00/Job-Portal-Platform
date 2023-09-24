@@ -6,7 +6,7 @@ import os
 
 load_dotenv()
 
-AWS_RDS_MYSQL_URL = os.getenv("AWS_RDS_MYSQL_URL")
+AWS_RDS_MYSQL_URL = os.environ.get("AWS_RDS_MYSQL_URL")
 
 engine = create_engine(
     AWS_RDS_MYSQL_URL
