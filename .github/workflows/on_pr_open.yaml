@@ -142,8 +142,8 @@ jobs:
         run: pipenv install isort black
       - name: Format code with isort and black
         run: |
-          isort .
-          black .
+          pipenv run isort .
+          pipenv run black .
       - name: Commit changes
         run: |
           git config user.name "elto0nxale"
