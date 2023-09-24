@@ -16,11 +16,14 @@ Automated Doc with [Swagger UI](https://fastapi.tiangolo.com/features/) has been
 
 ## Getting Started
 
-setting up pipenv on Windows
+#### setting up pipenv
+##### if using pip as package manager
 ```bash
 pip install pipenv
+or
+pip3 install pipenv
 ```
-for MacOS
+##### if using brew as package manager
 ```bash
 brew install pipenv
 ```
@@ -33,6 +36,11 @@ npm i
 Then, run the development server:
 ```bash
 npm run dev
+```
+
+To activate the created venv:
+```bash
+pipenv shell
 ```
 
 The FastApi server will be running on http://127.0.0.1:8000 – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
