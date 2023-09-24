@@ -146,7 +146,7 @@ jobs:
           pipenv run black .
       - name: Commit changes
         run: |
-          git config user.name "elto0nxale"
+          git config user.name "elt0nxale"
           git config user.email "eltontay1@gmail.com"
           git add .
           git commit -m "Auto-format code"
