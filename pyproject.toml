@@ -6,6 +6,7 @@ target-version = ['py39']
 profile = "black"
 multi_line_output = 3
 
-[flake8]
+[tool.flake8]
 max-line-length = 88
-exclude = "venv, .git"
+exclude = ".git,__pycache__,venv"
+ignore = "E501,W503,E722"
