@@ -122,26 +122,24 @@ jobs:
     continue-on-error: false
     timeout-minutes: 5
     steps:
+     - name: Install pipenv
+        uses: dschep/install-pipenv-action@v1
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
           python-version: 3.9
-
       - name: Install dependencies
         run: pipenv install isort black
-
       - name: Format code with isort and black
         run: |
           isort .
           black .
-
       - name: Commit changes
         run: |
-          git config user.name "Your Name"
-          git config user.email "you@example.com"
+          git config user.name "elto0nxale"
+          git config user.email "eltontay1@gmail.com"
           git add .
           git commit -m "Auto-format code"
           git push
