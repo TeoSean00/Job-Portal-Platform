@@ -1,8 +1,9 @@
+import os
+
+import pytest
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
-import pytest
-import os
 
 
 @pytest.fixture(scope="module")
@@ -27,5 +28,6 @@ def test_session_creation(session):
     # Check if a session is created
     assert session
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     pytest.main()
