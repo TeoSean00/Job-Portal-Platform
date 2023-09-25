@@ -51,6 +51,14 @@ The FastApi server will be running on http://127.0.0.1:8000 – feel free to cha
 2. Run `npm run lint:fix` to check for and fix linting errors.
 3. If there are errors that cannot be fixed automatically, you will have to check the cli for the errors and fix them manually.
 
+## Staging Commits
+
+Pre-commit offloads some of the work of github CI unit testing to local dev environment for
+1. Speed in identifying failed tests
+2. Ease of use instead of running unit tests manually each time
+3. Security in case bad code is written - tests are broken and user is notified even before committing
+4. Standardization of code formatting and linting (for python files)
+
 ## Branching and opening pull requests
 
 1. Include **issue ID** in the branch name to link the issue to a Pull/Merge Request. The fastest way to link to issues is to use Linear's branch name feature by clicking on the top right button 'Copy git branch name action' when viewing an issue.
