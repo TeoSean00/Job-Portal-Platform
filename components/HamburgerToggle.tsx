@@ -17,6 +17,6 @@ export const HamburgerToggle = ({
     })}
     onClick={() => setMobileMenu(!mobileMenu)}
   >
-    <Menu className="ml-2 h-fit w-10 rounded-lg border border-border p-2 hover:bg-secondary" />
+    <Menu className="h-fit w-10 rounded-lg border border-border p-2 hover:bg-secondary" />
   </button>
 );

@@ -13,12 +13,12 @@ import { cn } from "@/lib/utils";
 const sidebarLinks: SidebarNavItem[] = [
   {
     title: "Profile",
-    href: "/profile",
+    href: "/dashboard/profile",
     icon: <UserCircle />,
   },
   {
     title: "Roles",
-    href: "/roles",
+    href: "/dashboard/roles",
     icon: <List />,
   },
 ];
@@ -29,7 +29,7 @@ const Sidebar = () => {
 
   const location = usePathname();
   return (
-    <div className="">
+    <div>
       <div
         className={`${
           open ? "w-52" : "w-fit"
@@ -43,7 +43,7 @@ const Sidebar = () => {
         </div>
 
         <ul className="flex flex-col gap-y-3 px-2">
-          <div>
+          <Link href="/dashboard">
             <h1
               className={cn(
                 poppins.className,
@@ -52,7 +52,7 @@ const Sidebar = () => {
             >
               Portal
             </h1>
-          </div>
+          </Link>
           {sidebarLinks.map((link, index) => (
             <Link
               key={index}
@@ -78,8 +78,9 @@ const Sidebar = () => {
           ))}
         </ul>
       </div>
+
       {/* Mobile Menu */}
-      <div className="pt-3">
+      <div className="absolute left-2 top-2 h-fit">
         <HamburgerToggle
           mobileMenu={mobileMenu}
           setMobileMenu={setMobileMenu}
@@ -89,9 +90,19 @@ const Sidebar = () => {
         <div
           className={cn(
             mobileMenu ? "flex" : "hidden",
-            "absolute left-6 right-6 z-50 mt-5 flex-col items-center space-y-6 self-end rounded-lg border border-border px-24 py-8 font-bold sm:w-auto",
+            "absolute left-6 right-6 top-10 z-50 mt-5 flex-col items-center space-y-2 self-end rounded-lg border border-border bg-background px-24 py-8 font-bold sm:w-auto",
           )}
         >
+          <Link href="/dashboard">
+            <h1
+              className={cn(
+                poppins.className,
+                "p-2 text-center text-lg font-bold text-primary",
+              )}
+            >
+              Portal
+            </h1>
+          </Link>
           {sidebarLinks.map((link, index) => (
             <Link
               key={index}
