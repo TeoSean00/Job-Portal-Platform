@@ -13,7 +13,6 @@ def engine():
     print("AWS_RDS_MYSQL_URL:", AWS_RDS_MYSQL_URL)
     return create_engine(AWS_RDS_MYSQL_URL)
 
-
 @pytest.fixture(scope="module")
 def session(engine):
     # Create a session
@@ -24,7 +23,6 @@ def session(engine):
 def test_database_connection(engine):
     # Check if the engine is connected
     assert engine.connect()
-
 
 def test_session_creation(session):
     # Check if a session is created

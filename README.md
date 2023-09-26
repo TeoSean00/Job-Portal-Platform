@@ -30,7 +30,11 @@ brew install pipenv
 
 First, install the dependencies
 ```bash
+# nodejs / js
 npm i
+
+# python (additional dependencies needed to be specified as an argument after 'install', pipfile will auto update)
+pipenv install 
 ```
 
 Then, run the development server:
