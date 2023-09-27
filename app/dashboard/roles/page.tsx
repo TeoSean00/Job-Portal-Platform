@@ -1,4 +1,3 @@
-
 import { RoleTable } from "@/components/RoleTable";
 
 const RolesPage = () => {
@@ -12,7 +11,8 @@ const RolesPage = () => {
     {
       roleId: 2,
       roleName: "Temp Role 2",
-      roleDescription: "This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2",
+      roleDescription:
+        "This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2",
       roleStatus: "active",
     },
     {
@@ -25,11 +25,12 @@ const RolesPage = () => {
 
   return (
     <>
-      <div className="">Roles
+      <div className="">
+        Roles
         <RoleTable roleData={roleData} />
       </div>
     </>
-  )
+  );
 };
 
 export default RolesPage;
