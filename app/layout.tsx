@@ -20,7 +20,7 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         variables: {
-          colorPrimary: "#16a34a",
+          colorPrimary: "#2563eb",
         },
       }}
     >
@@ -28,7 +28,7 @@ export default function RootLayout({
         <body
           className={cn(
             inter.className,
-            "dark h-screen bg-background text-foreground",
+            "h-screen bg-background text-foreground",
           )}
         >
           <main>{children}</main>
