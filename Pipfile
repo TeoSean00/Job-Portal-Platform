@@ -41,6 +41,7 @@ pymysql = "==1.1.0"
 black = "*"
 isort = "*"
 pre-commit = "*"
+httpx = "*"
 
 [dev-packages]
 
