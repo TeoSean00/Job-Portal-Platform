@@ -1,7 +1,17 @@
 import { RoleTable } from "@/components/RoleTable";
+import { Payment, columns } from "@/components/ui/Colums";
+import { DataTable } from "@/components/ui/DataTable";
 
 const RolesPage = () => {
-  const roleData = [
+  // const data = [
+  //   {
+  //     id: "728ed52f",
+  //     amount: 100,
+  //     status: "pending",
+  //     email: "m@example.com",
+  //   },
+  // ];
+  const data = [
     {
       roleId: 1,
       roleName: "Temp Role 1",
@@ -27,7 +37,8 @@ const RolesPage = () => {
     <>
       <div className="">
         Roles
-        <RoleTable roleData={roleData} />
+        <DataTable columns={columns} data={data} />
+        {/* <RoleTable roleData={roleData} /> */}
       </div>
     </>
   );
