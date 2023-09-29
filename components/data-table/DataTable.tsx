@@ -1,11 +1,14 @@
 "use client";
 
-import type { ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
-import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import type {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
 } from "@/components/types";
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+} from "@tanstack/react-table";
 
 import {
   flexRender,
@@ -13,11 +16,12 @@ import {
   getPaginationRowModel,
   useReactTable,
   getFilteredRowModel,
-  SortingState,
   getSortedRowModel,
 } from "@tanstack/react-table";
+
 import * as React from "react";
 
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { Button } from "@/components/ui/Button";
 import {
   Table,
@@ -32,8 +36,8 @@ import { Input } from "@/components/ui/input";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filterableColumns?: DataTableFilterableColumn<TData>[]
-  searchableColumns?: DataTableSearchableColumn<TData>[]
+  filterableColumns?: DataTableFilterableColumn<TData>[];
+  searchableColumns?: DataTableSearchableColumn<TData>[];
 }
 
 export function DataTable<TData, TValue>({
@@ -67,9 +71,9 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <DataTableToolbar
-        table={table}
         filterableColumns={filterableColumns}
         searchableColumns={searchableColumns}
+        table={table}
       />
       <div className="rounded-md border">
         <Table>

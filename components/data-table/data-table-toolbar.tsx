@@ -1,21 +1,22 @@
-"use client"
+"use client";
 
 import type {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
-} from "@/types"
-import { Cross2Icon } from "@radix-ui/react-icons"
-import type { Table } from "@tanstack/react-table"
+} from "@/components/types";
+import type { Table } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter"
-import { DataTableViewOptions } from "@/components/data-table/data-table-view-options"
+import { Cross2Icon } from "@radix-ui/react-icons";
+
+import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
+import { DataTableViewOptions } from "@/components/data-table/data-table-view-options";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/input";
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>
-  filterableColumns?: DataTableFilterableColumn<TData>[]
-  searchableColumns?: DataTableSearchableColumn<TData>[]
+  table: Table<TData>;
+  filterableColumns?: DataTableFilterableColumn<TData>[];
+  searchableColumns?: DataTableSearchableColumn<TData>[];
 }
 
 export function DataTableToolbar<TData>({
@@ -23,7 +24,7 @@ export function DataTableToolbar<TData>({
   filterableColumns = [],
   searchableColumns = [],
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0
+  const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
     <div className="flex items-center justify-between p-1">
@@ -34,6 +35,7 @@ export function DataTableToolbar<TData>({
               table.getColumn(column.id ? String(column.id) : "") && (
                 <Input
                   key={String(column.id)}
+                  className="h-8 w-[150px] lg:w-[250px]"
                   placeholder={`Filter ${column.title}...`}
                   value={
                     (table
@@ -45,9 +47,8 @@ export function DataTableToolbar<TData>({
                       .getColumn(String(column.id))
                       ?.setFilterValue(event.target.value)
                   }
-                  className="h-8 w-[150px] lg:w-[250px]"
                 />
-              )
+              ),
           )}
         {filterableColumns.length > 0 &&
           filterableColumns.map(
@@ -56,16 +57,16 @@ export function DataTableToolbar<TData>({
                 <DataTableFacetedFilter
                   key={String(column.id)}
                   column={table.getColumn(column.id ? String(column.id) : "")}
-                  title={column.title}
                   options={column.options}
+                  title={column.title}
                 />
-              )
+              ),
           )}
         {isFiltered && (
           <Button
+            className="h-8 px-2 lg:px-3"
             variant="ghost"
             onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
           >
             Reset
             <Cross2Icon className="ml-2 h-4 w-4" />
@@ -74,5 +75,5 @@ export function DataTableToolbar<TData>({
       </div>
       <DataTableViewOptions table={table} />
     </div>
-  )
+  );
 }

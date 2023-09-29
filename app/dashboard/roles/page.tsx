@@ -1,5 +1,5 @@
-import { Payment, columns } from "@/components/ui/Colums";
 import { DataTable } from "@/components/data-table/DataTable";
+import { Payment, columns } from "@/components/ui/Colums";
 
 const RolesPage = () => {
   // const data = [
@@ -16,7 +16,7 @@ const RolesPage = () => {
       roleName: "Temp Role 1",
       roleDescription: "This is a temporary role 1",
       roleStatus: "active",
-      skillRequired : ["skill 1", "skill 2"]
+      skillRequired: ["skill 1", "skill 2"],
     },
     {
       roleId: 2,
@@ -24,14 +24,14 @@ const RolesPage = () => {
       roleDescription:
         "This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2",
       roleStatus: "active",
-      skillRequired : ["skill 2", "skill 3"]
+      skillRequired: ["skill 2", "skill 3"],
     },
     {
       roleId: 3,
       roleName: "Temp Inactive Role",
       roleDescription: "This is a temporary inactive role",
       roleStatus: "inactive",
-      skillRequired : ["skill 3", "skill 4"]
+      skillRequired: ["skill 3", "skill 4"],
     },
   ];
 
@@ -55,7 +55,7 @@ const RolesPage = () => {
               title: "Role Name",
             },
           ]}
-        /> 
+        />
       </div>
     </>
   );
