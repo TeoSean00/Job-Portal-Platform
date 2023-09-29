@@ -1,6 +1,5 @@
-import { RoleTable } from "@/components/RoleTable";
 import { Payment, columns } from "@/components/ui/Colums";
-import { DataTable } from "@/components/ui/DataTable";
+import { DataTable } from "@/components/data-table/DataTable";
 
 const RolesPage = () => {
   // const data = [
@@ -17,6 +16,7 @@ const RolesPage = () => {
       roleName: "Temp Role 1",
       roleDescription: "This is a temporary role 1",
       roleStatus: "active",
+      skillRequired : ["skill 1", "skill 2"]
     },
     {
       roleId: 2,
@@ -24,12 +24,14 @@ const RolesPage = () => {
       roleDescription:
         "This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2",
       roleStatus: "active",
+      skillRequired : ["skill 2", "skill 3"]
     },
     {
       roleId: 3,
       roleName: "Temp Inactive Role",
       roleDescription: "This is a temporary inactive role",
       roleStatus: "inactive",
+      skillRequired : ["skill 3", "skill 4"]
     },
   ];
 
@@ -37,8 +39,23 @@ const RolesPage = () => {
     <>
       <div className="">
         Roles
-        <DataTable columns={columns} data={data} />
-        {/* <RoleTable roleData={roleData} /> */}
+        <DataTable
+          columns={columns}
+          data={data}
+          filterableColumns={[
+            {
+              id: "skillRequired",
+              title: "Required Skills",
+              options: ["skill 1"],
+            },
+          ]}
+          searchableColumns={[
+            {
+              id: "roleName",
+              title: "Role Name",
+            },
+          ]}
+        /> 
       </div>
     </>
   );

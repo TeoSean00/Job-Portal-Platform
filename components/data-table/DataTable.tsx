@@ -1,6 +1,11 @@
 "use client";
 
 import type { ColumnDef, ColumnFiltersState } from "@tanstack/react-table";
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import type {
+  DataTableFilterableColumn,
+  DataTableSearchableColumn,
+} from "@/components/types";
 
 import {
   flexRender,
@@ -8,6 +13,8 @@ import {
   getPaginationRowModel,
   useReactTable,
   getFilteredRowModel,
+  SortingState,
+  getSortedRowModel,
 } from "@tanstack/react-table";
 import * as React from "react";
 
@@ -25,15 +32,23 @@ import { Input } from "@/components/ui/input";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filterableColumns?: DataTableFilterableColumn<TData>[]
+  searchableColumns?: DataTableSearchableColumn<TData>[]
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterableColumns = [],
+  searchableColumns = [],
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  // Filtering Columns
+
+  // Filtering End
   const table = useReactTable({
     data,
     columns,
@@ -41,23 +56,21 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
+      sorting,
       columnFilters,
     },
   });
 
   return (
     <div>
-      <div className="flex items-center py-4">
-        <Input
-          className="max-w-sm"
-          placeholder="Filter roles..."
-          value={(table.getColumn("roleName")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("roleName")?.setFilterValue(event.target.value)
-          }
-        />
-      </div>
+      <DataTableToolbar
+        table={table}
+        filterableColumns={filterableColumns}
+        searchableColumns={searchableColumns}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
