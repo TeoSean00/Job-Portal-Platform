@@ -18,6 +18,7 @@
     "lint:markdown:fix": "npx remark . -qfo"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.24.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@types/node": "20.5.2",
     "@types/react": "18.2.20",

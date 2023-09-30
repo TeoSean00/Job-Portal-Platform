@@ -1,4 +1,5 @@
 ## Introduction
+
 This is a hybrid Next.js + Python app that uses Next.js as the frontend and FastAPI as the API backend.
 
 ## How it works
@@ -15,19 +16,52 @@ Automated Doc with [Swagger UI](https://fastapi.tiangolo.com/features/) has been
 
 ## Getting Started
 
+#### setting up pipenv
+##### if using pip as package manager
+```bash
+pip install pipenv
+or
+pip3 install pipenv
+```
+##### if using brew as package manager
+```bash
+brew install pipenv
+```
+
 First, install the dependencies
 ```bash
-npm install
+# nodejs / js
+npm i
+
+# python (additional dependencies needed to be specified as an argument after 'install', pipfile will auto update)
+pipenv install 
 ```
 
 Then, run the development server:
-
 ```bash
 npm run dev
 ```
 
+To activate the created venv:
+```bash
+pipenv shell
+```
+
 The FastApi server will be running on http://127.0.0.1:8000 – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
 
+## Fixing Typescript Linting error 
+
+1. Install ESLint extension for VSCode, other helpful extensions are Prettier, Tailwind CSS, and Error Lens.
+2. Run `npm run lint:fix` to check for and fix linting errors.
+3. If there are errors that cannot be fixed automatically, you will have to check the cli for the errors and fix them manually.
+
+## Staging Commits
+
+Pre-commit offloads some of the work of github CI unit testing to local dev environment for
+1. Speed in identifying failed tests
+2. Ease of use instead of running unit tests manually each time
+3. Security in case bad code is written - tests are broken and user is notified even before committing
+4. Standardization of code formatting and linting (for python files)
 
 ## Branching and opening pull requests
 

@@ -14,6 +14,7 @@ concurrency:
   group: ${{ github.ref }}-on-pr-open # The branch or tag ref that triggered the workflow run.
 
 jobs:
+
   lint-next:
     runs-on: ubuntu-latest
     continue-on-error: false
@@ -123,7 +124,7 @@ jobs:
           pipenv run uvicorn main:app &  # Start in background
           sleep 5  # Wait for 5 seconds
           kill $!  # Kill the background process
-  
+
   unit-test-fastapi:
     runs-on: ubuntu-latest
     continue-on-error: false

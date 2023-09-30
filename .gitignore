@@ -28,7 +28,6 @@ yarn-error.log*
 .env*.local
 .env
 
-
 # Ignore virtual environment
 venv/
 
