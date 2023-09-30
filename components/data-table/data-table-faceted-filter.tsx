@@ -1,7 +1,6 @@
 import type { Column, RowModel } from "@tanstack/react-table";
 
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
-
 import React, { useState } from "react";
 
 import { Button } from "@/components/ui/Button";
@@ -109,23 +108,19 @@ export function DataTableFacetedFilter<TData, TValue>({
                         filterValues.length ? filterValues : undefined,
                       );
 
-                      const filteredData = filterData.filter((row) => {
-                        // console.log(row.original);
-                        console.log(row.original.skillRequired.some((skill) => selectedValues.has(skill)));
-                        // Check if the role is active and has at least one selected skill
-                        return (
-                          row.original.skillRequired.some((skill) => filterValues.includes(skill))
-                        );
-                      });
-                      // Extract the "roleName" values from the filtered data
-                      const roleNameValues = filteredData.map((row) => row.original.roleName);
-                      // Set the filter value for the "roleName" column to the extracted values
-                      console.log(roleNameValues);
-                      for (let i = 0; i < roleNameValues.length; i++) {
-                        console.log(roleNameValues[i]);
-                        nameColumn?.setFilterValue(roleNameValues[i]);
-                      }
-                      // nameColumn?.setFilterValue(roleNameValues.length ? roleNameValues : undefined);
+                      // const filteredData = filterData.filter((row) => {
+                      //   // Check if the role is active and has at least one selected skill
+                      //   return row.original.skillRequired.some((skill) =>
+                      //     filterValues.includes(skill),
+                      //   );
+                      // });
+                      // // Extract the "roleName" values from the filtered data
+                      // const roleNameValues = filteredData.map(
+                      //   (row) => row.original.roleName,
+                      // );
+                      // // Set the filter value for the "roleName" column to the extracted values
+                      // console.log(roleNameValues);
+                      // // nameColumn?.setFilterValue(roleNameValues.length ? roleNameValues : undefined);
                     }}
                   >
                     <div

@@ -18,7 +18,6 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
 } from "@tanstack/react-table";
-
 import * as React from "react";
 
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
