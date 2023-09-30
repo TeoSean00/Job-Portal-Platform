@@ -107,20 +107,6 @@ export function DataTableFacetedFilter<TData, TValue>({
                       column?.setFilterValue(
                         filterValues.length ? filterValues : undefined,
                       );
-
-                      // const filteredData = filterData.filter((row) => {
-                      //   // Check if the role is active and has at least one selected skill
-                      //   return row.original.skillRequired.some((skill) =>
-                      //     filterValues.includes(skill),
-                      //   );
-                      // });
-                      // // Extract the "roleName" values from the filtered data
-                      // const roleNameValues = filteredData.map(
-                      //   (row) => row.original.roleName,
-                      // );
-                      // // Set the filter value for the "roleName" column to the extracted values
-                      // console.log(roleNameValues);
-                      // // nameColumn?.setFilterValue(roleNameValues.length ? roleNameValues : undefined);
                     }}
                   >
                     <div

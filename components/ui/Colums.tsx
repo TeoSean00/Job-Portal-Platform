@@ -1,6 +1,6 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row } from "@tanstack/react-table";
 
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
@@ -48,12 +48,12 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "skillRequired",
     header: "Required Skills",
     filterFn: (row, id, value) => {
-      console.log(row.getValue(id));
-      console.log(id, value);
       if (!Array.isArray(value)) {
         return false; // Handle the case where value is not an array
       }
-      const hasOverlap = value.every(skill => row.getValue(id).includes(skill));
+      const hasOverlap = value.every((skill) =>
+        row.getValue(id).includes(skill),
+      );
       return hasOverlap;
     },
   },
