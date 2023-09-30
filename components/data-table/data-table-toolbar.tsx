@@ -25,7 +25,7 @@ export function DataTableToolbar<TData>({
   searchableColumns = [],
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-
+  // console.log(table.getColumn("skillRequired"));
   return (
     <div className="flex items-center justify-between p-1">
       <div className="flex flex-1 items-center space-x-2">
@@ -57,6 +57,8 @@ export function DataTableToolbar<TData>({
                 <DataTableFacetedFilter
                   key={String(column.id)}
                   column={table.getColumn(column.id ? String(column.id) : "")}
+                  data={table.getRowModel()}
+                  nameColumn={table.getColumn("roleName")}
                   options={column.options}
                   title={column.title}
                 />

@@ -50,9 +50,6 @@ export function DataTable<TData, TValue>({
     [],
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  // Filtering Columns
-
-  // Filtering End
   const table = useReactTable({
     data,
     columns,
@@ -67,7 +64,6 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
-
   return (
     <div>
       <DataTableToolbar

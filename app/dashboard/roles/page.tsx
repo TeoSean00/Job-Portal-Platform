@@ -2,14 +2,12 @@ import { DataTable } from "@/components/data-table/DataTable";
 import { Payment, columns } from "@/components/ui/Colums";
 
 const RolesPage = () => {
-  // const data = [
-  //   {
-  //     id: "728ed52f",
-  //     amount: 100,
-  //     status: "pending",
-  //     email: "m@example.com",
-  //   },
-  // ];
+  const tempSkills = [
+    { label: "Skill 1", value: "skill 1" },
+    { label: "Skill 2", value: "skill 2" },
+    { label: "Skill 3", value: "skill 3" },
+    { label: "Skill 4", value: "skill 4" },
+  ];
   const data = [
     {
       roleId: 1,
@@ -46,7 +44,7 @@ const RolesPage = () => {
             {
               id: "skillRequired",
               title: "Required Skills",
-              options: ["skill 1"],
+              options: tempSkills,
             },
           ]}
           searchableColumns={[
