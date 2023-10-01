@@ -16,10 +16,72 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-const DatePickerWithRange: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
-  className,
-}) => {
-  const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+// const DatePickerWithRange: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+//   className,
+// }) => {
+//   const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+//   console.log(date);
+//   return (
+//     <div className={cn("grid gap-2", className)}>
+//       <Popover>
+//         <PopoverTrigger asChild>
+//           <Button
+//             className={cn(
+//               "w-[300px] justify-start text-left font-normal",
+//               !date && "text-muted-foreground",
+//             )}
+//             id="date"
+//             variant={"outline"}
+//           >
+//             <CalendarIcon className="mr-2 h-4 w-4" />
+//             {date?.from ? (
+//               date.to ? (
+//                 <>
+//                   {format(date.from, "LLL dd, y")} -{" "}
+//                   {format(date.to, "LLL dd, y")}
+//                 </>
+//               ) : (
+//                 format(date.from, "LLL dd, y")
+//               )
+//             ) : (
+//               <span>Pick a date</span>
+//             )}
+//           </Button>
+//         </PopoverTrigger>
+//         <PopoverContent align="start" className="w-auto p-0">
+//           <Calendar
+//             initialFocus
+//             defaultMonth={date?.from}
+//             mode="range"
+//             numberOfMonths={2}
+//             selected={date}
+//             onSelect={setDate}
+//           />
+//         </PopoverContent>
+//       </Popover>
+//     </div>
+//   );
+// };
+
+// export default DatePickerWithRange;
+
+const DatePickerWithRange: React.FC<{
+  className?: string;
+  value?: DateRange;
+  onChange?: (dateRange: DateRange | undefined) => void;
+}> = ({ className, value, onChange }) => {
+  const [date, setDate] = React.useState<DateRange | undefined>(value);
+
+  React.useEffect(() => {
+    setDate(value);
+  }, [value]);
+
+  const handleDateChange = (selectedDateRange: DateRange | undefined) => {
+    setDate(selectedDateRange);
+    if (onChange) {
+      onChange(selectedDateRange);
+    }
+  };
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -55,7 +117,7 @@ const DatePickerWithRange: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
             mode="range"
             numberOfMonths={2}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleDateChange}
           />
         </PopoverContent>
       </Popover>

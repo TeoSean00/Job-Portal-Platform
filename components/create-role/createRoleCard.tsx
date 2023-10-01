@@ -45,7 +45,7 @@ const CreateRoleCard: React.FC<CreateRoleCardProps> = ({
   selectOptions,
   children,
 }) => (
-  <Card className="w-[350px]">
+  <Card className="w-[350px] sm:w-[600px] md:w-[800px]">
     <CardHeader>
       <CardTitle>{title}</CardTitle>
       <CardDescription>{description}</CardDescription>

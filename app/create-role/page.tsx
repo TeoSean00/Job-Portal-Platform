@@ -1,20 +1,17 @@
 import React from "react";
 
-import CreateRoleCard from "@/components/create-role/createRoleCard";
-import DatePickerWithRange from "@/components/ui/datePicker";
+// import CreateRoleCard from "@/components/create-role/createRoleCard";
+// import DatePickerWithRange from "@/components/ui/datePicker";
+import RoleForm from "@/components/create-role/RoleForm";
+import { Separator } from "@/components/ui/separator";
 
 const createRole = () => (
-  <div className="flex h-screen items-center justify-center">
-    <CreateRoleCard
-      selectOptions={[
-        { value: "finance", label: "Finance" },
-        { value: "HR", label: "Human Resource and Admin" },
-        { value: "IT", label: "Information Technology" },
-        { value: "sales", label: "Sales" },
-      ]}
-    >
-      <DatePickerWithRange />
-    </CreateRoleCard>
+  <div className="flex h-screen flex-col space-y-6">
+    <div>
+      <h3 className="text-xl font-medium">Role Creation</h3>
+    </div>
+    <Separator />
+    <RoleForm />
   </div>
 );
 
