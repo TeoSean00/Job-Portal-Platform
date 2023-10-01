@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/buttons";
 import { Combobox } from "@/components/ui/comboBox";
 import DatePickerWithRange from "@/components/ui/datePicker";
 import {
