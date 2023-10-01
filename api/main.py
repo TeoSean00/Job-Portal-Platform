@@ -1,5 +1,9 @@
 from fastapi import FastAPI
-from .routers import staff, roles, skills
+from api.routers import (
+    staff,
+    skills,
+    roles
+)
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
