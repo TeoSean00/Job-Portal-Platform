@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, List, UserCircle } from "lucide-react";
+import { ChevronRight, List, UserCircle, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
@@ -20,6 +20,11 @@ const sidebarLinks: SidebarNavItem[] = [
     title: "Roles",
     href: "/dashboard/roles",
     icon: <List />,
+  },
+  {
+    title: "Add Role",
+    href: "/create-role",
+    icon: <UserPlus />,
   },
 ];
 

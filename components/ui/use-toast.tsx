@@ -74,13 +74,14 @@ const addToRemoveQueue = (toastId: string) => {
 };
 
 export const reducer = (state: State, action: Action): State => {
+  console.log("Reducer action:", action);
   switch (action.type) {
     case "ADD_TOAST":
       return {
         ...state,
         toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
       };
-
+      console.log("Reducer new state:", state);
     case "UPDATE_TOAST":
       return {
         ...state,
@@ -162,7 +163,6 @@ function toast({ ...props }: Toast) {
       },
     },
   });
-
   return {
     id,
     dismiss,

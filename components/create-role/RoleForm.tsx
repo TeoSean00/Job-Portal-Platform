@@ -21,29 +21,19 @@ import { SelectComponent } from "@/components/ui/selectComponent";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 
-const jobTypeList = [
-  { value: "Pascal Programming", label: "Pascal Programming" },
-  { value: "Python Programming", label: "Python Programming" },
-  { value: "Certified Scrum Master", label: "Certified Scrum Master" },
-  { value: "Marketing", label: "Marketing" },
-  { value: "Scrum", label: "Scrum" },
-  { value: "UI/UX", label: "UI/UX" },
-  { value: "Product Management", label: "Product Management" },
-];
-
-const departments = ["HR", "IT", "Sales", "Finance"].map((department) => ({
-  value: department,
-  label: department,
-}));
+type RoleFormProps = {
+  skillList: Skill[];
+  departments: Department[];
+};
 
 const departmentPlaceholder = "Select a department";
 
 const skillSchema = z.object({
-  value: z.string().min(1), // Assuming each skill is represented as a string
+  value: z.string().min(1),
 });
 
 const roleFormSchema = z.object({
-  roleName: z.string().max(100, {
+  roleName: z.string().min(1, "Role Name is required").max(100, {
     message: "Role Name must not be longer than 100 characters.",
   }),
   roleDescription: z.string().min(1, "Role Description is required").max(1000),
@@ -62,7 +52,7 @@ const defaultValues: Partial<RoleFormValues> = {
   roleDescription: "",
 };
 
-const RoleForm = () => {
+const RoleForm: React.FC<RoleFormProps> = ({ skillList, departments }) => {
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleFormSchema),
     defaultValues,
@@ -78,7 +68,7 @@ const RoleForm = () => {
     toast({
       title: "You submitted the following values:",
       description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+        <pre className="mt-2 w-[340px] rounded-md bg-black p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
@@ -94,7 +84,7 @@ const RoleForm = () => {
             name="roleName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Role Name</FormLabel>
+                <FormLabel className="text-base">Role Name</FormLabel>
                 <FormControl>
                   <Input placeholder="" {...field} />
                 </FormControl>
@@ -108,7 +98,7 @@ const RoleForm = () => {
             name="roleDescription"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Role Description</FormLabel>
+                <FormLabel className="text-base">Role Description</FormLabel>
                 <FormDescription>Describe the role in detail.</FormDescription>
                 <FormControl>
                   <Textarea className="resize-none" placeholder="" {...field} />
@@ -122,7 +112,7 @@ const RoleForm = () => {
             name="departments"
             render={({ field: departmentField }) => (
               <FormItem>
-                <FormLabel>Department</FormLabel>
+                <FormLabel className="text-base">Department</FormLabel>
                 <FormDescription>
                   Select the department the role belongs in.
                 </FormDescription>
@@ -147,12 +137,12 @@ const RoleForm = () => {
             name="skills"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Skills</FormLabel>
+                <FormLabel className="text-base">Skills</FormLabel>
                 <FormDescription>Skills required for role.</FormDescription>
                 <SelectComponent
                   createAble={true}
                   isMulti={true}
-                  options={jobTypeList}
+                  options={skillList}
                   placeholder="Select Skills"
                   {...field}
                 />
@@ -166,7 +156,7 @@ const RoleForm = () => {
             name="dateRange"
             render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel>Date Range</FormLabel>
+                <FormLabel className="text-base">Date Range</FormLabel>
                 <FormDescription>
                   Select the start and end date for this role.
                 </FormDescription>
