@@ -1,2 +1,2 @@
-export * from "./buttons";
+export * from "./button";
 export * from "./separator";
