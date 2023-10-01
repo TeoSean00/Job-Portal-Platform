@@ -13,6 +13,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    // fix for the common issue were vscode doesn't realise there aren't two files with the same name, but inconsistent casing.
+    "forceConsistentCasingInFileNames": true,
     "plugins": [
       {
         "name": "next"
