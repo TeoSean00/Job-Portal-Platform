@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.routers import (
+from .routers import (
     staff,
     skills,
     roles
