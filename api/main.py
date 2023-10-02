@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# CORS policy for backend to interact with the frontend
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",

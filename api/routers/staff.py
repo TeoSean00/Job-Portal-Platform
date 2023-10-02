@@ -1,26 +1,43 @@
 from fastapi import APIRouter, Depends, HTTPException
+from typing import List
+from database.schemas import (
+  StaffDetailsPydantic, 
+  StaffReportingOfficerPydantic, 
+  StaffRolesPydantic,
+  StaffSkillsPydantic,
+  ClerkStaffMatch
+)
 
 router = APIRouter(
   prefix = "/staff",
   tags = ["Staff"],
 )
 
-
-mock_data = {
-  123: {
-    "name": "John Doe",
-    "role": "Software Developer",
-    "skills": ["Python", "Django", "FastAPI", "ReactJS", "JavaScript", "HTML", "CSS"],
+mock_data = [
+  {
+    "staff_id": 123,
+    "fname": "John",
+    "lname": "Doe",
+    "dept": "Finance",
+    "email": "johndoe@gmail.com",
+    "phone": "65-1234-5678",
+    "biz_address": "smu scis stamford road",
+    "sys_role": "staff"      
   },
-  456: {
-    "name": "John Doe2",
-    "role": "Software Tester",
-    "skills": ["Python", "React", "Flask", "TypeScript", "HTML", "CSS"],
-  }
-}
+  {
+    "staff_id": 456,
+    "fname": "Tom",
+    "lname": "Harry",
+    "dept": "Sales",
+    "email": "tomharry@gmail.com",
+    "phone": "65-4566-5678",
+    "biz_address": "smu scis stamford road",
+    "sys_role": "hr"      
+  },
+]
 
 
-@router.get("/get-all")
+@router.get("/get-all", response_model=List[StaffDetailsPydantic])
 async def get_all_staff():
   """
     ### Description:
@@ -30,7 +47,7 @@ async def get_all_staff():
     Null.
 
     ### Returns:
-    A JSON object containing the details of all staff members.
+    A list containing the details of all staff members in JSON format.
 
     ### Example:
     #### Request:
@@ -42,18 +59,28 @@ async def get_all_staff():
     ```
     #### Response:
     ```
-    {
-      123: {
-        "name": "John Doe",
-        "role": "Software Developer",
-        "skills": ["Python", "Django", "FastAPI", "ReactJS", "JavaScript", "HTML", "CSS"],
+    [
+      {
+        "staff_id": 123,
+        "fname": "John",
+        "lname": "Doe",
+        "dept": "Finance",
+        "email": "johndoe@gmail.com",
+        "phone": "65-1234-5678",
+        "biz_address": "smu scis stamford road",
+        "sys_role": "staff"      
       },
-      456: {
-        "name": "John Doe2",
-        "role": "Software Tester",
-        "skills": ["Python", "React", "Flask", "TypeScript", "HTML", "CSS"],
-      }
-    }
+      {
+        "staff_id": 456,
+        "fname": "Tom",
+        "lname": "Harry",
+        "dept": "Sales",
+        "email": "tomharry@gmail.com",
+        "phone": "65-4566-5678",
+        "biz_address": "smu scis stamford road",
+        "sys_role": "hr"      
+      },
+    ]
     ```
     ### Errors:
     `404 Not Found`: No staff members found in the system.<br /><br />
@@ -65,7 +92,7 @@ async def get_all_staff():
     raise HTTPException(status_code=404, detail="No staff found")
   
 
-@router.get("/get-staff/{staff_id}")
+@router.get("/get-staff/{staff_id}", response_model=StaffDetailsPydantic)
 async def get_staff(
   staff_id: int
   ):
@@ -90,18 +117,26 @@ async def get_staff(
     #### Response:
     ```
     {
-      123: {
-        "name": "John Doe",
-        "role": "Software Developer",
-        "skills": ["Python", "Django", "FastAPI", "ReactJS", "JavaScript", "HTML", "CSS"],
-      }
+      "staff_id": 456,
+      "fname": "Tom",
+      "lname": "Harry",
+      "dept": "Sales",
+      "email": "tomharry@gmail.com",
+      "phone": "65-4566-5678",
+      "biz_address": "smu scis stamford road",
+      "sys_role": "hr"      
     }
     ```
     ### Errors:
     `404 Not Found`: No staff member matching the given staff_id found in the system.<br /><br />
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
-    if staff_id in mock_data:
-      return mock_data[staff_id]
+    staffMatch = None
+    for staff in mock_data:
+      if staff["staff_id"] == staff_id:
+        staffMatch = staff
+        break
+    if staffMatch:
+      return staffMatch
     else:
-      raise HTTPException(status_code=404, detail="Staff with staff_id {staff_id} not found")
+      raise HTTPException(status_code=404, detail=f"Staff with staff_id: '{staff_id}' not found")
