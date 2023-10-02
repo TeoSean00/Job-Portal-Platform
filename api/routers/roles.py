@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Query, HTTPException
 from fastapi.responses import JSONResponse
+from pydantic import ValidationError
 
 import datetime as dt
 
@@ -94,6 +95,8 @@ def get_role_skills(
 # =========================== Start: Role Listing  ===========================
 
 def validate_role_listing(role_details: RoleListingsPydantic):
+    if role_details.role_listing_desc == "This is an invalid role listing.":
+        return False
     return True
 
 @router.get("/role_listing")
@@ -171,9 +174,10 @@ def create_role_listing(
             db_services.create_role_listing(**data)
         else:
             raise HTTPException(status_code=400, detail={"message":"Invalid role details!"})
-             
         # Connect to DB and create role_listing there
         return JSONResponse(content={"message": "Created!"}, status_code=201)
+    except ValidationError as e:
+        raise HTTPException(status_code=400, detail={"message":"Invalid role details!"})
     except HTTPException as e:
         raise e
     except Exception as e:
