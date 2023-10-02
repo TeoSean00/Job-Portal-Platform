@@ -2,8 +2,12 @@
 /* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable import/no-cycle */
 // Inspired by react-hot-toast library
-import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
+
+"use client";
+
+import type { ToastActionElement, ToastProps } from "@/components/ui";
 
 import * as React from "react";
 

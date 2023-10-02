@@ -1,3 +1,7 @@
+/* eslint-disable import/no-cycle */
+
+"use client";
+
 import type * as LabelPrimitive from "@radix-ui/react-label";
 import type { ControllerProps, FieldPath, FieldValues } from "react-hook-form";
 
@@ -5,7 +9,7 @@ import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 import { Controller, FormProvider, useFormContext } from "react-hook-form";
 
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 const Form = FormProvider;

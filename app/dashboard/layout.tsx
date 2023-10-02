@@ -1,6 +1,7 @@
 import "../globals.scss";
 
 import Sidebar from "@/components/Sidebar";
+import { Toaster } from "@/components/ui/toaster";
 import { inter } from "@/fonts";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,7 @@ export default function RootLayout({
       <div className="flex flex-auto">
         <aside>
           <Sidebar />
+          <Toaster />
         </aside>
         <main className="grow p-10">{children}</main>
       </div>

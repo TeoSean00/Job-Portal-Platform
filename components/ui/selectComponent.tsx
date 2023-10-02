@@ -33,13 +33,13 @@ const MultiValueRemove = (props: MultiValueRemoveProps) => (
 );
 
 const controlStyles = {
-  base: "border border-border rounded-lg bg-background hover:cursor-pointer hover:bg-secondary",
+  base: "border border-border rounded-lg bg-background hover:cursor-pointer hover:bg-secondary h-10",
   focus: "border-border ring-ring ring-primary-500",
   nonFocus: "border-border",
 };
 const placeholderStyles = "text-muted-foreground text-sm ml-1";
 const selectInputStyles = "text-foreground text-sm ml-1";
-const valueContainerStyles = "text-foreground text-sm";
+const valueContainerStyles = "text-foreground text-sm ml-4";
 const singleValueStyles = "ml-1";
 const multiValueStyles =
   "ml-1 bg-background border border-border rounded items-center py-0.5 pl-2 pr-1 gap-1.5";
@@ -72,17 +72,6 @@ type SelectComponentProps = {
   createAble: boolean;
   placeholder?: string;
 };
-
-// type SelectComponentProps = {
-//   options: any[];
-//   value?: any;
-//   onChange?: (value: any) => void;
-//   isMulti?: boolean;
-//   isDisabled?: boolean;
-//   isLoading?: boolean;
-//   createAble: boolean;
-//   placeholder?: string;
-// };
 
 export const SelectComponent = ({
   options,

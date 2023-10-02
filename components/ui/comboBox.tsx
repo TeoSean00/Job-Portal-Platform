@@ -1,9 +1,11 @@
+/* eslint-disable import/no-cycle */
+
 "use client";
 
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import {
   Command,
   CommandEmpty,

@@ -23,7 +23,7 @@ const sidebarLinks: SidebarNavItem[] = [
   },
   {
     title: "Add Role",
-    href: "/create-role",
+    href: "/dashboard/create-role",
     icon: <UserPlus />,
   },
 ];
