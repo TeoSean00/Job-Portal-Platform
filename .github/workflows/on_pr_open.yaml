@@ -116,12 +116,10 @@ jobs:
         uses: dschep/install-pipenv-action@v1
       - name: Install dependencies
         run: |
-          cd api 
           pipenv install --dev
       - name: Build FastAPI
         run: |
-          cd api
-          pipenv run uvicorn main:app &  # Start in background
+          pipenv run uvicorn app.main:app &  # Start in background
           sleep 5  # Wait for 5 seconds
           kill $!  # Kill the background process
 
