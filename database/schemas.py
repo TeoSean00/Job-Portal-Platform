@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from enums import (
+from database.enums import (
     RoleApplicationStatusEnum,
     RoleTypeEnum,
     StatusEnum,
@@ -9,6 +9,19 @@ from enums import (
     VerificationStatusEnum,
 )
 from pydantic import BaseModel
+
+
+
+class User(BaseModel):
+    """
+    Represents the requestor user information.
+    """
+    user_token:int
+    role: SysRoleEnum
+
+
+
+
 
 
 class RoleDetailsPydantic(BaseModel):
@@ -35,18 +48,34 @@ class StaffDetailsPydantic(BaseModel):
         orm_mode = True
 
 
+# class RoleListingsPydantic(BaseModel):
+#     role_listing_id: int
+#     role_id: int
+#     role_listing_desc: str
+#     role_listing_source: int
+#     role_listing_open: datetime
+#     role_listing_close: datetime
+#     role_listing_hide: Optional[datetime]
+#     role_listing_creator: int
+#     role_listing_ts_create: datetime
+#     role_listing_updater: int
+#     role_listing_ts_update: Optional[datetime]
+
+#     class Config:
+#         orm_mode = True
+
 class RoleListingsPydantic(BaseModel):
-    role_listing_id: int
-    role_id: int
+    # Updated model to get from frontend
+    role_id:int
     role_listing_desc: str
     role_listing_source: int
-    role_listing_open: datetime
-    role_listing_close: datetime
-    role_listing_hide: Optional[datetime]
+    role_listing_open: str
+    role_listing_close: str
+    role_listing_hide: str
     role_listing_creator: int
-    role_listing_ts_create: datetime
+    role_listing_ts_create: str
     role_listing_updater: int
-    role_listing_ts_update: Optional[datetime]
+    role_listing_ts_update: str
 
     class Config:
         orm_mode = True

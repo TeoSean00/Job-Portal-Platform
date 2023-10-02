@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Query, HTTPException
+from fastapi.responses import JSONResponse
+
 import datetime as dt
 
 import api.routers.common_services as common_services
@@ -91,6 +93,9 @@ def get_role_skills(
 
 # =========================== Start: Role Listing  ===========================
 
+def validate_role_listing(role_details: RoleListingsPydantic):
+    return True
+
 @router.get("/role_listing")
 def get_role_listing(
     user: User,
@@ -146,7 +151,7 @@ def create_role_listing(
     try:
         # Validate form-details
         role_listing_ts_create = dt.datetime.utcnow()
-        if common_services.validate_role_listing(role_details):
+        if validate_role_listing(role_details):
             data = {
                 "role_id": 234511581, # Links to ID inside role details
                 "role_listing_desc": role_details.role_listing_desc,
@@ -155,12 +160,12 @@ def create_role_listing(
                 "role_listing_close": common_services.convert_str_to_datetime(role_details.role_listing_close),
                 "role_listing_hide": common_services.convert_str_to_datetime(role_details.role_listing_hide),
                 "role_listing_creator": user.user_token,
-                "role_listing_ts_create": role_listing_ts_create,
+                "role_listing_ts_create": common_services.convert_str_to_datetime(role_listing_ts_create),
                 # "role_listing_updater": None,
                 # "role_listing_ts_update": None,
                 # Set the updater and update time to the creator on first occurence
                 "role_listing_updater": user.user_token,
-                "role_listing_ts_update": role_listing_ts_create,
+                "role_listing_ts_update": common_services.convert_str_to_datetime(role_listing_ts_create),
             }
             # Create role_listing
             db_services.create_role_listing(**data)
@@ -168,7 +173,7 @@ def create_role_listing(
             raise HTTPException(status_code=400, detail={"message":"Invalid role details!"})
              
         # Connect to DB and create role_listing there
-        return {"message": "Created!"}    
+        return JSONResponse(content={"message": "Created!"}, status_code=201)
     except HTTPException as e:
         raise e
     except Exception as e:

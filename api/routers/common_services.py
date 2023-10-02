@@ -17,7 +17,7 @@ def authenticate_user(
     is either a staff or admin.
     """
     # 4 corrosponds to invalid in SysRoleEnum
-    if user.role == 4:
+    if user.role == "invalid":
         return False
     return True
 
@@ -25,7 +25,10 @@ def convert_str_to_datetime(date_str:str):
     """
     Function to convert string to datetime object.
     """
-    return dt.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+    if type(date_str) == str:
+        return dt.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+    else:
+        return date_str
 
 def get_attrs_from_model(model):
     """
