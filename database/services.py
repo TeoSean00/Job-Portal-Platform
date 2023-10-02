@@ -375,17 +375,26 @@ def create_role_skill(role_id: int, skill_id: int):
     db.close()
     return role_skill
 
-
-def get_role_skill(role_id: int, skill_id: int):
+# Original
+# def get_role_skill(role_id: int, skill_id: int):
+#     db = SessionLocal()
+#     role_skill = (
+#         db.query(RoleSkills)
+#         .filter(RoleSkills.role_id == role_id, RoleSkills.skill_id == skill_id)
+#         .first()
+#     )
+#     db.close()
+#     return role_skill
+# Updated, allow us to get all skills associated with a role id
+def get_role_skill(role_id: int):
     db = SessionLocal()
     role_skill = (
         db.query(RoleSkills)
-        .filter(RoleSkills.role_id == role_id, RoleSkills.skill_id == skill_id)
+        .filter(RoleSkills.role_id == role_id)
         .first()
     )
     db.close()
     return role_skill
-
 
 def update_role_skill(role_id: int, skill_id: int):
     db = SessionLocal()
