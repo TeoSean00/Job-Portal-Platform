@@ -1,16 +1,15 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import pprint
 import datetime as dt
 from enum import Enum, auto
 
 from fastapi import HTTPException, Query
 
 # Import database services
-import database.services as db_services
-
+import database.services as db_services # This is for npm run dev
 app = FastAPI()
 
+# =========================== Start: Pydantic Classes ===========================
 class RolesEnum(str, Enum):
     ADMIN = auto()
     STAFF = auto()
@@ -33,6 +32,8 @@ class RoleListing(BaseModel):
     role_listing_hide: str
     role_listing_creator: int
     role_listing_updater: int
+# =========================== End: Pydantic Classes ===========================
+# =========================== Start: Helper Functions  ===========================
 
 def authenticate_user(
         user:User,
@@ -72,15 +73,94 @@ def validate_role_listing(role_details: RoleListing):
         return False
     return True
 
-    
+# =========================== End: Helper Functions  ===========================
+# =========================== Start: End points  ===========================
+
 @app.get("/api/python")
 def hello_world():
-    _ = db_services.get_staff_details(123)
-    print(get_attrs_from_model(_.all()[0]))
-    for tmp in _.all():
-        print(tmp.staff_id)
-
+    # Modify the below function to easily retrieve data from db
+    # _ = db_services.get_staff_details(123)
+    # print(get_attrs_from_model(_.all()[0]))
+    # for tmp in _.all():
+    #     print(tmp.staff_id)
     return {"message": "Hello World"}
+ 
+# =========================== Start: Role Details  ===========================
+
+@app.get("/api/role_details")
+def get_role_details(
+    user: User,
+    role_id: int = Query(None, description="Optional role_id"),
+):
+    """
+    End point that returns all the created role_listings inside the table.
+    If a role_id is specified, only return information for that role_id
+    """
+    if not authenticate_user(user, "ADMIN"):
+        raise HTTPException(status_code=401, detail="Unauthorized user!")
+    try:
+        # Return role details for all
+        if role_id == None:
+            role_details = db_services.get_all_role_details()
+            role_detail = []
+            for item in role_details.all():
+                role_detail.append(
+                    convert_sqlalchemy_object_to_dict(item)
+                )
+            return {"role_details": role_detail}
+        else:
+            role_detail = db_services.get_role_details(role_id)
+            if role_detail == None:
+                raise HTTPException(
+                    status_code=404, 
+                    detail={
+                        "message":f"Role details with id {role_id} not found!"
+                        })
+            return {"role_details": convert_sqlalchemy_object_to_dict(role_detail)}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        # This catches all other exceptions
+        raise HTTPException(status_code=500, detail={"message":"Internal Server Error!"})
+    finally:
+        # Close DB connection if needed
+        pass
+# =========================== End: Role Details  ===========================
+
+# =========================== Start: Role Skills  ===========================
+
+@app.get("/api/role_skills")
+def get_role_skills(
+    user:User,
+    role_id: int = Query(description="Required role_id"),
+):
+    """
+    End point that takes in a role ID and returns the skills associated with that role.
+    """
+    if not authenticate_user(user, "ADMIN", "STAFF", "DIRECTOR"):
+        raise HTTPException(status_code=401, detail="Unauthorized user!")
+    try:
+        role_skills = db_services.get_role_skill(role_id)
+        if role_skills == None:
+            raise HTTPException(
+                status_code=404, 
+                detail={
+                    "message":f"Role with id {role_id} either has no skills, or does not exist!"
+                    })
+        return {"role_skills": convert_sqlalchemy_object_to_dict(role_skills)}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        # This catches all other exceptions
+        raise HTTPException(status_code=500, detail={"message":"Internal Server Error!"})
+    finally:
+        # Close DB connection if needed
+        pass
+# =========================== End: Role Skills ===========================
+
+
+
+# =========================== Start: Role Listing  ===========================
 
 @app.get("/api/role_listing")
 def get_role_listing(
@@ -106,7 +186,7 @@ def get_role_listing(
             return {"role_listing": role_listing}
         # Return role listing for specific role_listing_id
         else:
-            role_listing = db_services.get_role_listing(role_listing_id)
+            role_listing = db_services.get_role_listings(role_listing_id)
             if role_listing == None:
                 raise HTTPException(
                     status_code=404, 
@@ -168,3 +248,6 @@ def create_role_listing(
     finally:
         # Close db connection 
         pass
+# =========================== End: Role Listing  ===========================
+
+# =========================== End: Endpoints  ===========================
