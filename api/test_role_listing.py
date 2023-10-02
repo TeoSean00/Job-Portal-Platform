@@ -58,3 +58,4 @@ def test_invalid_create_role_listing():
     # Assert
     assert response.status_code == 400
     assert response.json() == {'detail': {'message': 'Invalid role details!'}}
+
