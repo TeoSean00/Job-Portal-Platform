@@ -24,6 +24,11 @@ def get_role_details(role_id: int):
     db.close()
     return role
 
+def get_all_role_details():
+    db = SessionLocal()
+    role = db.query(RoleDetails)
+    db.close()
+    return role
 
 def create_role_details(role_name: str, role_description: str, role_status: str):
     db = SessionLocal()
