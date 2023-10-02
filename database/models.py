@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
 
-from database.database import Base
+from database import Base
 
 
 class RoleDetails(Base):

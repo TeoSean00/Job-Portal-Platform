@@ -1,7 +1,7 @@
 import datetime as dt
 
 from fastapi import HTTPException
-from database.models import (
+from models import (
     ClerkStaffMatch,
     RoleApplications,
     RoleDetails,
@@ -14,9 +14,10 @@ from database.models import (
     StaffSkills,
 )
 
-from database.database import SessionLocal
+from database import SessionLocal
 
 # RoleDetails CRUD operations
+
 
 def get_role_details(role_id: int):
     db = SessionLocal()
