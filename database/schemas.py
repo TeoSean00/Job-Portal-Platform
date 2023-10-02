@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from enums import (
+from .enums import (
     RoleApplicationStatusEnum,
     RoleTypeEnum,
     StatusEnum,
