@@ -11,6 +11,7 @@ import {
   SelectComponent,
   Textarea,
   toast,
+  ToastAction,
 } from "@/components/ui";
 import DatePickerWithRange from "@/components/ui/datePickerWithRange";
 import {
@@ -22,6 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { longDateTime } from "@/lib/utils";
 
 type RoleFormProps = {
   skillList: Skill[];
@@ -54,6 +56,9 @@ const defaultValues: Partial<RoleFormValues> = {
   roleDescription: "",
 };
 
+const currentDate = new Date();
+const formattedDate = longDateTime.format(currentDate);
+
 const RoleForm: React.FC<RoleFormProps> = ({ skillList, departments }) => {
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleFormSchema),
@@ -68,14 +73,16 @@ const RoleForm: React.FC<RoleFormProps> = ({ skillList, departments }) => {
 
   function onSubmit(data: RoleFormValues) {
     toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-black p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      title: "Role Successfully Created!",
+      description: formattedDate,
+      action: <ToastAction altText="ok">Dismiss</ToastAction>,
     });
   }
+
+  // For connecting BE to FE to see the form object put this code into description
+  // <pre className="mt-2 flex w-[340px] flex-wrap rounded-md bg-green-950 p-4">
+  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+  //       </pre>
 
   return (
     <div className="">
