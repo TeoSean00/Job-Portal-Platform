@@ -17,6 +17,8 @@ def authenticate_user(
     is either a staff or admin.
     """
     # 4 corrosponds to invalid in SysRoleEnum
+    # if user.role ==  *role:
+    #     return True
     if user.role == "invalid":
         return False
     return True

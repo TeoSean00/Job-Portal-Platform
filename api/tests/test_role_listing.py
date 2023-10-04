@@ -5,7 +5,6 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 
-import datetime
 import api.routers.common_services as common_services
 from fastapi.testclient import TestClient
 from unittest.mock import patch, call
@@ -20,7 +19,7 @@ client = TestClient(app)
 @patch("api.routers.roles.db_services.create_role_listing")
 def test_success_create_role_listing(mock_create_role_listing):
     # Arrange
-    user = User(user_token=123456789, role="staff")
+    user = User(user_token=123456789, role="manager")
 
     role_details = RoleListingsPydantic(
         role_id= 234511581, # Existing ID
