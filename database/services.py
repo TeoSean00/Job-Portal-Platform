@@ -327,7 +327,12 @@ def get_skill_details(skill_id: int):
     db.close()
     return skill
 
-
+def get_all_skills():
+    db = SessionLocal()
+    skills = db.query(SkillDetails).distinct().all()
+    db.close()
+    return skills
+    
 def create_skill_details(skill_name: str, skill_status: str):
     db = SessionLocal()
     skill = SkillDetails(skill_name=skill_name, skill_status=skill_status)

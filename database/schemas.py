@@ -16,13 +16,8 @@ class User(BaseModel):
     """
     Represents the requestor user information.
     """
-    user_token:int
-    role: SysRoleEnum
-
-
-
-
-
+    user_token:int #Staff ID
+    role: SysRoleEnum # Their actual role 
 
 class RoleDetailsPydantic(BaseModel):
     role_id: int
