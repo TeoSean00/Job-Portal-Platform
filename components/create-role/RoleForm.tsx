@@ -25,11 +25,6 @@ import {
 } from "@/components/ui/form";
 import { longDateTime } from "@/lib/utils";
 
-type RoleFormProps = {
-  skillList: Skill[];
-  departments: Department[];
-};
-
 const departmentPlaceholder = "Select a department";
 
 const skillSchema = z.object({
@@ -48,8 +43,6 @@ const roleFormSchema = z.object({
     to: z.date(),
   }),
 });
-
-type RoleFormValues = z.infer<typeof roleFormSchema>;
 
 // This can come from your database or API.
 const defaultValues: Partial<RoleFormValues> = {

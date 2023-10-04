@@ -6,3 +6,10 @@ declare type SidebarNavItem = {
 
 declare type Skill = { value: string; label: string };
 declare type Department = { value: string; label: string };
+
+declare type RoleFormProps = {
+  skillList: Skill[];
+  departments: Department[];
+};
+
+declare type RoleFormValues = z.infer<typeof roleFormSchema>;
