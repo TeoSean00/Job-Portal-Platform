@@ -33,3 +33,7 @@ app.add_middleware(
 app.include_router(staff.router)
 app.include_router(roles.router)
 app.include_router(skills.router)
+
+@app.get("/")
+def default_message():
+    return {"add /docs at end of the URL to see the Swagger UI Documentation"}

@@ -138,9 +138,7 @@ jobs:
         uses: dschep/install-pipenv-action@v1
       - name: Install dependencies
         run: |
-          cd api  
           pipenv install --dev
       - name: Run unit tests
         run: |
-          cd api
-          pipenv run pytest
+          pipenv run pytest .
