@@ -1,4 +1,5 @@
 import datetime as dt
+from sqlalchemy.exc import OperationalError
 
 from fastapi import HTTPException
 from database.models import (
@@ -15,6 +16,19 @@ from database.models import (
 )
 
 from database.database import SessionLocal
+
+# Healthcheck
+def healthcheck():
+    try:
+        db = SessionLocal()
+        
+        # Attempt a simple query to check the database connection
+        db.query(RoleDetails).first()
+        
+        db.close()
+        return True  # Database is reachable
+    except OperationalError:
+        return False  # Database is not reachable
 
 # RoleDetails CRUD operations
 

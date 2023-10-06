@@ -33,3 +33,15 @@ app.add_middleware(
 app.include_router(staff.router)
 app.include_router(roles.router)
 app.include_router(skills.router)
+
+@app.get("/healthcheck", response_model=dict)
+async def healthcheck():
+    db_status = db_services.healthcheck()
+    if db_status:
+        msg = "Database connection successful!"
+    else:
+        msg = "Database connection failed!"
+    return {
+        "fastapi": "Successfully connected to FastAPI!",
+        "database" : msg
+        }
