@@ -6,6 +6,10 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 
+interface RowObject {
+  getValue: (id: string) => string[];
+}
+
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Payment = {
@@ -47,7 +51,7 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "skillRequired",
     header: "Required Skills",
-    filterFn: (row, id, value) => {
+    filterFn: (row: RowObject, id: string, value: string[]) => {
       if (!Array.isArray(value)) {
         return false; // Handle the case where value is not an array
       }
