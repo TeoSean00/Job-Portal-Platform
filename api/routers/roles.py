@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Query, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
+import json
 
 import datetime as dt
 
@@ -40,7 +41,7 @@ def get_role_details(
             role_detail = []
             for item in role_details.all():
                 role_detail.append(
-                    common_services.convert_sqlalchemy_object_to_dict(item)
+                    json.dumps(item)
                 )
             return {"role_details": role_detail}
         else:
@@ -51,7 +52,7 @@ def get_role_details(
                     detail={
                         "message":f"Role details with id {role_id} not found!"
                         })
-            return {"role_details": common_services.convert_sqlalchemy_object_to_dict(role_detail)}
+            return {"role_details": json.dumps(role_detail)}
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -80,7 +81,7 @@ def get_role_skills(
                 detail={
                     "message":f"Role with id {role_id} either has no skills, or does not exist!"
                     })
-        return {"role_skills": common_services.convert_sqlalchemy_object_to_dict(role_skills)}
+        return {"role_skills": json.dumps(role_skills)}
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -118,7 +119,7 @@ def get_role_listing(
             role_listing = []
             for item in role_listings.all():
                 role_listing.append(
-                    common_services.convert_sqlalchemy_object_to_dict(item)
+                    json.dumps(item)
                 )
             return {"role_listing": role_listing}
         # Return role listing for specific role_listing_id
@@ -130,7 +131,7 @@ def get_role_listing(
                     detail={
                         "message":f"Role listing with id {role_listing_id} not found!"
                         })
-            return {"role_listing": common_services.convert_sqlalchemy_object_to_dict(role_listing)}
+            return {"role_listing": json.dumps(role_listing)}
     except HTTPException as e:
         raise e
     except Exception as e:
