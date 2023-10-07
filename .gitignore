@@ -37,3 +37,7 @@ venv/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python cache
+*.pyc
+__pycache__/

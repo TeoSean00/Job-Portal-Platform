@@ -1,7 +1,7 @@
 import datetime as dt
 
 from fastapi import HTTPException
-from models import (
+from database.models import (
     ClerkStaffMatch,
     RoleApplications,
     RoleDetails,
@@ -14,7 +14,7 @@ from models import (
     StaffSkills,
 )
 
-from database import SessionLocal
+from database.database import SessionLocal
 
 # RoleDetails CRUD operations
 
@@ -25,6 +25,11 @@ def get_role_details(role_id: int):
     db.close()
     return role
 
+def get_all_role_details():
+    db = SessionLocal()
+    role = db.query(RoleDetails)
+    db.close()
+    return role
 
 def create_role_details(role_name: str, role_description: str, role_status: str):
     db = SessionLocal()
@@ -156,6 +161,13 @@ def get_role_listings(role_listing_id: int):
     db.close()
     return role_listing
 
+def get_all_role_listings():
+    db = SessionLocal()
+    role_listing = (
+        db.query(RoleListings)
+    )
+    db.close()
+    return role_listing
 
 def create_role_listing(
     role_id: int,
@@ -364,17 +376,26 @@ def create_role_skill(role_id: int, skill_id: int):
     db.close()
     return role_skill
 
-
-def get_role_skill(role_id: int, skill_id: int):
+# Original
+# def get_role_skill(role_id: int, skill_id: int):
+#     db = SessionLocal()
+#     role_skill = (
+#         db.query(RoleSkills)
+#         .filter(RoleSkills.role_id == role_id, RoleSkills.skill_id == skill_id)
+#         .first()
+#     )
+#     db.close()
+#     return role_skill
+# Updated, allow us to get all skills associated with a role id
+def get_role_skill(role_id: int):
     db = SessionLocal()
     role_skill = (
         db.query(RoleSkills)
-        .filter(RoleSkills.role_id == role_id, RoleSkills.skill_id == skill_id)
+        .filter(RoleSkills.role_id == role_id)
         .first()
     )
     db.close()
     return role_skill
-
 
 def update_role_skill(role_id: int, skill_id: int):
     db = SessionLocal()
