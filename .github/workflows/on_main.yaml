@@ -73,6 +73,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"]
+    env:
+      AWS_RDS_MYSQL_URL: ${{ secrets.AWS_RDS_MYSQL_URL }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -98,6 +100,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"]
+    env:
+      AWS_RDS_MYSQL_URL: ${{ secrets.AWS_RDS_MYSQL_URL }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -108,12 +112,10 @@ jobs:
         uses: dschep/install-pipenv-action@v1
       - name: Install dependencies
         run: |
-          cd api 
           pipenv install --dev
       - name: Build FastAPI
         run: |
-          cd api
-          pipenv run uvicorn main:app &  # Start in background
+          pipenv run uvicorn api.main:app &  # Start in background
           sleep 5  # Wait for 5 seconds
           kill $!  # Kill the background process
   
@@ -124,6 +126,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"]
+    env:
+      AWS_RDS_MYSQL_URL: ${{ secrets.AWS_RDS_MYSQL_URL }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -134,9 +138,7 @@ jobs:
         uses: dschep/install-pipenv-action@v1
       - name: Install dependencies
         run: |
-          cd api  
           pipenv install --dev
       - name: Run unit tests
         run: |
-          cd api
-          pipenv run pytest
+          pipenv run pytest .
