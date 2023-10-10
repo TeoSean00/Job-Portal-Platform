@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, HTTPException
+from fastapi import APIRouter, Query, HTTPException, Header
 from typing import List
 
 import api.routers.common_services as common_services
@@ -21,17 +21,17 @@ def default_message():
 
 @router.get("/get-all")
 def get_all_skills(
-        user_token:int,
-        role:str
+    user_token: int = Header(..., description="User token"),
+    role: str = Header(..., description="User role"),
 ):
     """
     End point that returns all skills inside skills table.
     """
-    user = User(
-        user_token = user_token,
-        role = role
-    )
-    if not common_services.authenticate_user(user, "STAFF"):
+
+    if not common_services.authenticate_user(            
+            User(user_token=user_token, role=role),
+            "STAFF"
+        ):
 
        raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:

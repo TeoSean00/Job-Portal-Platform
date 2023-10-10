@@ -26,8 +26,8 @@ def default_message():
 # =========================== Start: Role Details  ===========================
 @router.get("/role_details")
 def get_role_details(
-    user_token: int = Query(..., description="User token"),
-    role: str = Query(..., description="User role"),
+    user_token: int = Header(..., description="User token"),
+    role: str = Header(..., description="User role"),
     role_id: int = Query(None,  description="Role ID"),
 ):
 
@@ -36,8 +36,8 @@ def get_role_details(
     If a role_id is specified, only return information for that role_id
     """
     if not common_services.authenticate_user(
-        User(user_token=user_token, role=role), 
-        "ADMIN"
+            User(user_token=user_token, role=role), 
+            "ADMIN"
         ):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
@@ -49,7 +49,7 @@ def get_role_details(
             if type(role_details) == dict:
                 return {"role_details": role_details}
             for item in role_details.all():
-                # For some reason, json.dumps don't work for this particular object
+                # For some reason, common_services.convert_sqlalchemy_object_to_dict don't work for this particular object
                 role_details_dict = common_services.convert_sqlalchemy_object_to_dict(item)
          
                 role_detail.append(
@@ -72,7 +72,6 @@ def get_role_details(
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(e)
         # This catches all other exceptions
         raise HTTPException(status_code=500, detail={"message":"Internal Server Error!"})
     finally:
@@ -82,13 +81,17 @@ def get_role_details(
 
 @router.get("/role_skills")
 def get_role_skills(
-    user:User,
+    user_token: int = Header(..., description="User token"),
+    role: str = Header(..., description="User role"),
     role_id: int = Query(description="Required role_id"),
 ):
     """
     End point that takes in a role ID and returns the skills associated with that role.
     """
-    if not common_services.authenticate_user(user, "ADMIN", "STAFF", "DIRECTOR"):
+    if not common_services.authenticate_user(
+                    User(user_token=user_token, role=role), 
+                    "ADMIN", "STAFF", "DIRECTOR"
+                    ):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
         role_skills = db_services.get_role_skill(role_id)
@@ -98,7 +101,7 @@ def get_role_skills(
                 detail={
                     "message":f"Role with id {role_id} either has no skills, or does not exist!"
                     })
-        return {"role_skills": json.dumps(role_skills)}
+        return {"role_skills": common_services.convert_sqlalchemy_object_to_dict(role_skills)}
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -119,7 +122,8 @@ def validate_role_listing(role_details: RoleListingsPydantic):
 
 @router.get("/role_listing")
 def get_role_listing(
-    user: User,
+    user_token: int = Header(..., description="User token"),
+    role: str = Header(..., description="User role"),
     role_listing_id: int = Query(None, description="Optional role_listing_id"),
 ):
     """
@@ -127,23 +131,30 @@ def get_role_listing(
     If role_listing_id is provided, it returns information about that ID.
     If role_listing_id is blank, it returns all role_listings.
     """
-    if not common_services.authenticate_user(user, "ADMIN", "STAFF", "DIRECTOR"):
+    if not common_services.authenticate_user(            
+            User(user_token=user_token, role=role), 
+            "ADMIN", "STAFF", "DIRECTOR"
+        ):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
         # Return role listing for all
         if role_listing_id == None:
             role_listings = db_services.get_all_role_listings()
             role_listing = []
+            # For testing purposes
+            if type(role_listings) == dict:
+                return {"role_listing": role_listings}
             for item in role_listings.all():
-                
                 role_listing.append(
                     common_services.convert_sqlalchemy_object_to_dict(item)
-                    # json.dumps(item)
                 )
             return {"role_listing": role_listing}
         # Return role listing for specific role_listing_id
         else:
             role_listing = db_services.get_role_listings(role_listing_id)
+            # For testing purposes, since cannot return SQLAlchemy object
+            if type(role_listing) == dict:
+                return {"role_listing": role_listing}
             if role_listing == None:
                 raise HTTPException(
                     status_code=404, 
@@ -155,6 +166,7 @@ def get_role_listing(
         raise e
     except Exception as e:
         # This catches all other exceptions
+        print(e)
         raise HTTPException(status_code=500, detail={"message":"Internal Server Error!"})
     finally:
         # Close DB connection if needed
@@ -162,32 +174,36 @@ def get_role_listing(
 
 @router.post("/role_listing")
 def create_role_listing(
-    user: User,
-    role_details: RoleListingsPydantic
+    role_details: RoleListingsPydantic,
+    user_token: int = Header(..., description="User token"),
+    role: str = Header(..., description="User role")
     ):
     """
     End point that takes in a role_listing, validates and creates it.
     """
     # Authenticate user 
-    if not common_services.authenticate_user(user, "ADMIN"):
+    if not common_services.authenticate_user(
+            User(user_token=user_token, role=role),
+            "ADMIN"
+            ):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
         # Validate form-details
         role_listing_ts_create = dt.datetime.utcnow()
         if validate_role_listing(role_details):
             data = {
-                "role_id": 234511581, # Links to ID inside role details
+                "role_id": role_details.role_id, # Links to ID inside role details
                 "role_listing_desc": role_details.role_listing_desc,
-                "role_listing_source": user.user_token,
+                "role_listing_source": user_token,
                 "role_listing_open": common_services.convert_str_to_datetime(role_details.role_listing_open),
                 "role_listing_close": common_services.convert_str_to_datetime(role_details.role_listing_close),
                 "role_listing_hide": common_services.convert_str_to_datetime(role_details.role_listing_hide),
-                "role_listing_creator": user.user_token,
+                "role_listing_creator": user_token,
                 "role_listing_ts_create": common_services.convert_str_to_datetime(role_listing_ts_create),
                 # "role_listing_updater": None,
                 # "role_listing_ts_update": None,
                 # Set the updater and update time to the creator on first occurence
-                "role_listing_updater": user.user_token,
+                "role_listing_updater": user_token,
                 "role_listing_ts_update": common_services.convert_str_to_datetime(role_listing_ts_create),
             }
             # Create role_listing
@@ -201,6 +217,7 @@ def create_role_listing(
     except HTTPException as e:
         raise e
     except Exception as e:
+
         # This catches all other exceptions
         raise HTTPException(status_code=500, detail={"message":"Internal Server Error!"})
     finally:
