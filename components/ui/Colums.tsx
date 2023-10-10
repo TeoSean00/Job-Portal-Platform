@@ -4,7 +4,7 @@ import type { ColumnDef, Row } from "@tanstack/react-table";
 
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui";
 
 interface RowObject {
   getValue: (id: string) => string[];

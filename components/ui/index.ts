@@ -14,4 +14,5 @@ export * from "./separator";
 export * from "./textarea";
 export * from "./toast";
 export * from "./toaster";
+export * from "./badge";
 export * from "./use-toast";
