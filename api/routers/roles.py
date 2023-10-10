@@ -135,8 +135,10 @@ def get_role_listing(
             role_listings = db_services.get_all_role_listings()
             role_listing = []
             for item in role_listings.all():
+                
                 role_listing.append(
-                    json.dumps(item)
+                    common_services.convert_sqlalchemy_object_to_dict(item)
+                    # json.dumps(item)
                 )
             return {"role_listing": role_listing}
         # Return role listing for specific role_listing_id
@@ -148,7 +150,7 @@ def get_role_listing(
                     detail={
                         "message":f"Role listing with id {role_listing_id} not found!"
                         })
-            return {"role_listing": json.dumps(role_listing)}
+            return {"role_listing": common_services.convert_sqlalchemy_object_to_dict(role_listing)}
     except HTTPException as e:
         raise e
     except Exception as e:
