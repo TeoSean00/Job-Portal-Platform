@@ -21,7 +21,7 @@ import {
 import * as React from "react";
 
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 import {
   Table,
   TableBody,

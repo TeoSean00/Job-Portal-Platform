@@ -4,15 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 
-import {
-  Button,
-  Combobox,
-  Input,
-  SelectComponent,
-  Textarea,
-  toast,
-  ToastAction,
-} from "@/components/ui";
+import { Button } from "@/components/ui/Button";
+import { Combobox } from "@/components/ui/comboBox";
 import DatePickerWithRange from "@/components/ui/datePickerWithRange";
 import {
   Form,
@@ -23,6 +16,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { SelectComponent } from "@/components/ui/selectComponent";
+import { Textarea } from "@/components/ui/textarea";
+import { ToastAction } from "@/components/ui/toast";
+import { toast } from "@/components/ui/use-toast";
 import { longDateTime } from "@/lib/utils";
 
 type RoleFormProps = {

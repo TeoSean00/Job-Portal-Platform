@@ -3,7 +3,8 @@ import type { Column, RowModel } from "@tanstack/react-table";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import React, { useState } from "react";
 
-import { Button, Badge } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/badge";
 import {
   Command,
   CommandEmpty,

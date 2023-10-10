@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-export * from "./button";
+export * from "./Button";
 export * from "./calendar";
 export * from "./comboBox";
 export * from "./command";

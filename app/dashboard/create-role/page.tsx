@@ -1,7 +1,7 @@
 import React from "react";
 
 import RoleForm from "@/components/create-role/RoleForm";
-import { Separator } from "@/components/ui";
+import { Separator } from "@/components/ui/separator";
 
 const skillList: Skill[] = [
   { value: "Pascal Programming", label: "Pascal Programming" },

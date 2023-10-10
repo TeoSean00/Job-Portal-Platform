@@ -3,7 +3,7 @@
 import { useSession, SignOutButton } from "@clerk/nextjs";
 import React from "react";
 
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 
 const DashboardPage = () => {
   const { isLoaded, session } = useSession();
