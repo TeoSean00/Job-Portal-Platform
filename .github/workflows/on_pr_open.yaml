@@ -81,6 +81,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"]
+    env:
+      AWS_RDS_MYSQL_URL: ${{ secrets.AWS_RDS_MYSQL_URL }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -106,6 +108,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"]
+    env:
+      AWS_RDS_MYSQL_URL: ${{ secrets.AWS_RDS_MYSQL_URL }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -130,6 +134,8 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"]
+    env:
+      AWS_RDS_MYSQL_URL: ${{ secrets.AWS_RDS_MYSQL_URL }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
