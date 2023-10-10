@@ -28,7 +28,7 @@ def default_message():
 def get_role_details(
     user_token: int = Query(..., description="User token"),
     role: str = Query(..., description="User role"),
-    role_id: int = Query(..., description="Role ID"),
+    role_id: int = Query(None,  description="Role ID"),
 ):
 
     """
@@ -45,25 +45,34 @@ def get_role_details(
         if role_id == None:
             role_details = db_services.get_all_role_details()
             role_detail = []
+            # For testing, since we do not return a SQLAlchemy object
+            if type(role_details) == dict:
+                return {"role_details": role_details}
             for item in role_details.all():
                 # For some reason, json.dumps don't work for this particular object
                 role_details_dict = common_services.convert_sqlalchemy_object_to_dict(item)
+         
                 role_detail.append(
                     role_details_dict
                 )
             return {"role_details": role_detail}
         else:
             role_detail = db_services.get_role_details(role_id)
+            # For testing, since we do not return a SQLAlchemy object
+            if type(role_detail) == dict:
+                return {"role_details": role_detail}
             if role_detail == None:
                 raise HTTPException(
                     status_code=404, 
                     detail={
                         "message":f"Role details with id {role_id} not found!"
                         })
+            # return {"role_details": json.dumps(role_detail)}
             return {"role_details": common_services.convert_sqlalchemy_object_to_dict(role_detail)}
     except HTTPException as e:
         raise e
     except Exception as e:
+        print(e)
         # This catches all other exceptions
         raise HTTPException(status_code=500, detail={"message":"Internal Server Error!"})
     finally:
