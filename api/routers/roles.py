@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Query, HTTPException
+from fastapi import APIRouter, Query, HTTPException, Header
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 import json
 
 import datetime as dt
 
+from typing import Optional
 import api.routers.common_services as common_services
 import database.services as db_services 
 from database.schemas import (
@@ -25,14 +26,19 @@ def default_message():
 # =========================== Start: Role Details  ===========================
 @router.get("/role_details")
 def get_role_details(
-    user: User,
-    role_id: int = Query(None, description="Optional role_id"),
+    user_token: int = Query(..., description="User token"),
+    role: str = Query(..., description="User role"),
+    role_id: int = Query(..., description="Role ID"),
 ):
+
     """
     End point that returns all the created role_listings inside the table.
     If a role_id is specified, only return information for that role_id
     """
-    if not common_services.authenticate_user(user, "ADMIN"):
+    if not common_services.authenticate_user(
+        User(user_token=user_token, role=role), 
+        "ADMIN"
+        ):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
         # Return role details for all
@@ -40,8 +46,10 @@ def get_role_details(
             role_details = db_services.get_all_role_details()
             role_detail = []
             for item in role_details.all():
+                # For some reason, json.dumps don't work for this particular object
+                role_details_dict = common_services.convert_sqlalchemy_object_to_dict(item)
                 role_detail.append(
-                    json.dumps(item)
+                    role_details_dict
                 )
             return {"role_details": role_detail}
         else:
@@ -52,7 +60,7 @@ def get_role_details(
                     detail={
                         "message":f"Role details with id {role_id} not found!"
                         })
-            return {"role_details": json.dumps(role_detail)}
+            return {"role_details": common_services.convert_sqlalchemy_object_to_dict(role_detail)}
     except HTTPException as e:
         raise e
     except Exception as e:
