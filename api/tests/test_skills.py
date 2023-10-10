@@ -16,10 +16,8 @@ from database.schemas import (
 client = TestClient(app)
 
 @patch("api.routers.skills.db_services.get_all_skills")
-def test_success_create_role_listing(mock_get_all_skills):
-    user = User(user_token=123456789, role="staff")
+def test_success_get_all_skills(mock_get_all_skills):
 
-    mock_get_all_skills.return_value = "Hello"
     mock_get_all_skills.return_value = [
         {
             "skill_id": 345678790,
@@ -42,10 +40,13 @@ def test_success_create_role_listing(mock_get_all_skills):
             "skill_status": "inactive"
         }
     ]
-    print(user.user_token, user.role)
-    response = client.get("/skill/get-all", params={"user_token": user.user_token, "role": "staff"})
-    print("Response here is !")
-    print(response, response.text)
+    # Define headers
+    headers = {
+        "user-token": "123456789",
+        "role": "manager"
+    }
+
+    response = client.get("/skill/get-all", headers=headers)
     mock_get_all_skills.assert_called()
 
     assert response.status_code == 200
