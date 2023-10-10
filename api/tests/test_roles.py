@@ -20,6 +20,12 @@ client = TestClient(app)
 # =========================== Start: Role Listings  ===========================
 @patch("api.routers.roles.db_services.create_role_listing")
 def test_success_create_role_listing(mock_create_role_listing):
+    """
+    Endpoint Tested: 
+        POST /role/role_listing
+    Scenario:
+        Tests a successful, authorized POST request to create a role listing.
+    """
     role_details = {
         "role_id":234511581, # Existing ID
         "role_name": "Pokemon",
@@ -49,6 +55,12 @@ def test_success_create_role_listing(mock_create_role_listing):
     assert response.json() == {"message": "Created!"}, f"Response content does not match expected JSON"
 
 def test_unauthorized_create_role_listing():
+    """
+    Endpoint Tested: 
+        POST /role/role_listing
+    Scenario:
+        Tests a unauthorized POST request to create a role listing.
+    """
     role_details = {
         "role_id":234511581, # Existing ID
         "role_name": "Pokemon",
@@ -74,6 +86,13 @@ def test_unauthorized_create_role_listing():
     assert response.json() == {"detail": "Unauthorized user!"}
 
 def test_invalid_create_role_listing():
+    """
+    Endpoint Tested: 
+        POST /role/role_listing
+    Scenario:
+        Tests a authorized POST request to create a role listing where role details
+        are no valid.
+    """
     role_details = {
         "role_id":234511581, # Existing ID
         "role_name": "Pokemon",
@@ -100,6 +119,12 @@ def test_invalid_create_role_listing():
 # Get Role Listings
 @patch("api.routers.roles.db_services.get_all_role_listings")
 def test_success_get_all_role_listings(mock_get_all_role_listings):
+    """
+    Endpoint Tested: 
+        GET /role/role_listing
+    Scenario:
+        Tests a authorized GET request to get all role listings.
+    """
     # Define headers
     mock_get_all_role_listings.return_value = {
         "role_listing": [
@@ -159,6 +184,12 @@ def test_success_get_all_role_listings(mock_get_all_role_listings):
 
 @patch("api.routers.roles.db_services.get_role_listings")
 def test_success_get_role_listings(mock_get_role_listings):
+    """
+    Endpoint Tested: 
+        GET /role/role_listing?role_listing_id=0
+    Scenario:
+        Tests a authorized GET request to get a particular role listings.
+    """
     # Define headers
     mock_get_role_listings.return_value = {
             "role_listing": 
@@ -190,6 +221,14 @@ def test_success_get_role_listings(mock_get_role_listings):
 
 @patch("api.routers.roles.db_services.get_role_listings")
 def test_failure_role_listing_not_exist(mock_get_role_listings):
+    """
+    Endpoint Tested: 
+        GET /role/role_listing?role_listing_id=0
+    Scenario:
+        Tests a authorized GET request to get an non existing role listing.
+    Expected Status Code:
+        404
+    """
     # Define headers
     mock_get_role_listings.return_value = None
 
@@ -204,6 +243,14 @@ def test_failure_role_listing_not_exist(mock_get_role_listings):
     assert response.status_code == 404
 
 def test_failure_not_authorized_get_role_listings():
+    """
+    Endpoint Tested: 
+        GET /role/role_listing
+    Scenario:
+        Tests a unauthorized GET request to get role listing.
+    Expected Status Code:
+        401
+    """
     # Define headers
     headers = {
         "user-token": "123456789",
@@ -218,6 +265,14 @@ def test_failure_not_authorized_get_role_listings():
 # =========================== Start: Role Details  ===========================
 @patch("api.routers.roles.db_services.get_all_role_details")
 def test_success_get_all_role_details(mock_get_all_role_details):
+    """
+    Endpoint Tested: 
+        GET /role/role_details
+    Scenario:
+        Tests a authorized GET request to get role details.
+    Expected Status Code:
+        200
+    """
     # Set the behavior of the mock function
     mock_get_all_role_details.return_value =  {
             "role_details": [
@@ -244,6 +299,14 @@ def test_success_get_all_role_details(mock_get_all_role_details):
 
 @patch("api.routers.roles.db_services.get_role_details")
 def test_success_get_role_details(mock_get_role_details):
+    """
+    Endpoint Tested: 
+        GET /role/role_details?role_id=234511581
+    Scenario:
+        Tests a authorized GET request to get specific role details.
+    Expected Status Code:
+        200
+    """
     # Set the behavior of the mock function
     mock_get_role_details.return_value =  {
             "role_details": [
@@ -269,6 +332,14 @@ def test_success_get_role_details(mock_get_role_details):
 
 @patch("api.routers.roles.db_services.get_role_details")
 def test_failure_role_not_exist_get_role_details(mock_get_role_details):
+    """
+    Endpoint Tested: 
+        GET /role/role_details?role_id=234511581
+    Scenario:
+        Tests a authorized GET request to get non existing role details.
+    Expected Status Code:
+        404
+    """
     # Set the behavior of the mock function
     mock_get_role_details.return_value =  None   
     # Define headers
@@ -284,6 +355,14 @@ def test_failure_role_not_exist_get_role_details(mock_get_role_details):
     assert response.status_code == 404
 
 def test_not_authorized_get_role_details():
+    """
+    Endpoint Tested: 
+        GET /role/role_details
+    Scenario:
+        Tests a unauthorized GET request to get role details.
+    Expected Status Code:
+        401
+    """
     # Arrange
     headers = {
         "user-token": "123456789",
