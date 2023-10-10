@@ -3,8 +3,7 @@ import type { Column, RowModel } from "@tanstack/react-table";
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons";
 import React, { useState } from "react";
 
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/badge";
+import { Button, Badge } from "@/components/ui";
 import {
   Command,
   CommandEmpty,
@@ -44,7 +43,7 @@ export function DataTableFacetedFilter<TData, TValue>({
   options,
 }: DataTableFacetedFilterInt<TData, TValue>) {
   const selectedValues = new Set(column?.getFilterValue() as string[]);
-  const [filterData, setData] = useState(data.rows);
+  // const [filterData, setData] = useState(data.rows);
   return (
     <Popover>
       <PopoverTrigger asChild>
