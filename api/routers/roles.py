@@ -30,10 +30,45 @@ def get_role_details(
     role: str = Header(..., description="User role"),
     role_id: int = Query(None,  description="Role ID"),
 ):
-
     """
-    End point that returns all the created role_listings inside the table.
-    If a role_id is specified, only return information for that role_id
+    ### Description:
+    This endpoint returns either all or specific role details from the database.
+
+    ### Parameters:
+    `role_id`: Optional, if provided returns role details for specific role. Else, returns all
+
+    `user_token`: Taken from Headers, key is `user-token` 
+
+    `role`: Taken from Headers, key is `role`,  
+
+    ### Returns:
+    A JSON object containing the details of the given staff member.
+
+    ### Example:
+    #### Request:
+    ```
+    GET /role/role_details
+    Authorization: <Clerk Token>
+    user-token: "123456789"
+    role: "hr"
+
+    ```
+    #### Response:
+    ```
+    {
+     "role_details": [
+        { 
+            "role_id": 1,
+            "role_name": "Clerk",
+            "role_desc": "Clerk role",
+            "role_status": "active",
+        }, ...
+     ]
+    }
+    ```
+    ### Errors:
+    `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
     if not common_services.authenticate_user(
             User(user_token=user_token, role=role), 
@@ -86,7 +121,49 @@ def get_role_skills(
     role_id: int = Query(description="Required role_id"),
 ):
     """
-    End point that takes in a role ID and returns the skills associated with that role.
+    ### Description:
+    This endpoint takes in a role_id and returns the skills associated with it.
+
+    ### Parameters:
+    `role_id`: Specifies the role_id to get the skills for.
+
+    `user_token`: Taken from Headers, key is `user-token` 
+
+    `role`: Taken from Headers, key is `role`,  
+
+    ### Returns:
+    A JSON object containing the skills associated.
+
+    ### Example:
+    #### Request:
+    ```
+    GET /role/role_skills
+    GET /role/role_skills?role_id=234567893
+    Authorization: <Clerk Token>
+    user-token: "123456789"
+    role: "hr"
+
+    ```
+    #### Response:
+    ```
+    {
+        "role_skills": {
+            "role_id": 234567893,
+            "skill_id": 345678912
+        }
+    }
+
+    or 
+
+    {
+        "detail": {
+            "message": "Role with id 23456789313 either has no skills, or does not exist!"
+        }
+    }
+    ```
+    ### Errors:
+    `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
     if not common_services.authenticate_user(
                     User(user_token=user_token, role=role), 
@@ -127,9 +204,51 @@ def get_role_listing(
     role_listing_id: int = Query(None, description="Optional role_listing_id"),
 ):
     """
-    End point that takes in an optional role_listing_id and returns the role_listing.
-    If role_listing_id is provided, it returns information about that ID.
-    If role_listing_id is blank, it returns all role_listings.
+    ### Description:
+    This endpoint returns either one or all role listings in the database.
+
+    ### Parameters:
+    `role_listing_id`: Optional, returns specific listing if provided else all.
+
+    `user_token`: Taken from Headers, key is `user-token` 
+
+    `role`: Taken from Headers, key is `role`,  
+
+    ### Returns:
+    A JSON object containing the role_listing associated.
+
+    ### Example:
+    #### Request:
+    ```
+
+    GET /role/role_listing
+    GET /role/role_listing?role_listing_id=0
+    Authorization: <Clerk Token>
+    user-token: "123456789"
+    role: "hr"
+
+    ```
+    #### Response:
+    ```
+    {
+        "role_listing": {
+            "role_listing_id": 0,
+            "role_id": 234511581,
+            "role_listing_desc": "Additional Description",
+            "role_listing_source": 123456789,
+            "role_listing_open": "2023-10-22T16:00:00",
+            "role_listing_close": "2023-10-25T16:00:00",
+            "role_listing_hide": "2023-10-25T16:00:00",
+            "role_listing_creator": 123456789,
+            "role_listing_ts_create": "2023-10-01T15:41:52",
+            "role_listing_updater": 123456789,
+            "role_listing_ts_update": "2023-10-01T15:41:52"
+        }
+    }
+    ```
+    ### Errors:
+    `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
     if not common_services.authenticate_user(            
             User(user_token=user_token, role=role), 
@@ -179,7 +298,35 @@ def create_role_listing(
     role: str = Header(..., description="User role")
     ):
     """
-    End point that takes in a role_listing, validates and creates it.
+    ### Description:
+    This endpoint creates a role listings in the database.
+
+    ### Parameters:
+    `role_details`: JSON object, schema further down
+
+    `user_token`: Taken from Headers, key is `user-token` 
+
+    `role`: Taken from Headers, key is `role`,  
+
+    ### Returns:
+    Sampel Text
+    
+    ### Example:
+    #### Request:
+    ```
+
+    POST/role/role_listing
+    Authorization: <Clerk Token>
+    user-token: "123456789"
+    role: "hr"
+
+    ```
+    #### Response:
+    ```
+    ```
+    ### Errors:
+    `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
     # Authenticate user 
     if not common_services.authenticate_user(
