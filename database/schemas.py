@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Optional
 
+from pydantic import BaseModel
+
 from database.enums import (
     RoleApplicationStatusEnum,
     RoleTypeEnum,
@@ -8,20 +10,15 @@ from database.enums import (
     SysRoleEnum,
     VerificationStatusEnum,
 )
-from pydantic import BaseModel
-
 
 
 class User(BaseModel):
     """
     Represents the requestor user information.
     """
-    user_token:int
+
+    user_token: int
     role: SysRoleEnum
-
-
-
-
 
 
 class RoleDetailsPydantic(BaseModel):
@@ -64,9 +61,10 @@ class StaffDetailsPydantic(BaseModel):
 #     class Config:
 #         orm_mode = True
 
+
 class RoleListingsPydantic(BaseModel):
     # Updated model to get from frontend
-    role_id:int
+    role_id: int
     role_listing_desc: str
     role_listing_source: int
     role_listing_open: str

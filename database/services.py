@@ -1,7 +1,9 @@
 import datetime as dt
-from sqlalchemy.exc import OperationalError
 
 from fastapi import HTTPException
+from sqlalchemy.exc import OperationalError
+
+from database.database import SessionLocal
 from database.models import (
     ClerkStaffMatch,
     RoleApplications,
@@ -15,20 +17,20 @@ from database.models import (
     StaffSkills,
 )
 
-from database.database import SessionLocal
 
 # Healthcheck
 def healthcheck():
     try:
         db = SessionLocal()
-        
+
         # Attempt a simple query to check the database connection
-        db.query(RoleDetails).first()
-        
-        db.close()
+        db.execute("SELECT 1")
         return True  # Database is reachable
     except OperationalError:
         return False  # Database is not reachable
+    finally:
+        db.close()
+
 
 # RoleDetails CRUD operations
 
@@ -39,16 +41,22 @@ def get_role_details(role_id: int):
     db.close()
     return role
 
+
 def get_all_role_details():
     db = SessionLocal()
     role = db.query(RoleDetails)
     db.close()
     return role
 
-def create_role_details(role_name: str, role_description: str, role_status: str):
+
+def create_role_details(
+    role_name: str, role_description: str, role_status: str
+):
     db = SessionLocal()
     role = RoleDetails(
-        role_name=role_name, role_description=role_description, role_status=role_status
+        role_name=role_name,
+        role_description=role_description,
+        role_status=role_status,
     )
     db.add(role)
     db.commit()
@@ -91,7 +99,11 @@ def delete_role_details(role_id: int):
 
 def get_staff_details(staff_id: int):
     db = SessionLocal()
-    staff = db.query(StaffDetails).filter(StaffDetails.staff_id == staff_id).first()
+    staff = (
+        db.query(StaffDetails)
+        .filter(StaffDetails.staff_id == staff_id)
+        .first()
+    )
     db.close()
     return staff
 
@@ -133,7 +145,11 @@ def update_staff_details(
     sys_role: str,
 ):
     db = SessionLocal()
-    staff = db.query(StaffDetails).filter(StaffDetails.staff_id == staff_id).first()
+    staff = (
+        db.query(StaffDetails)
+        .filter(StaffDetails.staff_id == staff_id)
+        .first()
+    )
     if staff:
         staff.fname = fname
         staff.lname = lname
@@ -152,7 +168,11 @@ def update_staff_details(
 
 def delete_staff_details(staff_id: int):
     db = SessionLocal()
-    staff = db.query(StaffDetails).filter(StaffDetails.staff_id == staff_id).first()
+    staff = (
+        db.query(StaffDetails)
+        .filter(StaffDetails.staff_id == staff_id)
+        .first()
+    )
     if staff:
         db.delete(staff)
         db.commit()
@@ -175,13 +195,13 @@ def get_role_listings(role_listing_id: int):
     db.close()
     return role_listing
 
+
 def get_all_role_listings():
     db = SessionLocal()
-    role_listing = (
-        db.query(RoleListings)
-    )
+    role_listing = db.query(RoleListings)
     db.close()
     return role_listing
+
 
 def create_role_listing(
     role_id: int,
@@ -281,7 +301,9 @@ def get_role_application(role_app_id: int):
     return role_app
 
 
-def create_role_application(role_listing_id: int, staff_id: int, role_app_status: str):
+def create_role_application(
+    role_listing_id: int, staff_id: int, role_app_status: str
+):
     db = SessionLocal()
     role_app = RoleApplications(
         role_listing_id=role_listing_id,
@@ -337,16 +359,22 @@ def delete_role_application(role_app_id: int):
 
 def get_skill_details(skill_id: int):
     db = SessionLocal()
-    skill = db.query(SkillDetails).filter(SkillDetails.skill_id == skill_id).first()
+    skill = (
+        db.query(SkillDetails)
+        .filter(SkillDetails.skill_id == skill_id)
+        .first()
+    )
     db.close()
     return skill
+
 
 def get_all_skills():
     db = SessionLocal()
     skills = db.query(SkillDetails).distinct().all()
     db.close()
     return skills
-    
+
+
 def create_skill_details(skill_name: str, skill_status: str):
     db = SessionLocal()
     skill = SkillDetails(skill_name=skill_name, skill_status=skill_status)
@@ -359,7 +387,11 @@ def create_skill_details(skill_name: str, skill_status: str):
 
 def update_skill_details(skill_id: int, skill_name: str, skill_status: str):
     db = SessionLocal()
-    skill = db.query(SkillDetails).filter(SkillDetails.skill_id == skill_id).first()
+    skill = (
+        db.query(SkillDetails)
+        .filter(SkillDetails.skill_id == skill_id)
+        .first()
+    )
     if skill:
         skill.skill_name = skill_name
         skill.skill_status = skill_status
@@ -373,7 +405,11 @@ def update_skill_details(skill_id: int, skill_name: str, skill_status: str):
 
 def delete_skill_details(skill_id: int):
     db = SessionLocal()
-    skill = db.query(SkillDetails).filter(SkillDetails.skill_id == skill_id).first()
+    skill = (
+        db.query(SkillDetails)
+        .filter(SkillDetails.skill_id == skill_id)
+        .first()
+    )
     if skill:
         db.delete(skill)
         db.commit()
@@ -395,6 +431,7 @@ def create_role_skill(role_id: int, skill_id: int):
     db.close()
     return role_skill
 
+
 # Original
 # def get_role_skill(role_id: int, skill_id: int):
 #     db = SessionLocal()
@@ -409,12 +446,11 @@ def create_role_skill(role_id: int, skill_id: int):
 def get_role_skill(role_id: int):
     db = SessionLocal()
     role_skill = (
-        db.query(RoleSkills)
-        .filter(RoleSkills.role_id == role_id)
-        .first()
+        db.query(RoleSkills).filter(RoleSkills.role_id == role_id).first()
     )
     db.close()
     return role_skill
+
 
 def update_role_skill(role_id: int, skill_id: int):
     db = SessionLocal()
@@ -488,7 +524,9 @@ def update_staff_reporting_officer(staff_id: int, RO_id: int):
         db.close()
         return staff_ro
     db.close()
-    raise HTTPException(status_code=404, detail="Staff reporting officer not found")
+    raise HTTPException(
+        status_code=404, detail="Staff reporting officer not found"
+    )
 
 
 def delete_staff_reporting_officer(staff_id: int):
@@ -504,13 +542,17 @@ def delete_staff_reporting_officer(staff_id: int):
         db.close()
         return staff_ro
     db.close()
-    raise HTTPException(status_code=404, detail="Staff reporting officer not found")
+    raise HTTPException(
+        status_code=404, detail="Staff reporting officer not found"
+    )
 
 
 # StaffRoles CRUD operations
 
 
-def create_staff_role(staff_id: int, staff_role: int, role_type: str, sr_status: str):
+def create_staff_role(
+    staff_id: int, staff_role: int, role_type: str, sr_status: str
+):
     db = SessionLocal()
     staff_role = StaffRoles(
         staff_id=staff_id,
@@ -529,18 +571,26 @@ def get_staff_role(staff_id: int, staff_role: int):
     db = SessionLocal()
     staff_role = (
         db.query(StaffRoles)
-        .filter(StaffRoles.staff_id == staff_id, StaffRoles.staff_role == staff_role)
+        .filter(
+            StaffRoles.staff_id == staff_id,
+            StaffRoles.staff_role == staff_role,
+        )
         .first()
     )
     db.close()
     return staff_role
 
 
-def update_staff_role(staff_id: int, staff_role: int, role_type: str, sr_status: str):
+def update_staff_role(
+    staff_id: int, staff_role: int, role_type: str, sr_status: str
+):
     db = SessionLocal()
     staff_role = (
         db.query(StaffRoles)
-        .filter(StaffRoles.staff_id == staff_id, StaffRoles.staff_role == staff_role)
+        .filter(
+            StaffRoles.staff_id == staff_id,
+            StaffRoles.staff_role == staff_role,
+        )
         .first()
     )
     if staff_role:
@@ -558,7 +608,10 @@ def delete_staff_role(staff_id: int, staff_role: int):
     db = SessionLocal()
     staff_role = (
         db.query(StaffRoles)
-        .filter(StaffRoles.staff_id == staff_id, StaffRoles.staff_role == staff_role)
+        .filter(
+            StaffRoles.staff_id == staff_id,
+            StaffRoles.staff_role == staff_role,
+        )
         .first()
     )
     if staff_role:
@@ -575,7 +628,9 @@ def delete_staff_role(staff_id: int, staff_role: int):
 
 def create_staff_skill(staff_id: int, skill_id: int, ss_status: str):
     db = SessionLocal()
-    staff_skill = StaffSkills(staff_id=staff_id, skill_id=skill_id, ss_status=ss_status)
+    staff_skill = StaffSkills(
+        staff_id=staff_id, skill_id=skill_id, ss_status=ss_status
+    )
     db.add(staff_skill)
     db.commit()
     db.refresh(staff_skill)
@@ -587,7 +642,9 @@ def get_staff_skill(staff_id: int, skill_id: int):
     db = SessionLocal()
     staff_skill = (
         db.query(StaffSkills)
-        .filter(StaffSkills.staff_id == staff_id, StaffSkills.skill_id == skill_id)
+        .filter(
+            StaffSkills.staff_id == staff_id, StaffSkills.skill_id == skill_id
+        )
         .first()
     )
     db.close()
@@ -598,7 +655,9 @@ def update_staff_skill(staff_id: int, skill_id: int, ss_status: str):
     db = SessionLocal()
     staff_skill = (
         db.query(StaffSkills)
-        .filter(StaffSkills.staff_id == staff_id, StaffSkills.skill_id == skill_id)
+        .filter(
+            StaffSkills.staff_id == staff_id, StaffSkills.skill_id == skill_id
+        )
         .first()
     )
     if staff_skill:
@@ -615,7 +674,9 @@ def delete_staff_skill(staff_id: int, skill_id: int):
     db = SessionLocal()
     staff_skill = (
         db.query(StaffSkills)
-        .filter(StaffSkills.staff_id == staff_id, StaffSkills.skill_id == skill_id)
+        .filter(
+            StaffSkills.staff_id == staff_id, StaffSkills.skill_id == skill_id
+        )
         .first()
     )
     if staff_skill:
@@ -643,7 +704,9 @@ def create_clerk_staff_match(clerk_id: int, staff_id: int):
 def get_clerk_staff_match(clerk_id: int):
     db = SessionLocal()
     clerk_staff_match = (
-        db.query(ClerkStaffMatch).filter(ClerkStaffMatch.clerk_id == clerk_id).first()
+        db.query(ClerkStaffMatch)
+        .filter(ClerkStaffMatch.clerk_id == clerk_id)
+        .first()
     )
     db.close()
     return clerk_staff_match
@@ -652,7 +715,9 @@ def get_clerk_staff_match(clerk_id: int):
 def update_clerk_staff_match(clerk_id: int, staff_id: int):
     db = SessionLocal()
     clerk_staff_match = (
-        db.query(ClerkStaffMatch).filter(ClerkStaffMatch.clerk_id == clerk_id).first()
+        db.query(ClerkStaffMatch)
+        .filter(ClerkStaffMatch.clerk_id == clerk_id)
+        .first()
     )
     if clerk_staff_match:
         clerk_staff_match.staff_id = staff_id
@@ -667,7 +732,9 @@ def update_clerk_staff_match(clerk_id: int, staff_id: int):
 def delete_clerk_staff_match(clerk_id: int):
     db = SessionLocal()
     clerk_staff_match = (
-        db.query(ClerkStaffMatch).filter(ClerkStaffMatch.clerk_id == clerk_id).first()
+        db.query(ClerkStaffMatch)
+        .filter(ClerkStaffMatch.clerk_id == clerk_id)
+        .first()
     )
     if clerk_staff_match:
         db.delete(clerk_staff_match)
