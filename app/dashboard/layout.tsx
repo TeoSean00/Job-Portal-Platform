@@ -12,12 +12,12 @@ export default function RootLayout({
 }) {
   return (
     <div className={cn(inter.className, "dark bg-background text-foreground")}>
-      <div className="flex flex-auto">
+      <div className="flex flex-auto ">
         <aside>
           <Sidebar />
           <Toaster />
         </aside>
-        <main className="grow p-10">{children}</main>
+        <main className="mx-auto max-w-4xl grow p-10">{children}</main>
       </div>
     </div>
   );

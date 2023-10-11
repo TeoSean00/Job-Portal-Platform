@@ -1,5 +1,5 @@
 import { DataTable } from "@/components/data-table/DataTable";
-import { Payment, columns } from "@/components/ui/";
+import { columns } from "@/components/ui/";
 
 const RolesPage = () => {
   const tempSkills = [

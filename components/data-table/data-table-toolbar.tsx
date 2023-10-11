@@ -26,7 +26,7 @@ export function DataTableToolbar<TData>({
   const isFiltered = table.getState().columnFilters.length > 0;
   // console.log(table.getColumn("skillRequired"));
   return (
-    <div className="flex items-center justify-between p-1">
+    <div className="flex items-center justify-between py-2">
       <div className="flex flex-1 items-center space-x-2">
         {searchableColumns.length > 0 &&
           searchableColumns.map(

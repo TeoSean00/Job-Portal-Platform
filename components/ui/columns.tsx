@@ -25,11 +25,12 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "roleId",
     header: ({ column }) => (
       <Button
+        className="space-x-2"
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Role ID
-        <ArrowUpDown className="ml-2 h-4 w-4" />
+        <span>ID</span>
+        <ArrowUpDown className="h-4 w-4" />
       </Button>
     ),
   },
@@ -37,11 +38,12 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "roleName",
     header: ({ column }) => (
       <Button
+        className="space-x-2"
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Role Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
+        <span>Name</span>
+        <ArrowUpDown className="h-4 w-4" />
       </Button>
     ),
   },
