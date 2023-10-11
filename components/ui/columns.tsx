@@ -4,6 +4,7 @@ import type { ColumnDef, Row } from "@tanstack/react-table";
 
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
+// eslint-disable-next-line import/no-cycle
 import { Button } from "@/components/ui";
 
 interface RowObject {
