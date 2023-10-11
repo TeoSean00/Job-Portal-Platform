@@ -9,7 +9,7 @@ import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 import { Controller, FormProvider, useFormContext } from "react-hook-form";
 
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 const Form = FormProvider;

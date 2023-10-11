@@ -7,8 +7,7 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
 import * as React from "react";
 
-import { Button } from "@/components/ui/Button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button, Calendar } from "@/components/ui";
 import {
   Popover,
   PopoverContent,

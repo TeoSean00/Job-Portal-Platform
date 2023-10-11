@@ -1,6 +1,6 @@
 import { SignInButton } from "@clerk/nextjs";
 
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui";
 
 /**
  * signup page not in used

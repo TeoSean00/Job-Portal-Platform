@@ -7,7 +7,7 @@
 
 "use client";
 
-import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
+import type { ToastActionElement, ToastProps } from "@/components/ui";
 
 import * as React from "react";
 
