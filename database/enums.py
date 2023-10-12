@@ -11,7 +11,7 @@ class SysRoleEnum(str, Enum):
     HR = "hr"
     MANAGER = "manager"
     # Created for test cases for unauthorized users
-    INVALID = "invalid" 
+    INVALID = "invalid"
 
 
 class RoleApplicationStatusEnum(str, Enum):
