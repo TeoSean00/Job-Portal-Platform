@@ -123,13 +123,15 @@ def get_role_skills(
     """
     ### Description:
     This endpoint takes in a role_id and returns the skills associated with it.
+    This is meant to be used to return all skills associated with a particular role.
+    Returns an empty list if no skills associated.
 
     ### Parameters:
     `role_id`: Specifies the role_id to get the skills for.
 
     `user_token`: Taken from Headers, key is `user-token` 
 
-    `role`: Taken from Headers, key is `role`,  
+    `role`: Taken from Headers, key is `role`  
 
     ### Returns:
     A JSON object containing the skills associated.
@@ -147,18 +149,16 @@ def get_role_skills(
     #### Response:
     ```
     {
-        "role_skills": {
-            "role_id": 234567893,
-            "skill_id": 345678912
-        }
-    }
-
-    or 
-
-    {
-        "detail": {
-            "message": "Role with id 23456789313 either has no skills, or does not exist!"
-        }
+        "role_skills": [
+            {
+                "role_id": 234567899,
+                "skill_id": 345678790
+            },
+            {
+                "role_id": 234567899,
+                "skill_id": 345678866
+            }
+        ]
     }
     ```
     ### Errors:
@@ -171,14 +171,18 @@ def get_role_skills(
                     ):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
-        role_skills = db_services.get_role_skill(role_id)
+        role_skills = db_services.get_role_skills(role_id)
+        if type(role_skills) == dict:
+            return {"role_skills": role_skills}
         if role_skills == None:
             raise HTTPException(
                 status_code=404, 
                 detail={
                     "message":f"Role with id {role_id} either has no skills, or does not exist!"
                     })
-        return {"role_skills": common_services.convert_sqlalchemy_object_to_dict(role_skills)}
+        res = [common_services.convert_sqlalchemy_object_to_dict(role_skill) for role_skill in role_skills]
+        
+        return {"role_skills": res}
     except HTTPException as e:
         raise e
     except Exception as e:
