@@ -3,5 +3,13 @@
 
 // Used for __tests__/testing-library.js
 // Learn more: https://github.com/testing-library/jest-dom
-// import "@testing-library/jest-dom/extend-expect";
+
 import "@testing-library/jest-dom";
+// import "@testing-library/jest-dom/extend-expect";
+
+const matchers = require("jest-extended");
+expect.extend(matchers);
+
+afterEach(() => {
+  jest.useRealTimers();
+});

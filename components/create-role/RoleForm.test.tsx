@@ -1,8 +1,7 @@
 import { render } from "@testing-library/react";
 import React from "react";
 
-// import "@testing-library/jest-dom/extend-expect";
-import RoleForm from "../../components/create-role/RoleForm";
+import RoleForm from "./RoleForm";
 
 const mockSkillList = [
   { value: "Pascal Programming", label: "Pascal Programming" },
