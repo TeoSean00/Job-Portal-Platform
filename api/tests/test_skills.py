@@ -11,7 +11,7 @@ current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 client = TestClient(app)
-
+# Testing pre commit
 
 @patch("api.routers.skills.db_services.get_all_skills")
 def test_success_get_all_skills(mock_get_all_skills):
