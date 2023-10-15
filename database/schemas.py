@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -128,6 +128,8 @@ class StaffRolesPydantic(BaseModel):
 class StaffSkillsPydantic(BaseModel):
     staff_id: int
     skill_id: int
+    skill_name: str
+    skill_status: StatusEnum
     ss_status: VerificationStatusEnum
 
     class Config:

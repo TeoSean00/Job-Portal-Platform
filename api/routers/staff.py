@@ -1,9 +1,12 @@
+import json
 from typing import List
 
 from fastapi import APIRouter, HTTPException
 
 import database.services as db_services
-from database.schemas import StaffDetailsPydantic
+from database.database import SessionLocal
+from database.models import StaffDetails
+from database.schemas import StaffDetailsPydantic, StaffSkillsPydantic
 
 router = APIRouter(
     prefix="/staff",
@@ -224,6 +227,75 @@ async def get_staff(staff_id: int):
             raise HTTPException(
                 status_code=404,
                 detail=f"Staff with staff_id: '{staff_id}' not found",
+            )
+        # Catching any other unexpected exceptions, returning a 500 error
+        else:
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error"
+            )
+
+
+# Get all the skills of each staff
+@router.get("/skills/{staff_id}", response_model=List[StaffSkillsPydantic])
+async def get_staff_skills(staff_id: int):
+    """
+    ### Description:
+    This endpoint returns a list of all skills and their details for a given staff member based on the given staff_id.
+
+    ### Parameters:
+    `staff_id`: The staff_id of the staff to be queried and returned.
+
+    ### Returns:
+    A JSON object containing the details of all skills for the given staff member.
+
+    ### Example:
+    #### Request:
+    ```
+    GET /staff/skills/12345678
+    staff_id: 12345678
+    ```
+    #### Response:
+    ```
+    [
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678790,
+            "skill_name": "Typescript Developer",
+            "skill_status": "active",
+            "ss_status": "active"
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678890,
+            "skill_name": "VMWare Villian",
+            "skill_status": "inactive",
+            "ss_status": "unverified"
+        }
+    ]
+    ```
+    ### Errors:
+    `404 Not Found`: staff member with the given staff_id does not have any skills in the system.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
+    """
+    # Invoking database service to get all staff's skills details with try-catch block
+    try:
+        response = db_services.get_staff_skill(staff_id)
+
+        if response is not None:
+            return response
+        else:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Staff with staff_id: '{staff_id}' does not exist in the system",
+            )
+
+    # Catching exceptions and raising them
+    except Exception as e:
+        # Catching 404 HTTPException specfically
+        if e.status_code == 404:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Staff with staff_id: '{staff_id}' does not exist in the system",
             )
         # Catching any other unexpected exceptions, returning a 500 error
         else:

@@ -672,17 +672,49 @@ def create_staff_skill(staff_id: int, skill_id: int, ss_status: str):
     return staff_skill
 
 
-def get_staff_skill(staff_id: int, skill_id: int):
+def get_staff_skill(staff_id: int):
     db = SessionLocal()
-    staff_skill = (
-        db.query(StaffSkills)
-        .filter(
-            StaffSkills.staff_id == staff_id, StaffSkills.skill_id == skill_id
+    try:
+        # Initial check to see if staff exists first
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
         )
-        .first()
-    )
-    db.close()
-    return staff_skill
+
+        if staff is None:
+            return None
+
+        # If staff exists, get all skills associated with staff
+        result = []
+
+        staff_skill_all = (
+            db.query(StaffSkills)
+            .filter(StaffSkills.staff_id == staff_id)
+            .all()
+        )
+
+        if staff_skill_all:
+            for staff_skill in staff_skill_all:
+                skill_id = staff_skill.skill_id
+                skill = (
+                    db.query(SkillDetails)
+                    .filter(SkillDetails.skill_id == skill_id)
+                    .first()
+                )
+                if skill:
+                    result_dict = {
+                        "staff_id": staff_id,
+                        "skill_id": skill_id,
+                        "skill_name": skill.skill_name,
+                        "skill_status": skill.skill_status,
+                        "ss_status": staff_skill.ss_status,
+                    }
+                    result.append(result_dict)
+
+        return result
+    finally:
+        db.close()
 
 
 def update_staff_skill(staff_id: int, skill_id: int, ss_status: str):
