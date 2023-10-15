@@ -108,13 +108,15 @@ def get_all_staff_details():
 
 def get_staff_details(staff_id: int):
     db = SessionLocal()
-    staff = (
-        db.query(StaffDetails)
-        .filter(StaffDetails.staff_id == staff_id)
-        .first()
-    )
-    db.close()
-    return staff
+    try:
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
+        )
+        return staff
+    finally:
+        db.close()
 
 
 def create_staff_details(
