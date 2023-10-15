@@ -37,6 +37,14 @@ npm i
 pipenv install 
 ```
 
+Second, install pre-commit hooks if you are developing 
+```
+pre-commit install
+
+# if existing work has not been formatted
+pre-commit run --all-files
+```
+
 Then, run the development server:
 ```bash
 npm run dev
