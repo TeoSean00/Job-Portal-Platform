@@ -12,6 +12,7 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 client = TestClient(app)
 
+
 @patch("api.routers.skills.db_services.get_all_skills")
 def test_success_get_all_skills(mock_get_all_skills):
     mock_get_all_skills.return_value = [

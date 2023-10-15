@@ -138,7 +138,7 @@ def get_role_skills(
 
     `user_token`: Taken from Headers, key is `user-token`
 
-    `role`: Taken from Headers, key is `role`  
+    `role`: Taken from Headers, key is `role`
 
     ### Returns:
     A JSON object containing the skills associated.
@@ -184,10 +184,14 @@ def get_role_skills(
             raise HTTPException(
                 status_code=404,
                 detail={
-                    "message":f"Role with id {role_id} either has no skills, or does not exist!"
-                    })
-        res = [common_services.convert_sqlalchemy_object_to_dict(role_skill) for role_skill in role_skills]
-        
+                    "message": f"Role with id {role_id} either has no skills, or does not exist!"
+                },
+            )
+        res = [
+            common_services.convert_sqlalchemy_object_to_dict(role_skill)
+            for role_skill in role_skills
+        ]
+
         return {"role_skills": res}
     except HTTPException as e:
         raise e

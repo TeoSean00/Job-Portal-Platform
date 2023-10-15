@@ -445,10 +445,7 @@ def create_role_skill(role_id: int, skill_id: int):
 # Updated, allow us to get all skills associated with a role id
 def get_role_skills(role_id: int):
     db = SessionLocal()
-    role_skill = (
-        db.query(RoleSkills)
-        .filter(RoleSkills.role_id == role_id)
-    )
+    role_skill = db.query(RoleSkills).filter(RoleSkills.role_id == role_id)
     db.close()
     return role_skill
 

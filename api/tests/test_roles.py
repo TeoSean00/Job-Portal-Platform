@@ -366,7 +366,7 @@ def test_not_authorized_get_role_details():
 @patch("api.routers.roles.db_services.get_role_skills")
 def test_success_get_role_skills(mock_get_role_skills):
     """
-    Endpoint Tested: 
+    Endpoint Tested:
         GET /role/role_skills?role_id=23456789
     Scenario:
         Tests a successful GET request to get role details.
@@ -375,29 +375,23 @@ def test_success_get_role_skills(mock_get_role_skills):
     """
     mock_get_role_skills.return_value = {
         "role_skills": [
-            {
-                "role_id": 234567899,
-                "skill_id": 345678790
-            },
-            {
-                "role_id": 234567899,
-                "skill_id": 345678866
-            }
+            {"role_id": 234567899, "skill_id": 345678790},
+            {"role_id": 234567899, "skill_id": 345678866},
         ]
     }
 
-    headers = {
-        "user-token": "123456789",
-        "role": "hr"
-    }     
+    headers = {"user-token": "123456789", "role": "hr"}
 
-    response = client.get(f"/role/role_skills?role_id=23456789", headers=headers)
+    response = client.get(
+        f"/role/role_skills?role_id=23456789", headers=headers
+    )
 
     assert response.status_code == 200
 
+
 def test_unauthorized_get_role_skills():
     """
-    Endpoint Tested: 
+    Endpoint Tested:
         GET /role/role_skills?role_id=23456789
     Scenario:
         Tests an GET request to get role details.
@@ -405,16 +399,15 @@ def test_unauthorized_get_role_skills():
         200
     """
 
+    headers = {"user-token": "123456789", "role": "invalid"}
 
-    headers = {
-        "user-token": "123456789",
-        "role": "invalid"
-    }     
-
-    response = client.get(f"/role/role_skills?role_id=23456789", headers=headers)
+    response = client.get(
+        f"/role/role_skills?role_id=23456789", headers=headers
+    )
 
     # Assert
     assert response.status_code == 401
     assert response.json() == {"detail": "Unauthorized user!"}
+
 
 # =========================== End: Role Details  ===========================
