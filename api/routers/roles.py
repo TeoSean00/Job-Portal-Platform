@@ -192,7 +192,6 @@ def get_role_skills(
             for role_skill in role_skills
         ]
 
-
         return {"role_skills": res}
     except HTTPException as e:
         raise e
