@@ -1,6 +1,19 @@
 [tool.black]
-line-length = 88
+line-length = 79
 target-version = ['py39']
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
 
 [tool.isort]
 profile = "black"

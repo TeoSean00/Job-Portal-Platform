@@ -1,15 +1,14 @@
-from fastapi import FastAPI
-from .routers import staff, roles, skills
-from fastapi.middleware.cors import CORSMiddleware
-
-from pydantic import BaseModel
 import datetime as dt
 from enum import Enum, auto
 
-from fastapi import HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 # Import database services
-import database.services as db_services # This is for npm run dev
+import database.services as db_services  # This is for npm run dev
+
+from .routers import roles, skills, staff
 
 app = FastAPI()
 
@@ -34,6 +33,12 @@ app.include_router(staff.router)
 app.include_router(roles.router)
 app.include_router(skills.router)
 
-@app.get("/")
-def default_message():
-    return {"add /docs at end of the URL to see the Swagger UI Documentation"}
+
+@app.get("/healthcheck", response_model=dict)
+async def healthcheck():
+    db_status = db_services.healthcheck()
+    if db_status:
+        msg = "Database connection successful!"
+    else:
+        msg = "Database connection failed!"
+    return {"fastapi": "Successfully connected to FastAPI!", "database": msg}
