@@ -38,7 +38,7 @@ app.include_router(skills.router)
 async def healthcheck():
     db_status = db_services.healthcheck()
     if db_status:
-        msg = "Database connection successful!"
+        msg = "Database connection successful! "
     else:
         msg = "Database connection failed!"
     return {"fastapi": "Successfully connected to FastAPI!", "database": msg}
