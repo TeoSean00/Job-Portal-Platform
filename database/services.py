@@ -449,6 +449,7 @@ def get_role_skills(role_id: int):
     db.close()
     return role_skill
 
+
 def update_role_skill(role_id: int, skill_id: int):
     db = SessionLocal()
     role_skill = (
