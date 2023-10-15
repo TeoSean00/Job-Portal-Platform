@@ -34,6 +34,70 @@ mock_data = [
 ]
 
 
+# Get specific staff details based on given clerk_id
+@router.get("/clerk/{clerk_id}", response_model=StaffDetailsPydantic)
+async def get_clerk_staff(clerk_id: str):
+    """
+    ### Description:
+    This endpoint returns a specifc staff member and the corresponding staff's details based on the given clerk_id.
+
+    ### Parameters:
+    `clerk_id`: The clerk_id of the staff to be queried and returned.
+
+    ### Returns:
+    A JSON object containing the details of the given staff member.
+
+    ### Example:
+    #### Request:
+    ```
+    GET /staff/get-staff/123
+    clerk_id: 12345678
+    ```
+    #### Response:
+    ```
+    {
+            "staff_id": 456,
+            "fname": "Tom",
+            "lname": "Harry",
+            "dept": "Sales",
+            "email": "tomharry@gmail.com",
+            "phone": "65-4566-5678",
+            "biz_address": "smu scis stamford road",
+            "sys_role": "hr"
+    }
+    ```
+    ### Errors:
+    `404 Not Found`: No staff member matching the given clerk_id found in the system.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
+    """
+    # Invoking database service to get staff details with try-catch block
+    try:
+        response = db_services.get_clerk_staff(clerk_id)
+
+        if response is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Staff with clerk_id: '{clerk_id}' not found",
+            )
+        else:
+            return response
+
+    # Catching exceptions and raising them
+    except Exception as e:
+        # Catching 404 HTTPException specfically
+        if e.status_code == 404:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Staff with clerk_id: '{clerk_id}' not found",
+            )
+        # Catching any other unexpected exceptions, returning a 500 error
+        else:
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error"
+            )
+
+
+# Get all staff details
 @router.get("", response_model=List[StaffDetailsPydantic])
 async def get_all_staff():
     """

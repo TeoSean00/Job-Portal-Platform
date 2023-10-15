@@ -97,6 +97,31 @@ def delete_role_details(role_id: int):
 # StaffDetails CRUD operations
 
 
+def get_clerk_staff(clerk_id: str):
+    db = SessionLocal()
+    try:
+        staff_clerk = (
+            db.query(ClerkStaffMatch)
+            .filter(ClerkStaffMatch.clerk_id == clerk_id)
+            .first()
+        )
+        if staff_clerk:
+            staff_id = staff_clerk.staff_id
+            staff = (
+                db.query(StaffDetails)
+                .filter(StaffDetails.staff_id == staff_id)
+                .first()
+            )
+            return staff
+        else:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Staff with clerk_id: '{clerk_id}' not found",
+            )
+    finally:
+        db.close()
+
+
 def get_all_staff_details():
     db = SessionLocal()
     try:
