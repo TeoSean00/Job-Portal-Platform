@@ -112,12 +112,9 @@ def get_clerk_staff(clerk_id: str):
                 .filter(StaffDetails.staff_id == staff_id)
                 .first()
             )
-            return staff
-        else:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Staff with clerk_id: '{clerk_id}' not found",
-            )
+            if staff:
+                return staff
+        return None
     finally:
         db.close()
 
@@ -140,6 +137,91 @@ def get_staff_details(staff_id: int):
             .first()
         )
         return staff
+    finally:
+        db.close()
+
+
+def get_staff_role_skills_match(staff_id: int, role_listing_id: int):
+    db = SessionLocal()
+    try:
+        # Initial check to see if staff exists first
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
+        )
+
+        if staff is None:
+            return None
+
+        # Initial check to see if role_listing_id exists first
+        role_listing = (
+            db.query(RoleListings)
+            .filter(RoleListings.role_listing_id == role_listing_id)
+            .first()
+        )
+
+        if role_listing is None:
+            return None
+
+        # If staff and role_listing exists, get all skills associated with staff and role_listing
+        role_skills = (
+            db.query(RoleSkills)
+            .filter(RoleSkills.role_id == role_listing.role_id)
+            .all()
+        )
+
+        staff_skills = (
+            db.query(StaffSkills)
+            .filter(StaffSkills.staff_id == staff_id)
+            .all()
+        )
+
+        # result to store all skills matches and mismatches
+        result = {
+            "match": {
+                "active": [],
+                "in-progress": [],
+                "unverified": [],
+            },
+            "missing": [],
+        }
+
+        for role_skill in role_skills:
+            # Get skill object details
+            skill = (
+                db.query(SkillDetails)
+                .filter(SkillDetails.skill_id == role_skill.skill_id)
+                .first()
+            )
+
+            # Get staff_skill object details if there's a match
+            matching_staff_skill = None
+            for staff_skill in staff_skills:
+                if staff_skill.skill_id == role_skill.skill_id:
+                    matching_staff_skill = staff_skill
+                    break
+
+            # Adding to result accordingly depending on match or mismatch
+            if matching_staff_skill:
+                match_object = {
+                    "skill_id": role_skill.skill_id,
+                    "skill_name": skill.skill_name,
+                    "skill_status": skill.skill_status,
+                    "ss_status": matching_staff_skill.ss_status,
+                }
+                result["match"][matching_staff_skill.ss_status].append(
+                    match_object
+                )
+            else:
+                mismatch_object = {
+                    "skill_id": role_skill.skill_id,
+                    "skill_name": skill.skill_name,
+                    "skill_status": skill.skill_status,
+                }
+                result["missing"].append(mismatch_object)
+
+        return result
     finally:
         db.close()
 

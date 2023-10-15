@@ -302,3 +302,89 @@ async def get_staff_skills(staff_id: int):
             raise HTTPException(
                 status_code=500, detail="Internal Server Error"
             )
+
+
+# Get the match and gaps between staff skills and role listing required skills
+@router.get("/role-skills-match/{staff_id}/{role_listing_id}")
+async def get_staff_role_skills_match(
+    staff_id: int,
+    role_listing_id: int,
+):
+    """
+    ### Description:
+    This endpoint returns a list of skills a staff has that matches the skills required for a role listing, and a list of the staff's missing required skills too.<br /><br />
+    The matching skills are further grouped into 3 categories based on the staff to skill status: active, in-progress, and unverified.
+    ### Parameters:
+    `staff_id`: The staff_id of the staff to be queried and returned.<br /><br />
+    `role_listing_id`: The role_listing_id of the role listing to be queried and returned.
+    ### Returns:
+    A JSON object containing the details of the staff's skills that matches and that are missing from the role listing's required skills.
+
+    ### Example:
+    #### Request:
+    ```
+    GET /staff/role-skills-match/12345678/678
+    staff_id: 12345678
+    role_listing_id: 678
+    ```
+    #### Response:
+    ```
+        {
+            "match": {
+                "active": [
+                    {
+                        "skill_id": 345678790,
+                        "skill_name": "Typescript Developer",
+                        "skill_status": "active",
+                        "ss_status": "active"
+                    },
+                    {
+                        "skill_id": 345678866,
+                        "skill_name": "Java Developer",
+                        "skill_status": "active",
+                        "ss_status": "active"
+                    }
+                ],
+                "in-progress": [],
+                "unverified": []
+            },
+            "missing": [
+                {
+                    "skill_id": 345678922,
+                    "skill_name": "React Beast",
+                    "skill_status": "active"
+                }
+            ]
+        }
+    ```
+    ### Errors:
+    `404 Not Found`: staff member with the given staff_id or role_listing with the given role_listing_id does not exist.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
+    """
+    # Invoking database service to get all staff's skills details with try-catch block
+    try:
+        response = db_services.get_staff_role_skills_match(
+            staff_id, role_listing_id
+        )
+
+        if response is not None:
+            return response
+        else:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Staff with staff_id: '{staff_id}' or role_listing with role_listing_id: '{role_listing_id}' does not exist in the system.",
+            )
+
+    # Catching exceptions and raising them
+    except Exception as e:
+        # Catching 404 HTTPException specfically
+        if e.status_code == 404:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Staff with staff_id: '{staff_id}' or role_listing with role_listing_id: '{role_listing_id}' does not exist in the system.",
+            )
+        # Catching any other unexpected exceptions, returning a 500 error
+        else:
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error"
+            )
