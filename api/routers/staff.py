@@ -1,14 +1,9 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 
-from database.schemas import (
-    ClerkStaffMatch,
-    StaffDetailsPydantic,
-    StaffReportingOfficerPydantic,
-    StaffRolesPydantic,
-    StaffSkillsPydantic,
-)
+import database.services as db_services
+from database.schemas import StaffDetailsPydantic
 
 router = APIRouter(
     prefix="/staff",
@@ -39,7 +34,7 @@ mock_data = [
 ]
 
 
-@router.get("/get-all", response_model=List[StaffDetailsPydantic])
+@router.get("", response_model=List[StaffDetailsPydantic])
 async def get_all_staff():
     """
     ### Description:
@@ -54,44 +49,60 @@ async def get_all_staff():
     ### Example:
     #### Request:
     ```
-    GET /staff/get-all
-    Authorization: <Clerk Token>
-    Content-Type: Null
-    Body: Null
+    GET /staff/get-all-staff
     ```
     #### Response:
     ```
     [
-      {
-        "staff_id": 123,
-        "fname": "John",
-        "lname": "Doe",
-        "dept": "Finance",
-        "email": "johndoe@gmail.com",
-        "phone": "65-1234-5678",
-        "biz_address": "smu scis stamford road",
-        "sys_role": "staff"
-      },
-      {
-        "staff_id": 456,
-        "fname": "Tom",
-        "lname": "Harry",
-        "dept": "Sales",
-        "email": "tomharry@gmail.com",
-        "phone": "65-4566-5678",
-        "biz_address": "smu scis stamford road",
-        "sys_role": "hr"
-      },
+            {
+                    "staff_id": 123,
+                    "fname": "John",
+                    "lname": "Doe",
+                    "dept": "Finance",
+                    "email": "johndoe@gmail.com",
+                    "phone": "65-1234-5678",
+                    "biz_address": "smu scis stamford road",
+                    "sys_role": "staff"
+            },
+            {
+                    "staff_id": 456,
+                    "fname": "Tom",
+                    "lname": "Harry",
+                    "dept": "Sales",
+                    "email": "tomharry@gmail.com",
+                    "phone": "65-4566-5678",
+                    "biz_address": "smu scis stamford road",
+                    "sys_role": "hr"
+            },
     ]
     ```
     ### Errors:
     `404 Not Found`: No staff members found in the system.<br /><br />
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
-    if mock_data:
-        return mock_data
-    else:
-        raise HTTPException(status_code=404, detail="No staff found")
+    # Invoking database service to get staff details with try-catch block
+    try:
+        response = db_services.get_all_staff_details()
+
+        if response is None:
+            raise HTTPException(
+                status_code=404, detail="No staff members found in the system"
+            )
+        else:
+            return response
+
+    # Catching exceptions and raising them
+    except Exception as e:
+        # Catching 404 HTTPException specfically
+        if e.status_code == 404:
+            raise HTTPException(
+                status_code=404, detail="No staff members found in the system"
+            )
+        # Catching any other unexpected exceptions, returning a 500 error
+        else:
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error"
+            )
 
 
 @router.get("/get-staff/{staff_id}", response_model=StaffDetailsPydantic)
