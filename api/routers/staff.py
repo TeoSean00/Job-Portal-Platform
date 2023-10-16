@@ -333,19 +333,20 @@ async def get_staff_role_skills_match(
             "match": {
                 "active": [
                     {
-                        "skill_id": 345678790,
-                        "skill_name": "Typescript Developer",
-                        "skill_status": "active",
-                        "ss_status": "active"
-                    },
-                    {
                         "skill_id": 345678866,
                         "skill_name": "Java Developer",
                         "skill_status": "active",
                         "ss_status": "active"
                     }
                 ],
-                "in-progress": [],
+                "in-progress": [
+                    {
+                        "skill_id": 345678790,
+                        "skill_name": "Typescript Developer",
+                        "skill_status": "active",
+                        "ss_status": "in-progress"
+                    }
+                ],
                 "unverified": []
             },
             "missing": [
