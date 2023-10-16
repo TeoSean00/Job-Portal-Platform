@@ -423,16 +423,53 @@ def create_role_application(
     role_listing_id: int, staff_id: int, role_app_status: str
 ):
     db = SessionLocal()
-    role_app = RoleApplications(
-        role_listing_id=role_listing_id,
-        staff_id=staff_id,
-        role_app_status=role_app_status,
-    )
-    db.add(role_app)
-    db.commit()
-    db.refresh(role_app)
-    db.close()
-    return role_app
+    try:
+        # Initial check to see if staff exists first
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
+        )
+
+        if staff is None:
+            return None
+
+        # Initial check to see if role_listing_id exists first
+        role_listing = (
+            db.query(RoleListings)
+            .filter(RoleListings.role_listing_id == role_listing_id)
+            .first()
+        )
+
+        if role_listing is None:
+            return None
+
+        # Initial check to see if staff has applied for this role_listing before
+        role_app = (
+            db.query(RoleApplications)
+            .filter(
+                RoleApplications.role_listing_id == role_listing_id,
+                RoleApplications.staff_id == staff_id,
+            )
+            .first()
+        )
+
+        if role_app:
+            return "applied before"
+
+        # If staff and role_listing exists, and staff has not applied for this role_listing before, proceed to create a new role_listing application
+        role_app = RoleApplications(
+            role_listing_id=role_listing_id,
+            staff_id=staff_id,
+            role_app_status=role_app_status,
+        )
+
+        db.add(role_app)
+        db.commit()
+        db.refresh(role_app)
+        return role_app
+    finally:
+        db.close()
 
 
 def update_role_application(
