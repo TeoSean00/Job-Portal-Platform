@@ -39,10 +39,16 @@ pipenv install
 
 Second, install pre-commit hooks if you are developing 
 ```
+pipenv install pre-commit
 pre-commit install
+# check that pre-commit file is crated in .git/hooks
 
 # if existing work has not been formatted
 pre-commit run --all-files
+
+# if it's been a long time, update hooks to latest ver
+pre-commit autoupdate
+
 ```
 
 Then, run the development server:
