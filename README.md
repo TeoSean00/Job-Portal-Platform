@@ -39,10 +39,16 @@ pipenv install
 
 Second, install pre-commit hooks if you are developing 
 ```
+pipenv install pre-commit
 pre-commit install
+# check that pre-commit file is crated in .git/hooks
 
 # if existing work has not been formatted
 pre-commit run --all-files
+
+# if it's been a long time, update hooks to latest ver
+pre-commit autoupdate
+
 ```
 
 Then, run the development server:
@@ -84,6 +90,33 @@ Pre-commit offloads some of the work of github CI unit testing to local dev envi
 5. When opening or merging a PR, make sure to include the Linear issue ID in the title, e.g. `Completed spm-4: Connect GitHub or GitLab`.
 
 6. An auto-generated URL to the Linear issue should have been automatically added to the PR description. The Linear issue will be automatically updated accordingly with the new timeline and URL to the Github PR too.
+
+## Database Migrations
+
+With Alembic, revisions to models via sqlalchemy can be used to automatically migrate the database, reducing the hassle of manual database reconfiguration 
+
+View current db version
+```bash
+alembic current
+```
+
+After modifying ORM code / models
+```bash
+alembic revision --autogenerate -m "YOUR MIGRATION MESSAGE"
+```
+
+After checking the generated revisions are okay
+```bash
+alembic upgrade HEAD 
+# alternatively specify the revision hash initials to upgrade to a specific version
+```
+
+To downgrade to the previous version
+```bash
+alembic downgrade -1
+# alternatively specify the revision hash initials to downgrade to a specific version 
+# or alembic downgrade base to reset to initial state
+```
 
 ## Icons
 
