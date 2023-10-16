@@ -58,7 +58,7 @@ async def get_clerk_staff(clerk_id: str):
     ### Example:
     #### Request:
     ```
-    GET /staff/get-staff/123
+    GET /staff/clerk/123
     clerk_id: 12345678
     ```
     #### Response:
@@ -121,7 +121,7 @@ async def get_all_staff():
     ### Example:
     #### Request:
     ```
-    GET /staff/get-all-staff
+    GET /staff
     ```
     #### Response:
     ```
@@ -193,7 +193,7 @@ async def get_staff(staff_id: int):
     ### Example:
     #### Request:
     ```
-    GET /staff/get-staff/123
+    GET /staff/12345678
     staff_id: 12345678
     ```
     #### Response:
@@ -420,7 +420,7 @@ async def create_staff_role_listing_application(
     ### Example:
     #### Request:
     ```
-    POST /staff/role-listing/12345678/678
+    POST /staff/role/12345678/678
     staff_id: 12345678
     role_listing_id: 678
     ```
