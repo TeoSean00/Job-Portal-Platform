@@ -446,6 +446,7 @@ def get_staff_role_application(staff_id: int, role_listing_id: int):
             .filter(
                 RoleApplications.role_listing_id == role_listing_id,
                 RoleApplications.staff_id == staff_id,
+                RoleApplications.role_app_status == "applied",
             )
             .first()
         )
@@ -488,6 +489,7 @@ def create_role_application(
             .filter(
                 RoleApplications.role_listing_id == role_listing_id,
                 RoleApplications.staff_id == staff_id,
+                RoleApplications.role_app_status == "applied",
             )
             .first()
         )
