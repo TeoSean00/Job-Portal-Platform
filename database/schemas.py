@@ -45,21 +45,30 @@ class StaffDetailsPydantic(BaseModel):
         orm_mode = True
 
 
-class SkillInfo(BaseModel):
+class SkillDetailsPydantic(BaseModel):
     skill_id: int
     skill_name: str
-    skill_status: str
+    skill_status: StatusEnum
+
+    class Config:
+        orm_mode = True
 
 
 class MatchStatus(BaseModel):
-    active: List[SkillInfo] = []
-    in_progress: List[SkillInfo] = []
-    unverified: List[SkillInfo] = []
+    active: List[SkillDetailsPydantic] = []
+    in_progress: List[SkillDetailsPydantic] = []
+    unverified: List[SkillDetailsPydantic] = []
+
+    class Config:
+        orm_mode = True
 
 
 class MatchResult(BaseModel):
     match: MatchStatus
-    missing: List[SkillInfo]
+    missing: List[SkillDetailsPydantic]
+
+    class Config:
+        orm_mode = True
 
 
 # class RoleListingsPydantic(BaseModel):
@@ -102,15 +111,6 @@ class RoleApplicationsPydantic(BaseModel):
     staff_id: int
     role_app_status: RoleApplicationStatusEnum
     role_app_ts_create: datetime
-
-    class Config:
-        orm_mode = True
-
-
-class SkillDetailsPydantic(BaseModel):
-    skill_id: int
-    skill_name: str
-    skill_status: StatusEnum
 
     class Config:
         orm_mode = True
