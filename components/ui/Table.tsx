@@ -56,7 +56,10 @@ const TableRow = React.forwardRef<
   } & React.HTMLAttributes<HTMLTableRowElement>
 >(({ className, roleId, ...props }, ref) => {
   const router = useRouter(); // Call the useRouter hook within a component
-  const routerLink = `/dashboard/roles/${roleId}`;
+  let routerLink = "/dashboard/roles";
+  if (roleId !== 0) {
+    routerLink = `/dashboard/roles/${roleId}`;
+  }
   return (
     <tr
       ref={ref}
