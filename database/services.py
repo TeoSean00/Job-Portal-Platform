@@ -419,6 +419,44 @@ def get_role_application(role_app_id: int):
     return role_app
 
 
+def get_staff_role_application(staff_id: int, role_listing_id: int):
+    db = SessionLocal()
+    try:
+        # Initial check to see if staff exists first
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
+        )
+        if staff is None:
+            return None
+
+        # Initial check to see if role_listing_id exists first
+        role_listing = (
+            db.query(RoleListings)
+            .filter(RoleListings.role_listing_id == role_listing_id)
+            .first()
+        )
+        if role_listing is None:
+            return None
+
+        # If staff and role_listing exists, check to see if staff has applied for this role_listing before
+        role_app = (
+            db.query(RoleApplications)
+            .filter(
+                RoleApplications.role_listing_id == role_listing_id,
+                RoleApplications.staff_id == staff_id,
+            )
+            .first()
+        )
+        if role_app:
+            return role_app
+        else:
+            return "not applied before"
+    finally:
+        db.close()
+
+
 def create_role_application(
     role_listing_id: int, staff_id: int, role_app_status: str
 ):

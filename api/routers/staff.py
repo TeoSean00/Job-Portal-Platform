@@ -314,7 +314,7 @@ async def get_staff_skills(staff_id: int):
     "/role-skills-match/{staff_id}/{role_listing_id}",
     response_model=MatchResult,
 )
-async def get_staff_role_skills_match(
+async def get_staff_role_listing_skills_match(
     staff_id: int,
     role_listing_id: int,
 ):
@@ -370,7 +370,7 @@ async def get_staff_role_skills_match(
     `404 Not Found`: staff member with the given staff_id or role_listing with the given role_listing_id does not exist.<br /><br />
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
-    # Invoking database service to get all staff's skills details with try-catch block
+    # Invoking database service to get all matching and missing skills between staff and role_listing with try-catch block
     try:
         response = db_services.get_staff_role_skills_match(
             staff_id, role_listing_id
@@ -410,7 +410,8 @@ async def create_staff_role_listing_application(
 ):
     """
     ### Description:
-    This endpoint allows a staff to apply for an available role listing, with the given staff_id and role_listing_id.
+    This endpoint allows a staff to apply for an available role listing, with the given staff_id and role_listing_id.<br /><br />
+    Initial validation checks are also done to ensure that the staff has not applied for the role_listing previously, and that both the staff and role_listing exist in the system.
     ### Parameters:
     `staff_id`: The staff_id of the staff to be used to create a new role_listing application.<br /><br />
     `role_listing_id`: The role_listing_id of the role listing to be used to create a new role_listing application.
@@ -438,7 +439,7 @@ async def create_staff_role_listing_application(
     `404 Not Found`: staff member with the given staff_id or role_listing with the given role_listing_id does not exist.<br /><br />
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
-    # Invoking database service to get all staff's skills details with try-catch block
+    # Invoking database service to create a new role_listing application with try-catch block
     try:
         response = db_services.create_role_application(
             role_listing_id=role_listing_id,
@@ -473,6 +474,82 @@ async def create_staff_role_listing_application(
             raise HTTPException(
                 status_code=400,
                 detail=f"Staff with staff_id: '{staff_id}' has already applied for role_listing with role_listing_id: '{role_listing_id}' previously.",
+            )
+        # Catching any other unexpected exceptions, returning a 500 error
+        else:
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error"
+            )
+
+
+# Check if staff has applied for a role_listing and its status
+@router.get("/role/{staff_id}/{role_listing_id}")
+async def get_staff_role_listing_application(
+    staff_id: int,
+    role_listing_id: int,
+):
+    """
+    ### Description:
+    This endpoint checks if a staff has applied for a role_listing before, with the given staff_id and role_listing_id.
+    ### Parameters:
+    `staff_id`: The staff_id of the staff to be queried.<br /><br />
+    `role_listing_id`: The role_listing_id of the role_listing to be queried.
+    ### Returns:
+    A JSON object containing the details of the role_listing application if previously applied before, otherwise returning a message indicating that the staff has not applied for the role_listing before.
+    ### Example:
+    #### Request:
+    ```
+    GET /staff/role/12345678/678
+    staff_id: 12345678
+    role_listing_id: 678
+    ```
+    #### Response:
+    applied before:
+    ```
+        {
+            "role_app_id": 4,
+            "staff_id": 123456789,
+            "role_app_ts_create": "2023-10-16T06:14:30",
+            "role_app_status": "applied",
+            "role_listing_id": 2
+        }
+    ```
+    not applied before:
+    ```
+        {
+            "message": "Staff with staff_id: '12345678' has not applied for role_listing with role_listing_id: '678' before."
+        }
+    ```
+    ### Errors:
+    `404 Not Found`: staff member with the given staff_id or role_listing with the given role_listing_id does not exist.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.
+    """
+    # Invoking database service to get role_listing application details with try-catch block
+    try:
+        response = db_services.get_staff_role_application(
+            role_listing_id=role_listing_id,
+            staff_id=staff_id,
+        )
+
+        if response is not None:
+            if response == "not applied before":
+                message = f"Staff with staff_id: '{staff_id}' has not applied for role_listing with role_listing_id: '{role_listing_id}' before."
+                return {"message": message}
+            else:
+                return response
+        else:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Staff with staff_id: '{staff_id}' or role_listing with role_listing_id: '{role_listing_id}' does not exist in the system.",
+            )
+
+    # Catching exceptions and raising them
+    except Exception as e:
+        # Catching 404 HTTPException specfically
+        if e.status_code == 404:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Staff with staff_id: '{staff_id}' or role_listing with role_listing_id: '{role_listing_id}' does not exist in the system.",
             )
         # Catching any other unexpected exceptions, returning a 500 error
         else:
