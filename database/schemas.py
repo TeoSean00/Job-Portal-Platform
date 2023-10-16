@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -43,6 +43,23 @@ class StaffDetailsPydantic(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SkillInfo(BaseModel):
+    skill_id: int
+    skill_name: str
+    skill_status: str
+
+
+class MatchStatus(BaseModel):
+    active: List[SkillInfo] = []
+    in_progress: List[SkillInfo] = []
+    unverified: List[SkillInfo] = []
+
+
+class MatchResult(BaseModel):
+    match: MatchStatus
+    missing: List[SkillInfo]
 
 
 # class RoleListingsPydantic(BaseModel):

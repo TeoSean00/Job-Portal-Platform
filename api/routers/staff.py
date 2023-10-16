@@ -6,7 +6,12 @@ from fastapi import APIRouter, HTTPException
 import database.services as db_services
 from database.database import SessionLocal
 from database.models import StaffDetails
-from database.schemas import StaffDetailsPydantic, StaffSkillsPydantic
+from database.schemas import (
+    MatchResult,
+    RoleApplicationsPydantic,
+    StaffDetailsPydantic,
+    StaffSkillsPydantic,
+)
 
 router = APIRouter(
     prefix="/staff",
@@ -305,7 +310,10 @@ async def get_staff_skills(staff_id: int):
 
 
 # Get the match and gaps between staff skills and role listing required skills
-@router.get("/role-skills-match/{staff_id}/{role_listing_id}")
+@router.get(
+    "/role-skills-match/{staff_id}/{role_listing_id}",
+    response_model=MatchResult,
+)
 async def get_staff_role_skills_match(
     staff_id: int,
     role_listing_id: int,
@@ -392,7 +400,10 @@ async def get_staff_role_skills_match(
 
 
 # Staff applying for an available role listing
-@router.post("/role/{staff_id}/{role_listing_id}")
+@router.post(
+    "/role/{staff_id}/{role_listing_id}",
+    response_model=RoleApplicationsPydantic,
+)
 async def create_staff_role_listing_application(
     staff_id: int,
     role_listing_id: int,
