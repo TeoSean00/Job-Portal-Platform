@@ -6,10 +6,42 @@ declare type SidebarNavItem = {
 
 declare type Skill = { value: string; label: string };
 declare type Department = { value: string; label: string };
-
-declare type RoleFormProps = {
-  skillList: Skill[];
-  departments: Department[];
+declare type RoleDetail = {
+  role_id: number;
+  role_name: string;
+  role_description: string;
+  role_status: string;
+};
+declare type SkillDetail = {
+  skill_status: string;
+  skill_name: string;
+  skill_id: number;
+};
+declare type RoleSkillId = {
+  role_id: number;
+  skill_id: number;
 };
 
-declare type RoleFormValues = z.infer<typeof roleFormSchema>;
+declare type SkillAPIResponse = {
+  skill_status: string;
+  skill_name: string;
+  skill_id: number;
+};
+
+declare type RoleFormProps = {
+  departments: Department[];
+  roles: RoleDetail[];
+  allSkills: SkillAPIResponse[];
+};
+// declare type RoleFormValues = z.infer<typeof roleFormSchema>;
+
+declare type RoleFormValues = {
+  roleName: string;
+  roleDescription: string;
+  departments: string;
+  skills: { value: string }[];
+  dateRange: {
+    from: Date;
+    to: Date;
+  };
+};

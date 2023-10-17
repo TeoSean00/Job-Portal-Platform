@@ -17,7 +17,7 @@ class User(BaseModel):
     Represents the requestor user information.
     """
 
-    user_token: int
+    user_token: str
     role: SysRoleEnum
 
 

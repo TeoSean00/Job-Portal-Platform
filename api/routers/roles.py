@@ -28,7 +28,7 @@ def default_message():
 
 @router.get("/role_details")
 def get_role_details(
-    user_token: int = Header(..., description="User token"),
+    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
     role_id: int = Query(None, description="Role ID"),
 ):
@@ -126,7 +126,7 @@ def process_single_role_detail(role_detail, role_id):
 
 @router.get("/role_skills")
 def get_role_skills(
-    user_token: int = Header(..., description="User token"),
+    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
     role_id: int = Query(description="Required role_id"),
 ):
@@ -220,7 +220,7 @@ def validate_role_listing(role_details: RoleListingsPydantic):
 
 @router.get("/role_listing")
 def get_role_listing(
-    user_token: int = Header(..., description="User token"),
+    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
     role_listing_id: int = Query(None, description="Optional role_listing_id"),
 ):
@@ -319,7 +319,7 @@ def process_single_role_listing(role_listing, role_listing_id):
 @router.post("/role_listing")
 def create_role_listing(
     role_details: RoleListingsPydantic,
-    user_token: int = Header(..., description="User token"),
+    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
 ):
     """
