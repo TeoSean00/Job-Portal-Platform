@@ -1,13 +1,14 @@
 "use client";
 
+import { useSession } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import * as z from "zod";
 
 import {
   Button,
   Combobox,
-  Input,
   SelectComponent,
   Textarea,
   toast,
@@ -32,9 +33,7 @@ const skillSchema = z.object({
 });
 
 const roleFormSchema = z.object({
-  roleName: z.string().min(1, "Role Name is required").max(100, {
-    message: "Role Name must not be longer than 100 characters.",
-  }),
+  roleName: z.string().nonempty("A valid role must be selected"),
   roleDescription: z.string().min(1, "Role Description is required").max(1000),
   departments: z.string(),
   skills: z.array(skillSchema).nonempty("At least one skill is required."),
@@ -44,38 +43,164 @@ const roleFormSchema = z.object({
   }),
 });
 
+interface RoleSkillAPIResponse {
+  role_skills: RoleSkillId[];
+}
+
+interface StaffIdAPIResponse {
+  staff_id: number;
+  fname: string;
+  lname: string;
+  dept: string;
+  email: string;
+  phone: string;
+  biz_address: string;
+  sys_role: string;
+}
+
+interface Skill {
+  skill_status: "active" | "inactive";
+  skill_name: string;
+  skill_id: number;
+}
+
+interface Role {
+  role_id: number;
+  role_name: string;
+}
+
 // This can come from your database or API.
 const defaultValues: Partial<RoleFormValues> = {
   roleDescription: "",
+  roleName: "",
 };
 
 const currentDate = new Date();
 const formattedDate = longDateTime.format(currentDate);
+const RoleForm: React.FC<RoleFormProps> = ({
+  departments,
+  roles,
+  allSkills,
+}) => {
+  const { session } = useSession();
+  const user = session?.user;
+  const [skillIdList, setSkillId] = useState<SkillAPIResponse[]>([]);
+  const [staffId, setStaffId] = useState<number | null>(null);
 
-const RoleForm: React.FC<RoleFormProps> = ({ skillList, departments }) => {
   const form = useForm<RoleFormValues>({
     resolver: zodResolver(roleFormSchema),
     defaultValues,
     mode: "onChange",
   });
 
-  const { fields, append } = useFieldArray({
-    name: "skills",
-    control: form.control,
-  });
-
   function onSubmit(data: RoleFormValues) {
-    toast({
-      title: "Role Successfully Created!",
-      description: formattedDate,
-      action: <ToastAction altText="ok">Dismiss</ToastAction>,
-    });
+    const transformedData = {
+      role_id: parseInt(data.roleName),
+      role_listing_desc: data.roleDescription,
+      role_listing_source: staffId,
+      role_listing_open: data.dateRange.from.toISOString(),
+      role_listing_close: data.dateRange.to.toISOString(),
+      role_listing_hide: "false",
+      role_listing_creator: staffId,
+      role_listing_ts_create: new Date().toISOString(),
+      role_listing_updater: staffId,
+      role_listing_ts_update: new Date().toISOString(),
+    };
+    console.log(JSON.stringify(transformedData));
+    fetch(`/api/role/role_listing`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "user-token": user?.id,
+        role: user?.publicMetadata?.role,
+      },
+      body: JSON.stringify(transformedData),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.statusText);
+        }
+        return res.json();
+      })
+      .then(() => {
+        toast({
+          title: "Role Successfully Created!",
+          description: formattedDate,
+          action: <ToastAction altText="ok">Dismiss</ToastAction>,
+        });
+      })
+      .catch((err) => {
+        toast({
+          variant: "destructive",
+          title: "Error creating role!",
+          description: err.message,
+          action: <ToastAction altText="ok">Dismiss</ToastAction>,
+        });
+      });
   }
 
-  // For connecting BE to FE to see the form object put this code into description
-  // <pre className="mt-2 flex w-[340px] flex-wrap rounded-md bg-green-950 p-4">
-  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-  //       </pre>
+  useEffect(() => {
+    if (user?.id) {
+      fetch(`/api/staff/clerk/${user.id}`, {
+        method: "GET",
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Network error");
+          }
+          return res.json();
+        })
+        .then((data: StaffIdAPIResponse) => {
+          setStaffId(data.staff_id);
+        })
+        .catch((err) => {
+          console.log("Error fetching staff_id:", err);
+        });
+    }
+  }, [user?.id]);
+
+  const getRoleSkills = (roleId: string) => {
+    fetch(`/api/role/role_skills?role_id=${roleId}`, {
+      method: "GET",
+      headers: {
+        "user-token": user?.id,
+        role: user?.publicMetadata?.role,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network error");
+        }
+        return res.json();
+      })
+      .then((data: RoleSkillAPIResponse) => {
+        if (allSkills) {
+          const associatedSkillIds = data.role_skills.map((rs) => rs.skill_id);
+
+          const filteredSkills = allSkills.filter((skill) =>
+            associatedSkillIds.includes(skill.skill_id),
+          );
+          setSkillId(filteredSkills);
+          form.setValue(
+            "skills",
+            filteredSkills.map((skill) => ({
+              value: skill.skill_id.toString(),
+              label: skill.skill_name,
+            })),
+          );
+        }
+      })
+      .catch((err) => {
+        console.log("Error fetching role skills:", err);
+      });
+  };
+
+  useEffect(() => {
+    const roleId = form.getValues().roleName;
+    if (roleId) {
+      getRoleSkills(roleId);
+    }
+  }, [form.watch("roleName")]);
 
   return (
     <div className="">
@@ -84,13 +209,26 @@ const RoleForm: React.FC<RoleFormProps> = ({ skillList, departments }) => {
           <FormField
             control={form.control}
             name="roleName"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
-                <FormLabel className="text-base">Role Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="" {...field} />
-                </FormControl>
-                <FormDescription></FormDescription>
+                <FormLabel className="text-base">Role</FormLabel>
+                <Controller
+                  control={form.control}
+                  name="roleName"
+                  render={({ field }) => (
+                    <Combobox
+                      items={roles.map((role) => ({
+                        value: role.role_id.toString(),
+                        label: role.role_name,
+                      }))}
+                      placeholder="Select a Role"
+                      value={field.value}
+                      onChange={(selectedRoleId) =>
+                        field.onChange(selectedRoleId)
+                      }
+                    />
+                  )}
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -112,7 +250,7 @@ const RoleForm: React.FC<RoleFormProps> = ({ skillList, departments }) => {
           <FormField
             control={form.control}
             name="departments"
-            render={({ field: departmentField }) => (
+            render={() => (
               <FormItem>
                 <FormLabel className="text-base">Department</FormLabel>
                 <FormDescription>
@@ -144,7 +282,10 @@ const RoleForm: React.FC<RoleFormProps> = ({ skillList, departments }) => {
                 <SelectComponent
                   createAble={true}
                   isMulti={true}
-                  options={skillList}
+                  options={skillIdList.map((skill) => ({
+                    value: skill.skill_id.toString(),
+                    label: skill.skill_name,
+                  }))}
                   placeholder="Select Skills"
                   {...field}
                 />
@@ -152,11 +293,10 @@ const RoleForm: React.FC<RoleFormProps> = ({ skillList, departments }) => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="dateRange"
-            render={({ field, fieldState }) => (
+            render={({ fieldState }) => (
               <FormItem>
                 <FormLabel className="text-base">Date Range</FormLabel>
                 <FormDescription>
@@ -197,7 +337,6 @@ const RoleForm: React.FC<RoleFormProps> = ({ skillList, departments }) => {
               </FormItem>
             )}
           />
-
           <Button type="submit">Create Role</Button>
         </form>
       </Form>

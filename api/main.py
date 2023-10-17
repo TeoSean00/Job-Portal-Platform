@@ -19,6 +19,7 @@ origins = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "https://is-212-spm.vercel.app",
+    "*",
 ]
 app.add_middleware(
     CORSMiddleware,
