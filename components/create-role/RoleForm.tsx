@@ -84,6 +84,11 @@ const RoleForm: React.FC<RoleFormProps> = ({
 }) => {
   const { session } = useSession();
   const user = session?.user;
+  if (!user?.id || !user?.publicMetadata?.role) {
+    throw new Error("User token or role is not defined!");
+  }
+  const userToken = user?.id;
+  const userRole = user?.publicMetadata?.role;
   const [skillIdList, setSkillId] = useState<SkillAPIResponse[]>([]);
   const [staffId, setStaffId] = useState<number | null>(null);
 
@@ -93,26 +98,38 @@ const RoleForm: React.FC<RoleFormProps> = ({
     mode: "onChange",
   });
 
+  function formatDateToISOWithoutZ(date: Date): string {
+    return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(
+      2,
+      "0",
+    )}-${String(date.getUTCDate()).padStart(2, "0")}T${String(
+      date.getUTCHours(),
+    ).padStart(2, "0")}:${String(date.getUTCMinutes()).padStart(
+      2,
+      "0",
+    )}:${String(date.getUTCSeconds()).padStart(2, "0")}`;
+  }
+
   function onSubmit(data: RoleFormValues) {
     const transformedData = {
-      role_id: parseInt(data.roleName),
+      role_id: parseInt(data.roleName, 10),
       role_listing_desc: data.roleDescription,
       role_listing_source: staffId,
-      role_listing_open: data.dateRange.from.toISOString(),
-      role_listing_close: data.dateRange.to.toISOString(),
-      role_listing_hide: "false",
+      role_listing_open: formatDateToISOWithoutZ(data.dateRange.from),
+      role_listing_close: formatDateToISOWithoutZ(data.dateRange.to),
+      role_listing_hide: formatDateToISOWithoutZ(data.dateRange.to),
       role_listing_creator: staffId,
-      role_listing_ts_create: new Date().toISOString(),
+      role_listing_ts_create: formatDateToISOWithoutZ(new Date()),
       role_listing_updater: staffId,
-      role_listing_ts_update: new Date().toISOString(),
+      role_listing_ts_update: formatDateToISOWithoutZ(new Date()),
     };
     console.log(JSON.stringify(transformedData));
     fetch(`/api/role/role_listing`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "user-token": user?.id,
-        role: user?.publicMetadata?.role,
+        "user-token": userToken,
+        role: String(userRole),
       },
       body: JSON.stringify(transformedData),
     })
@@ -126,15 +143,15 @@ const RoleForm: React.FC<RoleFormProps> = ({
         toast({
           title: "Role Successfully Created!",
           description: formattedDate,
-          action: <ToastAction altText="ok">Dismiss</ToastAction>,
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         toast({
           variant: "destructive",
           title: "Error creating role!",
           description: err.message,
-          action: <ToastAction altText="ok">Dismiss</ToastAction>,
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
       });
   }
@@ -163,8 +180,8 @@ const RoleForm: React.FC<RoleFormProps> = ({
     fetch(`/api/role/role_skills?role_id=${roleId}`, {
       method: "GET",
       headers: {
-        "user-token": user?.id,
-        role: user?.publicMetadata?.role,
+        "user-token": userToken,
+        role: String(userRole),
       },
     })
       .then((res) => {
@@ -196,7 +213,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
   };
 
   useEffect(() => {
-    const roleId = form.getValues().roleName;
+    const roleId: string = form.getValues().roleName;
     if (roleId) {
       getRoleSkills(roleId);
     }

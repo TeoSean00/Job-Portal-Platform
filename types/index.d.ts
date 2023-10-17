@@ -33,4 +33,15 @@ declare type RoleFormProps = {
   roles: RoleDetail[];
   allSkills: SkillAPIResponse[];
 };
-declare type RoleFormValues = z.infer<typeof roleFormSchema>;
+// declare type RoleFormValues = z.infer<typeof roleFormSchema>;
+
+declare type RoleFormValues = {
+  roleName: string;
+  roleDescription: string;
+  departments: string;
+  skills: { value: string }[];
+  dateRange: {
+    from: Date;
+    to: Date;
+  };
+};
