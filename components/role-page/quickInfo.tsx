@@ -19,7 +19,7 @@ interface RoleData {
 }
 export function QuickInfo(props: RoleData) {
   const [roleInfo, setRoleInfo] = React.useState(props.data);
-  console.log(roleInfo);
+  // console.log(roleInfo);
   return (
     <Card className="w-full">
       <CardHeader>
