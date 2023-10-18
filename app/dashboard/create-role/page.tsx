@@ -1,5 +1,7 @@
 "use client";
 
+import type { Department, RoleDetail, SkillDetail } from "@/types";
+
 import { useSession } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 
