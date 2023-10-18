@@ -90,11 +90,11 @@ class MatchResult(BaseModel):
 
 class RoleListingsPydantic(BaseModel):
     # Updated model to get from frontend
+    role_listing_id: int
     role_id: int
     role_listing_desc: str
     role_listing_source: int
     role_listing_open: str
-    role_listing_close: str
     role_listing_hide: Optional[str] = None
     role_listing_creator: int
     role_listing_ts_create: Optional[str] = None

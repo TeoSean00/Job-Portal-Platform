@@ -28,7 +28,6 @@ def default_message():
 
 @router.get("/role_details")
 def get_role_details(
-    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
     role_id: int = Query(None, description="Role ID"),
 ):
@@ -71,9 +70,8 @@ def get_role_details(
     ```
     """
     try:
-        if not common_services.authenticate_user(
-            User(user_token=user_token, role=role), "ADMIN"
-        ):
+        # Authenticate user
+        if not common_services.authenticate_user(role):
             raise HTTPException(status_code=401, detail="Unauthorized user!")
 
         if role_id is None:
@@ -126,7 +124,6 @@ def process_single_role_detail(role_detail, role_id):
 
 @router.get("/role_skills")
 def get_role_skills(
-    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
     role_id: int = Query(description="Required role_id"),
 ):
@@ -175,9 +172,8 @@ def get_role_skills(
     `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
-    if not common_services.authenticate_user(
-        User(user_token=user_token, role=role), "ADMIN", "STAFF", "DIRECTOR"
-    ):
+    # Authenticate user
+    if not common_services.authenticate_user(role):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
         role_skills = db_services.get_role_skills(role_id)
@@ -220,7 +216,6 @@ def validate_role_listing(role_details: RoleListingsPydantic):
 
 @router.get("/role_listing")
 def get_role_listing(
-    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
     role_listing_id: int = Query(None, description="Optional role_listing_id"),
 ):
@@ -259,12 +254,7 @@ def get_role_listing(
     ```
     """
     try:
-        if not common_services.authenticate_user(
-            User(user_token=user_token, role=role),
-            "ADMIN",
-            "STAFF",
-            "DIRECTOR",
-        ):
+        if not common_services.authenticate_user(role):
             raise HTTPException(status_code=401, detail="Unauthorized user!")
 
         if role_listing_id is None:
@@ -318,8 +308,7 @@ def process_single_role_listing(role_listing, role_listing_id):
 
 @router.post("/role_listing")
 def create_role_listing(
-    role_details: RoleListingsPydantic,
-    user_token: str = Header(..., description="User token"),
+    role_listing_details: RoleListingsPydantic,
     role: str = Header(..., description="User role"),
 ):
     """
@@ -328,8 +317,6 @@ def create_role_listing(
 
     ### Parameters:
     `role_details`: JSON object, schema further down
-
-    `user_token`: Taken from Headers, key is `user-token`
 
     `role`: Taken from Headers, key is `role`,
 
@@ -354,38 +341,32 @@ def create_role_listing(
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
     # Authenticate user
-    if not common_services.authenticate_user(
-        User(user_token=user_token, role=role), "ADMIN"
-    ):
+    if not common_services.authenticate_user(role):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
         # Validate form-details
         role_listing_ts_create = dt.datetime.utcnow()
-        if validate_role_listing(role_details):
+        if validate_role_listing(role_listing_details):
             data = {
-                "role_id": role_details.role_id,  # Links to ID inside role details
-                "role_listing_desc": role_details.role_listing_desc,
-                "role_listing_source": user_token,
+                "role_listing_id": role_listing_details.role_listing_id,
+                "role_id": role_listing_details.role_id,  # Links to ID inside role details
+                "role_listing_desc": role_listing_details.role_listing_desc,
+                "role_listing_source": role_listing_details.role_listing_source,
                 "role_listing_open": common_services.convert_str_to_datetime(
-                    role_details.role_listing_open
+                    role_listing_details.role_listing_open
                 ),
-                "role_listing_close": common_services.convert_str_to_datetime(
-                    role_details.role_listing_close
+                "role_listing_close": common_services.add_days_to_str_datetime(
+                    role_listing_details.role_listing_open, 14
                 ),
-                "role_listing_hide": common_services.convert_str_to_datetime(
-                    role_details.role_listing_hide
+                "role_listing_hide": common_services.add_days_to_str_datetime(
+                    role_listing_details.role_listing_hide, 14
                 ),
-                "role_listing_creator": user_token,
+                "role_listing_creator": role_listing_details.role_listing_creator,
                 "role_listing_ts_create": common_services.convert_str_to_datetime(
                     role_listing_ts_create
                 ),
-                # "role_listing_updater": None,
-                # "role_listing_ts_update": None,
-                # Set the updater and update time to the creator on first occurence
-                "role_listing_updater": user_token,
-                "role_listing_ts_update": common_services.convert_str_to_datetime(
-                    role_listing_ts_create
-                ),
+                "role_listing_updater": None,
+                "role_listing_ts_update": None,
             }
             # Create role_listing
             db_services.create_role_listing(**data)

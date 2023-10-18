@@ -3,18 +3,11 @@ import datetime as dt
 from database.schemas import User
 
 
-def authenticate_user(user: User, *role: str):
+def authenticate_user(user_role: str):
     """
-    Pseudo function for authenticating if user is of the required role.
-    User will be the user object, while role will be the priviledge
-    we are checking for.
-    Eg, authenticate_user(user, "staff", "admin") will check if the user
-    is either a staff or admin.
+    Function to authenticate user. Hard coded.
     """
-    # 4 corrosponds to invalid in SysRoleEnum
-    # if user.role ==  *role:
-    #     return True
-    if user.role == "invalid":
+    if user_role == "invalid":
         return False
     return True
 
@@ -25,6 +18,18 @@ def convert_str_to_datetime(date_str: str):
     """
     if isinstance(date_str, str):
         return dt.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+    else:
+        return date_str
+
+
+def add_days_to_str_datetime(date_str: str, days: int = 14):
+    """
+    Function to add days to string datetime object.
+    """
+    if isinstance(date_str, str):
+        date = dt.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+        date += dt.timedelta(days=days)
+        return date.strftime("%Y-%m-%dT%H:%M:%S")
     else:
         return date_str
 

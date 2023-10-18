@@ -1,6 +1,7 @@
 import datetime as dt
 
 from fastapi import HTTPException
+from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
 
 from database.database import SessionLocal
@@ -22,9 +23,8 @@ from database.models import (
 def healthcheck():
     try:
         db = SessionLocal()
-
         # Attempt a simple query to check the database connection
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         return True  # Database is reachable
     except OperationalError:
         return False  # Database is not reachable
@@ -322,6 +322,7 @@ def get_all_role_listings():
 
 
 def create_role_listing(
+    role_listing_id: int,
     role_id: int,
     role_listing_desc: str,
     role_listing_source: int,
@@ -335,6 +336,7 @@ def create_role_listing(
 ):
     db = SessionLocal()
     role_listing = RoleListings(
+        role_listing_id=role_listing_id,
         role_id=role_id,
         role_listing_desc=role_listing_desc,
         role_listing_source=role_listing_source,
