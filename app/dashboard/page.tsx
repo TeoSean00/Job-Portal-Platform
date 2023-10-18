@@ -1,16 +1,23 @@
 "use client";
 
-import { useSession, SignOutButton } from "@clerk/nextjs";
-import React from "react";
+import type { User } from "@/types";
 
+import { useSession, SignOutButton } from "@clerk/nextjs";
+import React, { useContext } from "react";
+import useSWR from "swr";
+
+import { AuthContext, fetcher } from "@/components/AuthProvider";
 import { Button } from "@/components/ui";
 
 const DashboardPage = () => {
   const { isLoaded, session } = useSession();
   const user = session?.user;
 
-  /* Just to show how we can access user/session data (role, name, image etc) from clerk. */
+  // An example of how you can retrive staff id from context to pass to API endpoints
+  const staffId = useContext(AuthContext);
+  const { data } = useSWR<User>(`/api/staff/${staffId}`, fetcher);
 
+  /* Just to show how we can access user/session data (role, name, image etc) from clerk. */
   return (
     <div className="pt-10">
       <div className="mx-auto flex h-full w-full max-w-md flex-col gap-y-4">
@@ -18,6 +25,7 @@ const DashboardPage = () => {
           <div>
             <h2 className="text-primary">Role:</h2>
             <span>{session.user.publicMetadata.role as string}</span>
+            <div>{JSON.stringify(data)}</div>
           </div>
         )}
 
@@ -26,6 +34,10 @@ const DashboardPage = () => {
             <div>
               <h2 className="text-primary">User ID:</h2>
               <span>{user.id}</span>
+            </div>
+            <div>
+              <h2 className="text-primary">Staff ID:</h2>
+              <span>{staffId}</span>
             </div>
           </>
         ) : (

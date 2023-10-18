@@ -23,7 +23,7 @@ def convert_str_to_datetime(date_str: str):
     """
     Function to convert string to datetime object.
     """
-    if type(date_str) == str:
+    if isinstance(date_str, str):
         return dt.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
     else:
         return date_str
