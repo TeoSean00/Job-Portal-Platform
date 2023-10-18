@@ -409,4 +409,72 @@ def create_role_listing(
         pass
 
 
+# Get all applicants for role_listing
+# @router.get("/role_applicants/{role_listing_id}")
+# def get_role_applicants(
+#     user_token: str = Header(..., description="User token"),
+#     role: str = Header(..., description="User role"),
+#     role_listing_id: int = Query(None, description="role_listing_id"),
+# ):
+#     """
+#     Description: This endpoint returns either one or all role listings in the database.
+
+#     Parameters:
+#     - role_listing_id: Optional, returns specific listing if provided else all.
+#     - user_token: Taken from Headers, key is `user-token`
+#     - role: Taken from Headers, key is `role`
+
+#     Returns:
+#     A JSON object containing the role_listing associated.
+
+#     Errors:
+#     - 404 Not Found: No role details matching the given role details ID found in the system.
+#     - 500 Internal Server Error: Generic server error that can occur for various reasons.
+
+#     Example Request:
+#     ```
+#     GET /role/role_listing
+#     GET /role/role_listing?role_listing_id=0
+#     Authorization: <Clerk Token>
+#     user-token: "123456789"
+#     role: "hr"
+#     ```
+
+#     Example Response:
+#     ```
+#     {
+#         "role_listing": {
+#             "role_listing_id": 0,
+#             ...
+#         }
+#     }
+#     ```
+#     """
+#     try:
+#         if not common_services.authenticate_user(
+#             User(user_token=user_token, role=role),
+#             "ADMIN",
+#             "STAFF",
+#             "DIRECTOR",
+#         ):
+#             raise HTTPException(status_code=401, detail="Unauthorized user!")
+
+#         if role_listing_id is None:
+#             role_listings = db_services.get_all_role_listings()
+#             role_listing = process_role_listings(role_listings)
+#         else:
+#             role_listing = db_services.get_role_listings(role_listing_id)
+#             role_listing = process_single_role_listing(
+#                 role_listing, role_listing_id
+#             )
+
+#         return {"role_listing": role_listing}
+
+#     except HTTPException as e:
+#         raise e
+#     except Exception as e:
+#         print(e)
+#         raise HTTPException(status_code=500, detail={"message": str(e)})
+
+
 # =========================== End: Role Listing  ===========================
