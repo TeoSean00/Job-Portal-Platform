@@ -55,6 +55,7 @@
     "remark-preset-lint-consistent": "^5.1.1",
     "remark-preset-lint-recommended": "^6.1.2",
     "sass": "^1.66.1",
+    "swr": "^2.2.4",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",

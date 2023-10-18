@@ -45,7 +45,10 @@ export function Combobox({
       <PopoverTrigger asChild>
         <Button
           aria-expanded={open}
-          className="w-full justify-between"
+          className={cn(
+            "w-full justify-between",
+            !value && "font-normal text-muted-foreground",
+          )}
           role="combobox"
           variant="outline"
         >
@@ -57,7 +60,7 @@ export function Combobox({
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
         <Command>
-          <CommandInput className="h-9" placeholder="Search item..." />
+          <CommandInput className="h-9 " placeholder="Search item..." />
           <CommandEmpty>No item found.</CommandEmpty>
           <CommandGroup>
             {items.map((item) => (

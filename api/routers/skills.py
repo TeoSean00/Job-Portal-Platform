@@ -21,7 +21,7 @@ def default_message():
 
 @router.get("/get-all")
 def get_all_skills(
-    user_token: int = Header(..., description="User token"),
+    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
 ):
     """

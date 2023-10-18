@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -17,7 +17,7 @@ class User(BaseModel):
     Represents the requestor user information.
     """
 
-    user_token: int
+    user_token: str
     role: SysRoleEnum
 
 
@@ -43,6 +43,32 @@ class StaffDetailsPydantic(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SkillDetailsPydantic(BaseModel):
+    skill_id: int
+    skill_name: str
+    skill_status: StatusEnum
+
+    class Config:
+        orm_mode = True
+
+
+class MatchStatus(BaseModel):
+    active: List[SkillDetailsPydantic] = []
+    in_progress: List[SkillDetailsPydantic] = []
+    unverified: List[SkillDetailsPydantic] = []
+
+    class Config:
+        orm_mode = True
+
+
+class MatchResult(BaseModel):
+    match: MatchStatus
+    missing: List[SkillDetailsPydantic]
+
+    class Config:
+        orm_mode = True
 
 
 # class RoleListingsPydantic(BaseModel):
@@ -90,15 +116,6 @@ class RoleApplicationsPydantic(BaseModel):
         from_attributes = True
 
 
-class SkillDetailsPydantic(BaseModel):
-    skill_id: int
-    skill_name: str
-    skill_status: StatusEnum
-
-    class Config:
-        from_attributes = True
-
-
 class RoleSkillsPydantic(BaseModel):
     role_id: int
     skill_id: int
@@ -128,6 +145,8 @@ class StaffRolesPydantic(BaseModel):
 class StaffSkillsPydantic(BaseModel):
     staff_id: int
     skill_id: int
+    skill_name: str
+    skill_status: StatusEnum
     ss_status: VerificationStatusEnum
 
     class Config:
