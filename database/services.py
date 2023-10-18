@@ -204,6 +204,7 @@ def get_all_role_listings():
 
 
 def create_role_listing(
+    role_listing_id:int,
     role_id: int,
     role_listing_desc: str,
     role_listing_source: int,
@@ -217,6 +218,7 @@ def create_role_listing(
 ):
     db = SessionLocal()
     role_listing = RoleListings(
+        role_listing_id=role_listing_id,
         role_id=role_id,
         role_listing_desc=role_listing_desc,
         role_listing_source=role_listing_source,
