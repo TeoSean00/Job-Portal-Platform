@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
+// e.g.: Wednesday, 04 Oct 2023, 11:59 PM
 export const longDateTime = new Intl.DateTimeFormat("en-sg", {
   weekday: "long",
   year: "numeric",

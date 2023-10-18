@@ -1,6 +1,7 @@
 /* eslint-disable import/no-cycle */
 export * from "./button";
 export * from "./calendar";
+export * from "./columns";
 export * from "./comboBox";
 export * from "./command";
 export * from "./dialog";
@@ -14,4 +15,5 @@ export * from "./separator";
 export * from "./textarea";
 export * from "./toast";
 export * from "./toaster";
+export * from "./badge";
 export * from "./use-toast";

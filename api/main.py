@@ -19,6 +19,7 @@ origins = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "https://is-212-spm.vercel.app",
+    "*",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -38,7 +39,7 @@ app.include_router(skills.router)
 async def healthcheck():
     db_status = db_services.healthcheck()
     if db_status:
-        msg = "Database connection successful!"
+        msg = "Database connection successful! "
     else:
         msg = "Database connection failed!"
     return {"fastapi": "Successfully connected to FastAPI!", "database": msg}

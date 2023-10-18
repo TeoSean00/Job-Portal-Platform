@@ -380,10 +380,9 @@ def test_success_get_role_skills(mock_get_role_skills):
         ]
     }
 
-    headers = {"user-token": "123456789", "role": "hr"}
-
     response = client.get(
-        f"/role/role_skills?role_id=23456789", headers=headers
+        "/role/role_skills?role_id=23456789",
+        headers={"user-token": "123456789", "role": "hr"},
     )
 
     assert response.status_code == 200
@@ -402,7 +401,7 @@ def test_unauthorized_get_role_skills():
     headers = {"user-token": "123456789", "role": "invalid"}
 
     response = client.get(
-        f"/role/role_skills?role_id=23456789", headers=headers
+        "/role/role_skills?role_id=23456789", headers=headers
     )
 
     # Assert

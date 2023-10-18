@@ -97,15 +97,133 @@ def delete_role_details(role_id: int):
 # StaffDetails CRUD operations
 
 
+def get_clerk_staff(clerk_id: str):
+    db = SessionLocal()
+    try:
+        staff_clerk = (
+            db.query(ClerkStaffMatch)
+            .filter(ClerkStaffMatch.clerk_id == clerk_id)
+            .first()
+        )
+        if staff_clerk:
+            staff_id = staff_clerk.staff_id
+            staff = (
+                db.query(StaffDetails)
+                .filter(StaffDetails.staff_id == staff_id)
+                .first()
+            )
+            if staff:
+                return staff
+        return None
+    finally:
+        db.close()
+
+
+def get_all_staff_details():
+    db = SessionLocal()
+    try:
+        staff = db.query(StaffDetails).all()
+        return staff
+    finally:
+        db.close()
+
+
 def get_staff_details(staff_id: int):
     db = SessionLocal()
-    staff = (
-        db.query(StaffDetails)
-        .filter(StaffDetails.staff_id == staff_id)
-        .first()
-    )
-    db.close()
-    return staff
+    try:
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
+        )
+        return staff
+    finally:
+        db.close()
+
+
+def get_staff_role_skills_match(staff_id: int, role_listing_id: int):
+    db = SessionLocal()
+    try:
+        # Initial check to see if staff exists first
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
+        )
+
+        if staff is None:
+            return None
+
+        # Initial check to see if role_listing_id exists first
+        role_listing = (
+            db.query(RoleListings)
+            .filter(RoleListings.role_listing_id == role_listing_id)
+            .first()
+        )
+
+        if role_listing is None:
+            return None
+
+        # If staff and role_listing exists, get all skills associated with staff and role_listing
+        role_skills = (
+            db.query(RoleSkills)
+            .filter(RoleSkills.role_id == role_listing.role_id)
+            .all()
+        )
+
+        staff_skills = (
+            db.query(StaffSkills)
+            .filter(StaffSkills.staff_id == staff_id)
+            .all()
+        )
+
+        # result to store all skills matches and mismatches
+        result = {
+            "match": {
+                "active": [],
+                "in-progress": [],
+                "unverified": [],
+            },
+            "missing": [],
+        }
+
+        for role_skill in role_skills:
+            # Get skill object details
+            skill = (
+                db.query(SkillDetails)
+                .filter(SkillDetails.skill_id == role_skill.skill_id)
+                .first()
+            )
+
+            # Get staff_skill object details if there's a match
+            matching_staff_skill = None
+            for staff_skill in staff_skills:
+                if staff_skill.skill_id == role_skill.skill_id:
+                    matching_staff_skill = staff_skill
+                    break
+
+            # Adding to result accordingly depending on match or mismatch
+            if matching_staff_skill:
+                match_object = {
+                    "skill_id": role_skill.skill_id,
+                    "skill_name": skill.skill_name,
+                    "skill_status": skill.skill_status,
+                    "ss_status": matching_staff_skill.ss_status,
+                }
+                result["match"][matching_staff_skill.ss_status].append(
+                    match_object
+                )
+            else:
+                mismatch_object = {
+                    "skill_id": role_skill.skill_id,
+                    "skill_name": skill.skill_name,
+                    "skill_status": skill.skill_status,
+                }
+                result["missing"].append(mismatch_object)
+
+        return result
+    finally:
+        db.close()
 
 
 def create_staff_details(
@@ -301,20 +419,97 @@ def get_role_application(role_app_id: int):
     return role_app
 
 
+def get_staff_role_application(staff_id: int, role_listing_id: int):
+    db = SessionLocal()
+    try:
+        # Initial check to see if staff exists first
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
+        )
+        if staff is None:
+            return None
+
+        # Initial check to see if role_listing_id exists first
+        role_listing = (
+            db.query(RoleListings)
+            .filter(RoleListings.role_listing_id == role_listing_id)
+            .first()
+        )
+        if role_listing is None:
+            return None
+
+        # If staff and role_listing exists, check to see if staff has applied for this role_listing before
+        role_app = (
+            db.query(RoleApplications)
+            .filter(
+                RoleApplications.role_listing_id == role_listing_id,
+                RoleApplications.staff_id == staff_id,
+                RoleApplications.role_app_status == "applied",
+            )
+            .first()
+        )
+        if role_app:
+            return role_app
+        else:
+            return "not applied before"
+    finally:
+        db.close()
+
+
 def create_role_application(
     role_listing_id: int, staff_id: int, role_app_status: str
 ):
     db = SessionLocal()
-    role_app = RoleApplications(
-        role_listing_id=role_listing_id,
-        staff_id=staff_id,
-        role_app_status=role_app_status,
-    )
-    db.add(role_app)
-    db.commit()
-    db.refresh(role_app)
-    db.close()
-    return role_app
+    try:
+        # Initial check to see if staff exists first
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
+        )
+
+        if staff is None:
+            return None
+
+        # Initial check to see if role_listing_id exists first
+        role_listing = (
+            db.query(RoleListings)
+            .filter(RoleListings.role_listing_id == role_listing_id)
+            .first()
+        )
+
+        if role_listing is None:
+            return None
+
+        # Initial check to see if staff has applied for this role_listing before
+        role_app = (
+            db.query(RoleApplications)
+            .filter(
+                RoleApplications.role_listing_id == role_listing_id,
+                RoleApplications.staff_id == staff_id,
+                RoleApplications.role_app_status == "applied",
+            )
+            .first()
+        )
+
+        if role_app:
+            return "applied before"
+
+        # If staff and role_listing exists, and staff has not applied for this role_listing before, proceed to create a new role_listing application
+        role_app = RoleApplications(
+            role_listing_id=role_listing_id,
+            staff_id=staff_id,
+            role_app_status=role_app_status,
+        )
+
+        db.add(role_app)
+        db.commit()
+        db.refresh(role_app)
+        return role_app
+    finally:
+        db.close()
 
 
 def update_role_application(
@@ -636,17 +831,49 @@ def create_staff_skill(staff_id: int, skill_id: int, ss_status: str):
     return staff_skill
 
 
-def get_staff_skill(staff_id: int, skill_id: int):
+def get_staff_skill(staff_id: int):
     db = SessionLocal()
-    staff_skill = (
-        db.query(StaffSkills)
-        .filter(
-            StaffSkills.staff_id == staff_id, StaffSkills.skill_id == skill_id
+    try:
+        # Initial check to see if staff exists first
+        staff = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.staff_id == staff_id)
+            .first()
         )
-        .first()
-    )
-    db.close()
-    return staff_skill
+
+        if staff is None:
+            return None
+
+        # If staff exists, get all skills associated with staff
+        result = []
+
+        staff_skill_all = (
+            db.query(StaffSkills)
+            .filter(StaffSkills.staff_id == staff_id)
+            .all()
+        )
+
+        if staff_skill_all:
+            for staff_skill in staff_skill_all:
+                skill_id = staff_skill.skill_id
+                skill = (
+                    db.query(SkillDetails)
+                    .filter(SkillDetails.skill_id == skill_id)
+                    .first()
+                )
+                if skill:
+                    result_dict = {
+                        "staff_id": staff_id,
+                        "skill_id": skill_id,
+                        "skill_name": skill.skill_name,
+                        "skill_status": skill.skill_status,
+                        "ss_status": staff_skill.ss_status,
+                    }
+                    result.append(result_dict)
+
+        return result
+    finally:
+        db.close()
 
 
 def update_staff_skill(staff_id: int, skill_id: int, ss_status: str):

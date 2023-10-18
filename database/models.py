@@ -7,7 +7,7 @@ from database.database import Base
 
 class RoleDetails(Base):
     __tablename__ = "ROLE_DETAILS"
-    role_id = Column(Integer, primary_key=True)
+    role_id = Column(Integer, primary_key=True, autoincrement=True)
     role_name = Column(String(50), nullable=False)
     role_description = Column(String(50000))
     role_status = Column(Enum("active", "inactive"))
@@ -15,7 +15,7 @@ class RoleDetails(Base):
 
 class StaffDetails(Base):
     __tablename__ = "STAFF_DETAILS"
-    staff_id = Column(Integer, primary_key=True)
+    staff_id = Column(Integer, primary_key=True, autoincrement=True)
     fname = Column(String(50), nullable=False)
     lname = Column(String(50), nullable=False)
     dept = Column(String(50), nullable=False)
@@ -27,7 +27,7 @@ class StaffDetails(Base):
 
 class RoleListings(Base):
     __tablename__ = "ROLE_LISTINGS"
-    role_listing_id = Column(Integer, primary_key=True)
+    role_listing_id = Column(Integer, primary_key=True, autoincrement=True)
     role_id = Column(
         Integer, ForeignKey("ROLE_DETAILS.role_id"), nullable=False
     )
@@ -63,7 +63,7 @@ class RoleApplications(Base):
 
 class SkillDetails(Base):
     __tablename__ = "SKILL_DETAILS"
-    skill_id = Column(Integer, primary_key=True)
+    skill_id = Column(Integer, primary_key=True, autoincrement=True)
     skill_name = Column(String(50), nullable=False)
     skill_status = Column(Enum("active", "inactive"), nullable=False)
 
@@ -115,7 +115,7 @@ class StaffSkills(Base):
 
 class ClerkStaffMatch(Base):
     __tablename__ = "CLERK_STAFF_MATCH"
-    clerk_id = Column(Integer, primary_key=True)
+    clerk_id = Column(String(155), primary_key=True)
     staff_id = Column(
         Integer, ForeignKey("STAFF_DETAILS.staff_id"), nullable=False
     )

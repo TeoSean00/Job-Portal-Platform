@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
@@ -17,7 +17,7 @@ class User(BaseModel):
     Represents the requestor user information.
     """
 
-    user_token: int
+    user_token: str
     role: SysRoleEnum
 
 
@@ -28,7 +28,7 @@ class RoleDetailsPydantic(BaseModel):
     role_status: StatusEnum
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class StaffDetailsPydantic(BaseModel):
@@ -40,6 +40,32 @@ class StaffDetailsPydantic(BaseModel):
     phone: str
     biz_address: str
     sys_role: SysRoleEnum
+
+    class Config:
+        from_attributes = True
+
+
+class SkillDetailsPydantic(BaseModel):
+    skill_id: int
+    skill_name: str
+    skill_status: StatusEnum
+
+    class Config:
+        orm_mode = True
+
+
+class MatchStatus(BaseModel):
+    active: List[SkillDetailsPydantic] = []
+    in_progress: List[SkillDetailsPydantic] = []
+    unverified: List[SkillDetailsPydantic] = []
+
+    class Config:
+        orm_mode = True
+
+
+class MatchResult(BaseModel):
+    match: MatchStatus
+    missing: List[SkillDetailsPydantic]
 
     class Config:
         orm_mode = True
@@ -59,7 +85,7 @@ class StaffDetailsPydantic(BaseModel):
 #     role_listing_ts_update: Optional[datetime]
 
 #     class Config:
-#         orm_mode = True
+#         from_attributes = True
 
 
 class RoleListingsPydantic(BaseModel):
@@ -87,16 +113,7 @@ class RoleApplicationsPydantic(BaseModel):
     role_app_ts_create: datetime
 
     class Config:
-        orm_mode = True
-
-
-class SkillDetailsPydantic(BaseModel):
-    skill_id: int
-    skill_name: str
-    skill_status: StatusEnum
-
-    class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class RoleSkillsPydantic(BaseModel):
@@ -104,7 +121,7 @@ class RoleSkillsPydantic(BaseModel):
     skill_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class StaffReportingOfficerPydantic(BaseModel):
@@ -112,7 +129,7 @@ class StaffReportingOfficerPydantic(BaseModel):
     RO_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class StaffRolesPydantic(BaseModel):
@@ -122,16 +139,18 @@ class StaffRolesPydantic(BaseModel):
     sr_status: StatusEnum
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class StaffSkillsPydantic(BaseModel):
     staff_id: int
     skill_id: int
+    skill_name: str
+    skill_status: StatusEnum
     ss_status: VerificationStatusEnum
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ClerkStaffMatch(BaseModel):
@@ -139,4 +158,4 @@ class ClerkStaffMatch(BaseModel):
     staff_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
