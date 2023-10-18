@@ -1,5 +1,7 @@
 "use client";
 
+import type { SidebarNavItem } from "@/types";
+
 import { ChevronRight, List, UserCircle, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

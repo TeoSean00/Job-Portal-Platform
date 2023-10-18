@@ -1,5 +1,12 @@
 "use client";
 
+import type {
+  RoleFormProps,
+  RoleFormValues,
+  RoleSkillId,
+  SkillAPIResponse,
+} from "@/types";
+
 import { useSession } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
