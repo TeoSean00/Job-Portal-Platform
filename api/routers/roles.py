@@ -1,8 +1,8 @@
 import datetime as dt
 import json
-from typing import Optional
+from typing import Annotated, Optional
 
-from fastapi import APIRouter, Header, HTTPException, Query
+from fastapi import APIRouter, Header, HTTPException, Path, Query
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
@@ -410,71 +410,91 @@ def create_role_listing(
 
 
 # Get all applicants for role_listing
-# @router.get("/role_applicants/{role_listing_id}")
-# def get_role_applicants(
-#     user_token: str = Header(..., description="User token"),
-#     role: str = Header(..., description="User role"),
-#     role_listing_id: int = Query(None, description="role_listing_id"),
-# ):
-#     """
-#     Description: This endpoint returns either one or all role listings in the database.
+@router.get("/applicants/{role_listing_id}")
+async def get_role_applicant_details(
+    role_listing_id: Annotated[int, Path(Title="required id of role listing")],
+):
+    """
+     Description: This endpoint returns all staff applicant details for a given role_listing_id.
 
-#     Parameters:
-#     - role_listing_id: Optional, returns specific listing if provided else all.
-#     - user_token: Taken from Headers, key is `user-token`
-#     - role: Taken from Headers, key is `role`
+     Parameters:
+     - role_listing_id: Required, returns all applicants for a given role_listing_id.
 
-#     Returns:
-#     A JSON object containing the role_listing associated.
+     Returns:
+     A JSON object containing a list of details for each applicant for this particular role_listing
+     - role_app_id: ID of the role application
+     - role_listing_id: ID of the role listing
+     - staff_id: ID of the staff member
+     - role_app_status: Status of the role application
 
-#     Errors:
-#     - 404 Not Found: No role details matching the given role details ID found in the system.
-#     - 500 Internal Server Error: Generic server error that can occur for various reasons.
 
-#     Example Request:
-#     ```
-#     GET /role/role_listing
-#     GET /role/role_listing?role_listing_id=0
-#     Authorization: <Clerk Token>
-#     user-token: "123456789"
-#     role: "hr"
-#     ```
 
-#     Example Response:
-#     ```
-#     {
-#         "role_listing": {
-#             "role_listing_id": 0,
-#             ...
-#         }
-#     }
-#     ```
-#     """
-#     try:
-#         if not common_services.authenticate_user(
-#             User(user_token=user_token, role=role),
-#             "ADMIN",
-#             "STAFF",
-#             "DIRECTOR",
-#         ):
-#             raise HTTPException(status_code=401, detail="Unauthorized user!")
+     Errors:
+     - 404 Not Found: No role details matching the given role details ID found in the system.
+     - 500 Internal Server Error: Generic server error that can occur for various reasons.
 
-#         if role_listing_id is None:
-#             role_listings = db_services.get_all_role_listings()
-#             role_listing = process_role_listings(role_listings)
-#         else:
-#             role_listing = db_services.get_role_listings(role_listing_id)
-#             role_listing = process_single_role_listing(
-#                 role_listing, role_listing_id
-#             )
+     Example Request:
+     ```
+     GET /role/applicants/1
+     Authorization: <Clerk Token>
+     role: "hr"
+     ```
 
-#         return {"role_listing": role_listing}
+     Example Response:
+     ```
+    { "role_applicants_details": [
+         {
+             "role_app_id": 1,
+             "role_listing_id": 1,
+             "staff_id": 123456788,
+             "fname": "VINCENT REX",
+             "lname": "COLINS",
+             "dept": "HUMAN RESOURCE AND ADMIN",
+             "email": "colins_vincent_rex@all-in-one.com.sg",
+             "phone": "65-1234-5679",
+             "biz_address": "60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051",
+             "sys_role": "hr",
+             "role_app_status": "applied",
+             "role_app_ts_create": "2023-09-22T14:38:42"
+         },
+         {
+             "role_app_id": 2,
+             "role_listing_id": 1,
+             "staff_id": 123456789,
+             "fname": "AH GAO",
+             "lname": "TAN",
+             "dept": "FINANCE",
+             "email": "tan_ah_gao@all-in-one.com.sg",
+             "phone": "65-1234-5678",
+             "biz_address": "60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051",
+             "sys_role": "staff",
+             "role_app_status": "withdrawn",
+             "role_app_ts_create": "2023-09-22T14:38:42"
+         }
+         ]
+     }
+     ```
+    """
+    try:
+        # if not common_services.authenticate_user(
+        #     User(user_token=user_token, role=role),
+        #     "ADMIN",
+        #     "STAFF",
+        #     "DIRECTOR",
+        # ):
+        #     raise HTTPException(status_code=401, detail="Unauthorized user!")
 
-#     except HTTPException as e:
-#         raise e
-#     except Exception as e:
-#         print(e)
-#         raise HTTPException(status_code=500, detail={"message": str(e)})
+        role_applicants_details = db_services.get_role_applicant_details(
+            role_listing_id
+        )
+
+        return {"role_applicants_details": role_applicants_details}
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail={"message": str(e)})
 
 
 # =========================== End: Role Listing  ===========================

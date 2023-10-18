@@ -27,7 +27,7 @@ class StaffDetails(Base):
 
 class RoleListings(Base):
     __tablename__ = "ROLE_LISTINGS"
-    role_listing_id = Column(Integer, primary_key=True, autoincrement=True)
+    role_listing_id = Column(Integer, primary_key=True)
     role_id = Column(
         Integer, ForeignKey("ROLE_DETAILS.role_id"), nullable=False
     )

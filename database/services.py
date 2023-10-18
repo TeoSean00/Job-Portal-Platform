@@ -419,6 +419,58 @@ def get_role_application(role_app_id: int):
     return role_app
 
 
+# get all role applicant details for a role_listing_id
+def get_role_applicant_details(role_listing_id: int):
+    db = SessionLocal()
+    try:
+        # Initial check to see if role_listing_id exists first
+        role_listing = (
+            db.query(RoleListings)
+            .filter(RoleListings.role_listing_id == role_listing_id)
+            .first()
+        )
+        if role_listing is None:
+            return None
+
+        # If role_listing exists, get all role applications associated with role_listing
+        role_app_all = (
+            db.query(RoleApplications)
+            .filter(RoleApplications.role_listing_id == role_listing_id)
+            .all()
+        )
+
+        result = []
+
+        if role_app_all:
+            for role_app in role_app_all:
+                staff_id = role_app.staff_id
+                staff = (
+                    db.query(StaffDetails)
+                    .filter(StaffDetails.staff_id == staff_id)
+                    .first()
+                )
+                if staff:
+                    result_dict = {
+                        "role_app_id": role_app.role_app_id,
+                        "role_listing_id": role_app.role_listing_id,
+                        "staff_id": staff_id,
+                        "fname": staff.fname,
+                        "lname": staff.lname,
+                        "dept": staff.dept,
+                        "email": staff.email,
+                        "phone": staff.phone,
+                        "biz_address": staff.biz_address,
+                        "sys_role": staff.sys_role,
+                        "role_app_status": role_app.role_app_status,
+                        "role_app_ts_create": role_app.role_app_ts_create,
+                    }
+                    result.append(result_dict)
+
+        return result
+    finally:
+        db.close()
+
+
 def get_staff_role_application(staff_id: int, role_listing_id: int):
     db = SessionLocal()
     try:
