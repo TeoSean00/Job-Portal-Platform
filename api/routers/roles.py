@@ -1,6 +1,7 @@
 import datetime as dt
 import json
 from typing import Optional
+import uuid
 
 from fastapi import APIRouter, Header, HTTPException, Query
 from fastapi.responses import JSONResponse
@@ -359,8 +360,12 @@ def create_role_listing(
     try:
         # Validate form-details
         role_listing_ts_create = dt.datetime.utcnow()
+        new_id = int(str(uuid.uuid4().int & (1<<64)-1)[:8])
+        
+
         if validate_role_listing(role_details):
             data = {
+                "role_listing_id": new_id,
                 "role_id": role_details.role_id,  # Links to ID inside role details
                 "role_listing_desc": role_details.role_listing_desc,
                 "role_listing_source": user_token,
