@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import "./globals.scss";
 
+import "./globals.scss";
 import { ClerkProvider } from "@clerk/nextjs";
 
+import { AuthProvider } from "@/components/AuthProvider";
 import { inter } from "@/fonts";
 import { cn } from "@/lib/utils";
 
@@ -24,16 +25,18 @@ export default function RootLayout({
         },
       }}
     >
-      <html lang="en">
-        <body
-          className={cn(
-            inter.className,
-            "h-screen bg-background text-foreground",
-          )}
-        >
-          <main>{children}</main>
-        </body>
-      </html>
+      <AuthProvider>
+        <html lang="en">
+          <body
+            className={cn(
+              inter.className,
+              "h-screen bg-background text-foreground",
+            )}
+          >
+            <main>{children}</main>
+          </body>
+        </html>
+      </AuthProvider>
     </ClerkProvider>
   );
 }
