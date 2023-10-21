@@ -371,7 +371,6 @@ def create_role_listing(
                 "role_location": role_listing_details.role_location,
             }
             # Create role_listing
-            print("Here!")
             db_services.create_role_listing(**data)
         else:
             raise HTTPException(
