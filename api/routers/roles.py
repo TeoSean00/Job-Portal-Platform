@@ -23,6 +23,113 @@ def default_message():
     }
 
 
+# =========================== Master: Get Roles  ===========================
+@router.get("/roles_info")
+def get_role_info(
+    role: str = Header(..., description="User role"),
+    role_id: int = Query(None, description="Role ID"),
+):
+    """
+    Description: This endpoint is a compiled end point that returns all information about a role detail,
+    included the linked skills.
+
+    Parameters:
+    - role_id: Optional, if provided returns role details for a specific role. Else, returns all.
+    - role: Taken from Headers, key is `role`.
+
+    Returns:
+    A JSON object containing the details of roles.
+
+    Errors:
+    - 500 Internal Server Error: Generic server error that can occur for various reasons.
+
+    Example Request:
+    ```
+    GET /role/role_details
+    Authorization: <Clerk Token>
+    role: "hr"
+    ```
+
+    Example Response:
+    ```
+        {
+        "234567892": {
+            "role_id": 234567892,
+            "role_name": "Learning Facilitator / Trainer",
+            "role_desc": "The Learning Facilitator delivers learning products and services in a variety of environments, using multiple learning delivery modes and methods. He/She assesses learning needs and adapts the facilitation approach to reflect desired learning outcomes and learner needs. He is responsible for knowledge and skills transfer by delivering learning content, facilitating group discussions and responding to queries. He drives learner development and commitment to continuous learning by actively providing feedback and learner support. He evaluates curriculum effectiveness and recommends improvement areas by collecting learner feedback as well as analysing learning delivery approaches and materials.\nHe is a strong communicator who builds trusted relationships and creates a cooperative and engaging learning environment. He is adaptable and adept at managing multiple stakeholders. He works in multiple different environments, including different learning venues and client sites, and regularly interacts with digital systems.",
+            "role_status": "active",
+            "skills": []
+        },
+        "234567899": {
+            "role_id": 234567899,
+            "role_name": "Butcher",
+            "role_desc": "added by elton on 22/9/23 10.12pm to fix fk constraints",
+            "role_status": "active",
+            "skills": [
+                {
+                    "skill_id": 345678790,
+                    "skill_name": "Typescript Developer",
+                    "skill_status": "active"
+                },
+                {
+                    "skill_id": 345678866,
+                    "skill_name": "Java Developer",
+                    "skill_status": "active"
+                },
+                {
+                    "skill_id": 345678922,
+                    "skill_name": "React Beast",
+                    "skill_status": "active"
+                }
+            ]
+        },
+    }
+    ```
+    """
+    try:
+        if not common_services.authenticate_user(role):
+            raise HTTPException(status_code=401, detail="Unauthorized user!")
+        if role_id is None:
+            result = db_services.get_all_roles_info()
+        else:
+            result = db_services.get_all_role_info(role_id)
+        response = process_roles_info(result)
+        return response
+    except HTTPException as e:
+        raise e
+
+
+def process_roles_info(roles_info):
+    """
+    This works for both single and multiple info,
+    since there might multiple skills for a single role.
+    """
+    if isinstance(roles_info, dict):
+        return roles_info
+    response = {}
+    for row in roles_info:
+        role_details, row_skills, skills_details = row
+        # Get role_detail_id, this will be the main key
+        id = role_details.role_id
+        if id not in response:
+            response[id] = {
+                "role_id": role_details.role_id,
+                "role_name": role_details.role_name,
+                "role_desc": role_details.role_description,
+                "role_status": role_details.role_status,
+                "skills": [],
+            }
+        # Check skills
+        if row_skills is not None:
+            skill = {
+                "skill_id": row_skills.skill_id,
+                "skill_name": skills_details.skill_name,
+                "skill_status": skills_details.skill_status,
+            }
+            response[id]["skills"].append(skill)
+    return response
+
+
 # =========================== Start: Role Details  ===========================
 
 

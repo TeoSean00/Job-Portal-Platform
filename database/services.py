@@ -3,6 +3,7 @@ import datetime as dt
 from fastapi import HTTPException
 from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import aliased
 
 from database.database import SessionLocal
 from database.models import (
@@ -33,6 +34,47 @@ def healthcheck():
 
 
 # RoleDetails CRUD operations
+def get_all_roles_info():
+    db = SessionLocal()
+    role_details_alias = aliased(RoleDetails, name="d")
+    role_skills_alias = aliased(RoleSkills, name="s")
+    skill_details_alias = aliased(SkillDetails, name="sd")
+
+    query = (
+        db.query(role_details_alias, role_skills_alias, skill_details_alias)
+        .outerjoin(
+            role_skills_alias,
+            role_details_alias.role_id == role_skills_alias.role_id,
+        )
+        .outerjoin(
+            skill_details_alias,
+            role_skills_alias.skill_id == skill_details_alias.skill_id,
+        )
+    )
+
+    return query.all()
+
+
+def get_all_role_info(role_id: int):
+    db = SessionLocal()
+    role_details_alias = aliased(RoleDetails, name="d")
+    role_skills_alias = aliased(RoleSkills, name="s")
+    skill_details_alias = aliased(SkillDetails, name="sd")
+
+    query = (
+        db.query(role_details_alias, role_skills_alias, skill_details_alias)
+        .outerjoin(
+            role_skills_alias,
+            role_details_alias.role_id == role_skills_alias.role_id,
+        )
+        .outerjoin(
+            skill_details_alias,
+            role_skills_alias.skill_id == skill_details_alias.skill_id,
+        )
+    )
+    query = query.filter(role_details_alias.role_id == role_id)
+
+    return query.all()
 
 
 def get_role_details(role_id: int):
