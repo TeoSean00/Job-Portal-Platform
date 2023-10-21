@@ -450,7 +450,7 @@ def test_success_get_roles_info(mock_get_all_roles_info):
     }
 
     headers = {"role": "hr"}
-    response = client.get("/role/roles_info", headers=headers)
+    response = client.get("/role/role_info", headers=headers)
     mock_get_all_roles_info.assert_called()
     assert response.status_code == 200
 
@@ -468,14 +468,14 @@ def test_success_get_role_info(mock_get_all_role_info):
     }
 
     headers = {"role": "hr"}
-    response = client.get("/role/roles_info?role_id=123", headers=headers)
+    response = client.get("/role/role_info?role_id=123", headers=headers)
     mock_get_all_role_info.assert_called()
     assert response.status_code == 200
 
 
 def test_unauthorized_get_role_info():
     headers = {"role": "invalid"}
-    response = client.get("/role/roles_info", headers=headers)
+    response = client.get("/role/role_info", headers=headers)
     assert response.status_code == 401
 
 

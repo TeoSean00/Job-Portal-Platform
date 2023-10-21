@@ -24,7 +24,7 @@ def default_message():
 
 
 # =========================== Master: Get Roles  ===========================
-@router.get("/roles_info")
+@router.get("/role_info")
 def get_role_info(
     role: str = Header(..., description="User role"),
     role_id: int = Query(None, description="Role ID"),
