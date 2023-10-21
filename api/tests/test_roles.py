@@ -30,6 +30,8 @@ def test_success_create_role_listing(mock_create_role_listing):
         "role_listing_source": 123456786,
         "role_listing_open": "2023-10-22T16:00:00",
         "role_listing_creator": 123456786,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
     }
 
     # Define headers
@@ -64,6 +66,8 @@ def test_unauthorized_create_role_listing():
         "role_listing_source": 123456786,
         "role_listing_creator": 123456786,
         "role_listing_open": "2023-10-22T16:00:00",
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
     }
 
     # Define headers
@@ -93,6 +97,8 @@ def test_invalid_create_role_listing():
         "role_listing_source": 123456786,
         "role_listing_open": "2023-10-22T16:00:00",
         "role_listing_creator": 123456786,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
     }
 
     # Define headers
@@ -130,6 +136,8 @@ def test_success_get_all_role_listings(mock_get_all_role_listings):
                 "role_listing_ts_create": "2023-10-01T15:41:52",
                 "role_listing_updater": 123456789,
                 "role_listing_ts_update": "2023-10-01T15:41:52",
+                "role_department": "Group Technology",
+                "role_location": "Front Office, Hong Kong SAR",
             },
             {
                 "role_listing_id": 1,
@@ -143,6 +151,8 @@ def test_success_get_all_role_listings(mock_get_all_role_listings):
                 "role_listing_ts_create": "2023-09-22T14:38:42",
                 "role_listing_updater": 123456787,
                 "role_listing_ts_update": "2023-09-22T14:38:42",
+                "role_department": "Group Technology",
+                "role_location": "Front Office, Hong Kong SAR",
             },
             {
                 "role_listing_id": 2,
@@ -156,6 +166,8 @@ def test_success_get_all_role_listings(mock_get_all_role_listings):
                 "role_listing_ts_create": "2023-09-22T14:38:42",
                 "role_listing_updater": 123456787,
                 "role_listing_ts_update": "2023-09-22T14:38:42",
+                "role_department": "Group Technology",
+                "role_location": "Front Office, Hong Kong SAR",
             },
         ]
     }
@@ -191,6 +203,8 @@ def test_success_get_role_listings(mock_get_role_listings):
             "role_listing_ts_create": "2023-10-01T15:41:52",
             "role_listing_updater": 123456789,
             "role_listing_ts_update": "2023-10-01T15:41:52",
+            "role_department": "Group Technology",
+            "role_location": "Front Office, Hong Kong SAR",
         }
     }
 

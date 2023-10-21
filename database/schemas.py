@@ -100,6 +100,8 @@ class RoleListingsPydantic(BaseModel):
     role_listing_ts_create: Optional[str] = None
     role_listing_updater: Optional[int] = None
     role_listing_ts_update: Optional[str] = None
+    role_department: str
+    role_location: str
 
     class Config:
         from_attributes = True
