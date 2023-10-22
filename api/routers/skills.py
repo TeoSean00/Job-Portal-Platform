@@ -21,7 +21,6 @@ def default_message():
 
 @router.get("/get-all")
 def get_all_skills(
-    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
 ):
     """
@@ -60,9 +59,7 @@ def get_all_skills(
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
 
-    if not common_services.authenticate_user(
-        User(user_token=user_token, role=role), "STAFF"
-    ):
+    if not common_services.authenticate_user(role):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
         skills = db_services.get_all_skills()
