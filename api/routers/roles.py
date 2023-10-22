@@ -23,12 +23,118 @@ def default_message():
     }
 
 
+# =========================== Master: Get Roles  ===========================
+@router.get("/role_info")
+def get_role_info(
+    role: str = Header(..., description="User role"),
+    role_id: int = Query(None, description="Role ID"),
+):
+    """
+    Description: This endpoint is a compiled end point that returns all information about a role detail,
+    included the linked skills.
+
+    Parameters:
+    - role_id: Optional, if provided returns role details for a specific role. Else, returns all.
+    - role: Taken from Headers, key is `role`.
+
+    Returns:
+    A JSON object containing the details of roles.
+
+    Errors:
+    - 500 Internal Server Error: Generic server error that can occur for various reasons.
+
+    Example Request:
+    ```
+    GET /role/role_details
+    Authorization: <Clerk Token>
+    role: "hr"
+    ```
+
+    Example Response:
+    ```
+        {
+        "234567892": {
+            "role_id": 234567892,
+            "role_name": "Learning Facilitator / Trainer",
+            "role_desc": "The Learning Facilitator delivers learning products and services in a variety of environments, using multiple learning delivery modes and methods. He/She assesses learning needs and adapts the facilitation approach to reflect desired learning outcomes and learner needs. He is responsible for knowledge and skills transfer by delivering learning content, facilitating group discussions and responding to queries. He drives learner development and commitment to continuous learning by actively providing feedback and learner support. He evaluates curriculum effectiveness and recommends improvement areas by collecting learner feedback as well as analysing learning delivery approaches and materials.\nHe is a strong communicator who builds trusted relationships and creates a cooperative and engaging learning environment. He is adaptable and adept at managing multiple stakeholders. He works in multiple different environments, including different learning venues and client sites, and regularly interacts with digital systems.",
+            "role_status": "active",
+            "skills": []
+        },
+        "234567899": {
+            "role_id": 234567899,
+            "role_name": "Butcher",
+            "role_desc": "added by elton on 22/9/23 10.12pm to fix fk constraints",
+            "role_status": "active",
+            "skills": [
+                {
+                    "skill_id": 345678790,
+                    "skill_name": "Typescript Developer",
+                    "skill_status": "active"
+                },
+                {
+                    "skill_id": 345678866,
+                    "skill_name": "Java Developer",
+                    "skill_status": "active"
+                },
+                {
+                    "skill_id": 345678922,
+                    "skill_name": "React Beast",
+                    "skill_status": "active"
+                }
+            ]
+        },
+    }
+    ```
+    """
+    try:
+        if not common_services.authenticate_user(role):
+            raise HTTPException(status_code=401, detail="Unauthorized user!")
+        if role_id is None:
+            result = db_services.get_all_roles_info()
+        else:
+            result = db_services.get_all_role_info(role_id)
+        response = process_roles_info(result)
+        return response
+    except HTTPException as e:
+        raise e
+
+
+def process_roles_info(roles_info):
+    """
+    This works for both single and multiple info,
+    since there might multiple skills for a single role.
+    """
+    if isinstance(roles_info, dict):
+        return roles_info
+    response = {}
+    for row in roles_info:
+        role_details, row_skills, skills_details = row
+        # Get role_detail_id, this will be the main key
+        id = role_details.role_id
+        if id not in response:
+            response[id] = {
+                "role_id": role_details.role_id,
+                "role_name": role_details.role_name,
+                "role_desc": role_details.role_description,
+                "role_status": role_details.role_status,
+                "skills": [],
+            }
+        # Check skills
+        if row_skills is not None:
+            skill = {
+                "skill_id": row_skills.skill_id,
+                "skill_name": skills_details.skill_name,
+                "skill_status": skills_details.skill_status,
+            }
+            response[id]["skills"].append(skill)
+    return response
+
+
 # =========================== Start: Role Details  ===========================
 
 
 @router.get("/role_details")
 def get_role_details(
-    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
     role_id: int = Query(None, description="Role ID"),
 ):
@@ -71,9 +177,8 @@ def get_role_details(
     ```
     """
     try:
-        if not common_services.authenticate_user(
-            User(user_token=user_token, role=role), "ADMIN"
-        ):
+        # Authenticate user
+        if not common_services.authenticate_user(role):
             raise HTTPException(status_code=401, detail="Unauthorized user!")
 
         if role_id is None:
@@ -126,7 +231,6 @@ def process_single_role_detail(role_detail, role_id):
 
 @router.get("/role_skills")
 def get_role_skills(
-    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
     role_id: int = Query(description="Required role_id"),
 ):
@@ -175,9 +279,8 @@ def get_role_skills(
     `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
-    if not common_services.authenticate_user(
-        User(user_token=user_token, role=role), "ADMIN", "STAFF", "DIRECTOR"
-    ):
+    # Authenticate user
+    if not common_services.authenticate_user(role):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
         role_skills = db_services.get_role_skills(role_id)
@@ -220,7 +323,6 @@ def validate_role_listing(role_details: RoleListingsPydantic):
 
 @router.get("/role_listing")
 def get_role_listing(
-    user_token: str = Header(..., description="User token"),
     role: str = Header(..., description="User role"),
     role_listing_id: int = Query(None, description="Optional role_listing_id"),
 ):
@@ -259,12 +361,7 @@ def get_role_listing(
     ```
     """
     try:
-        if not common_services.authenticate_user(
-            User(user_token=user_token, role=role),
-            "ADMIN",
-            "STAFF",
-            "DIRECTOR",
-        ):
+        if not common_services.authenticate_user(role):
             raise HTTPException(status_code=401, detail="Unauthorized user!")
 
         if role_listing_id is None:
@@ -318,8 +415,7 @@ def process_single_role_listing(role_listing, role_listing_id):
 
 @router.post("/role_listing")
 def create_role_listing(
-    role_details: RoleListingsPydantic,
-    user_token: str = Header(..., description="User token"),
+    role_listing_details: RoleListingsPydantic,
     role: str = Header(..., description="User role"),
 ):
     """
@@ -328,8 +424,6 @@ def create_role_listing(
 
     ### Parameters:
     `role_details`: JSON object, schema further down
-
-    `user_token`: Taken from Headers, key is `user-token`
 
     `role`: Taken from Headers, key is `role`,
 
@@ -354,38 +448,34 @@ def create_role_listing(
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
     # Authenticate user
-    if not common_services.authenticate_user(
-        User(user_token=user_token, role=role), "ADMIN"
-    ):
+    if not common_services.authenticate_user(role):
         raise HTTPException(status_code=401, detail="Unauthorized user!")
     try:
         # Validate form-details
         role_listing_ts_create = dt.datetime.utcnow()
-        if validate_role_listing(role_details):
+        if validate_role_listing(role_listing_details):
             data = {
-                "role_id": role_details.role_id,  # Links to ID inside role details
-                "role_listing_desc": role_details.role_listing_desc,
-                "role_listing_source": user_token,
+                "role_listing_id": role_listing_details.role_listing_id,
+                "role_id": role_listing_details.role_id,  # Links to ID inside role details
+                "role_listing_desc": role_listing_details.role_listing_desc,
+                "role_listing_source": role_listing_details.role_listing_source,
                 "role_listing_open": common_services.convert_str_to_datetime(
-                    role_details.role_listing_open
+                    role_listing_details.role_listing_open
                 ),
-                "role_listing_close": common_services.convert_str_to_datetime(
-                    role_details.role_listing_close
+                "role_listing_close": common_services.add_days_to_str_datetime(
+                    role_listing_details.role_listing_open, 14
                 ),
-                "role_listing_hide": common_services.convert_str_to_datetime(
-                    role_details.role_listing_hide
+                "role_listing_hide": common_services.add_days_to_str_datetime(
+                    role_listing_details.role_listing_hide, 14
                 ),
-                "role_listing_creator": user_token,
+                "role_listing_creator": role_listing_details.role_listing_creator,
                 "role_listing_ts_create": common_services.convert_str_to_datetime(
                     role_listing_ts_create
                 ),
-                # "role_listing_updater": None,
-                # "role_listing_ts_update": None,
-                # Set the updater and update time to the creator on first occurence
-                "role_listing_updater": user_token,
-                "role_listing_ts_update": common_services.convert_str_to_datetime(
-                    role_listing_ts_create
-                ),
+                "role_listing_updater": None,
+                "role_listing_ts_update": None,
+                "role_department": role_listing_details.role_department,
+                "role_location": role_listing_details.role_location,
             }
             # Create role_listing
             db_services.create_role_listing(**data)

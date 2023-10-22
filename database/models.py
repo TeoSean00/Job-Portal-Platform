@@ -46,6 +46,8 @@ class RoleListings(Base):
         Integer, ForeignKey("STAFF_DETAILS.staff_id")
     )
     role_listing_ts_update = Column(DateTime)
+    role_department = Column(String(50))
+    role_location = Column(String(50))
 
 
 class RoleApplications(Base):
