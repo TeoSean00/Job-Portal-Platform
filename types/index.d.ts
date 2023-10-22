@@ -39,26 +39,64 @@ declare type RoleSkillId = {
   skill_id: number;
 };
 
+declare type RoleSkillAPIResponse = {
+  role_skills: RoleSkillId[];
+};
+
 declare type SkillAPIResponse = {
   skill_status: string;
   skill_name: string;
   skill_id: number;
 };
 
+declare type StaffIdAPIResponse = {
+  staff_id: number;
+  fname: string;
+  lname: string;
+  dept: string;
+  email: string;
+  phone: string;
+  biz_address: string;
+  sys_role: string;
+};
+
+declare type FetcherOptions = RequestInit;
+
 declare type RoleFormProps = {
   departments: Department[];
   roles: RoleDetail[];
   allSkills: SkillAPIResponse[];
 };
-// declare type RoleFormValues = z.infer<typeof roleFormSchema>;
 
 declare type RoleFormValues = {
   roleName: string;
+  listingId: number;
   roleDescription: string;
+  roleManager: string;
+  location: string;
   departments: string;
   skills: { value: string }[];
-  dateRange: {
-    from: Date;
-    to: Date;
-  };
+  startDate: Date;
 };
+
+export type Option = {
+  label: string;
+  value: string;
+  icon?: React.ComponentType<{ className?: string }>;
+};
+
+export type DatePickerWithPresetsProps = {
+  className?: string;
+  value: Date;
+  onChange: (selectedDate: Date) => void;
+};
+
+export interface DataTableSearchableColumn<TData> {
+  id: keyof TData;
+  title: string;
+}
+
+export interface DataTableFilterableColumn<TData>
+  extends DataTableSearchableColumn<TData> {
+  options: Option[];
+}

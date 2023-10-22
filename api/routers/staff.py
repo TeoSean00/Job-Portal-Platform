@@ -177,6 +177,76 @@ async def get_all_staff():
             )
 
 
+# Get All Manager details
+@router.get("/manager", response_model=List[StaffDetailsPydantic])
+async def get_all_manager():
+    """
+    ### Description:
+    This endpoint returns a list of all manager currently in the system.
+
+    ### Parameters:
+    Null.
+
+    ### Returns:
+    A list containing the details of all manager in JSON format.
+
+    ### Example:
+    #### Request:
+    ```
+    GET /staff/manager
+    ```
+    #### Response:
+    ```
+    [
+            {
+                    "staff_id": 123,
+                    "fname": "John",
+                    "lname": "Doe",
+                    "dept": "Finance",
+                    "email": "johndoe@gmail.com",
+                    "phone": "65-1234-5678",
+                    "biz_address": "smu scis stamford road",
+                    "sys_role": "manager"
+            },
+            {
+                    "staff_id": 456,
+                    "fname": "Tom",
+                    "lname": "Harry",
+                    "dept": "Sales",
+                    "email": "tomharry@gmail.com",
+                    "phone": "65-4566-5678",
+                    "biz_address": "smu scis stamford road",
+                    "sys_role": "manager"
+            },
+    ]
+    ```
+    ### Errors:
+
+    """
+    try:
+        response = db_services.get_all_manager_details()
+
+        if response is None:
+            raise HTTPException(
+                status_code=404, detail="No managers found in the system"
+            )
+        else:
+            return response
+
+    # Catching exceptions and raising them
+    except Exception as e:
+        # Catching 404 HTTPException specfically
+        if e.status_code == 404:
+            raise HTTPException(
+                status_code=404, detail="No ,managers found in the system"
+            )
+        # Catching any other unexpected exceptions, returning a 500 error
+        else:
+            raise HTTPException(
+                status_code=500, detail="Internal Server Error"
+            )
+
+
 # Get specific staff details based on given staff_id
 @router.get("/{staff_id}", response_model=StaffDetailsPydantic)
 async def get_staff(staff_id: int):

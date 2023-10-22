@@ -1,19 +1,13 @@
 "use client";
 
-import type { Department, RoleDetail, SkillDetail } from "@/types";
+import type { RoleDetail, SkillDetail } from "@/types";
 
 import { useSession } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 
 import RoleForm from "@/components/create-role/RoleForm";
 import { Separator } from "@/components/ui";
-
-const departments: Department[] = ["HR", "IT", "Sales", "Finance"].map(
-  (department) => ({
-    value: department,
-    label: department,
-  }),
-);
+import { departments } from "@/lib/constants";
 
 interface RoleAPIResponse {
   role_details: RoleDetail[];
@@ -86,7 +80,7 @@ const CreateRole = () => {
   return (
     <div className="flex h-screen flex-col space-y-6">
       <div>
-        <h3 className="text-xl font-medium">Role Creation</h3>
+        <h3 className="text-xl font-medium">Add Role Listing</h3>
       </div>
       <Separator />
       {roleDetails && (
