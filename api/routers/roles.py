@@ -139,30 +139,27 @@ def get_role_details(
     role_id: int = Query(None, description="Role ID"),
 ):
     """
-    Description: This endpoint returns either all or specific role details from the database.
+    ### Description:
+    This endpoint returns either all or specific role details from the database.
 
-    Parameters:
-    - role_id: Optional, if provided returns role details for a specific role. Else, returns all.
-    - user_token: Taken from Headers, key is `user-token`.
-    - role: Taken from Headers, key is `role`.
+    ### Parameters:
+    `role`: Taken from Headers, expected values are hr, manager, staff or invalid
+    `role_id`: Optional, if provided returns role details for a specific role. If not specifed, returns all.
 
-    Returns:
-    A JSON object containing the details of the given staff member.
+    ### Returns:
+    A JSON object with the key "role_details" that contains a list of all
+    role details in the database or just one role details if role_id is specified.
+    Noted that if specified role_id, response is double nested role_details.
 
-    Errors:
-    - 404 Not Found: No role details matching the given role details ID found in the system.
-    - 500 Internal Server Error: Generic server error that can occur for various reasons.
-
-    Example Request:
+    ### Example:
+    #### Request:
     ```
     GET /role/role_details
+    GET /role/role_details?role_id=1
     Authorization: <Clerk Token>
-    user-token: "123456789"
     role: "hr"
     ```
-
-    Example Response:
-    ```
+    #### Response:
     {
         "role_details": [
             {
@@ -175,6 +172,10 @@ def get_role_details(
         ]
     }
     ```
+    ### Errors:
+    `401 Unauthorized`: User is not authorized to access this endpoint.<br /><br />
+    `404 Not Found: No role details matching the given role details ID found in the system.
+    `500 Internal Server Error: Generic server error that can occur for various reasons.
     """
     try:
         # Authenticate user
@@ -238,17 +239,15 @@ def get_role_skills(
     ### Description:
     This endpoint takes in a role_id and returns the skills associated with it.
     This is meant to be used to return all skills associated with a particular role.
-    Returns an empty list if no skills associated.
+    Returns an empty list if no skills associated or if the role does NOT exist.
 
     ### Parameters:
+    `role`: Taken from Headers, expected values are hr, manager, staff or invalid
     `role_id`: Specifies the role_id to get the skills for.
 
-    `user_token`: Taken from Headers, key is `user-token`
-
-    `role`: Taken from Headers, key is `role`
-
     ### Returns:
-    A JSON object containing the skills associated with the given role_id
+    A JSON object with the key "role_skills" that contains a list of all
+    skills details associated with the role_id.
 
     ### Example:
     #### Request:
@@ -256,9 +255,7 @@ def get_role_skills(
     GET /role/role_skills
     GET /role/role_skills?role_id=234567893
     Authorization: <Clerk Token>
-    user-token: "123456789"
     role: "hr"
-
     ```
     #### Response:
     ```
@@ -276,7 +273,7 @@ def get_role_skills(
     }
     ```
     ### Errors:
-    `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
+    `401 Unauthorized`: User is not authorized to access this endpoint.<br /><br />
     `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
     # Authenticate user
@@ -327,31 +324,28 @@ def get_role_listing(
     role_listing_id: int = Query(None, description="Optional role_listing_id"),
 ):
     """
-    Description: This endpoint returns either one or all role listings in the database.
+    ### Description:
+    This endpoint returns either one or all role listings in the database.
 
-    Parameters:
-    - role_listing_id: Optional, returns specific listing if provided else all.
-    - user_token: Taken from Headers, key is `user-token`
-    - role: Taken from Headers, key is `role`
+    ### Parameters:
+    `role`: Taken from Headers, expected values are hr, manager, staff or invalid
+    `role_listing_id`: Optional, returns specific listing if provided else all.
 
-    Returns:
-    A JSON object containing the role_listing associated.
+    ### Returns:
+    A JSON object with the key "role_listing" that contains a list of all
+    roles_listings in the database.
+    If a role_listing_id is specified, keep in mind that response will be
+    double nested with "role_listing" key.
 
-    Errors:
-    - 404 Not Found: No role details matching the given role details ID found in the system.
-    - 500 Internal Server Error: Generic server error that can occur for various reasons.
-
-    Example Request:
+    ### Example:
+    #### Request:
     ```
     GET /role/role_listing
-    GET /role/role_listing?role_listing_id=0
+    GET /role/role_listing?role_listing_id=31251332
     Authorization: <Clerk Token>
-    user-token: "123456789"
     role: "hr"
     ```
-
-    Example Response:
-    ```
+    #### Response:
     {
         "role_listing": {
             "role_listing_id": 0,
@@ -359,6 +353,10 @@ def get_role_listing(
         }
     }
     ```
+    ### Errors:
+    `401 Unauthorized`: User is not authorized to access this endpoint.<br /><br />
+    `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons.<br /><br />
     """
     try:
         if not common_services.authenticate_user(role):
@@ -423,29 +421,39 @@ def create_role_listing(
     This endpoint creates a role listings in the database.
 
     ### Parameters:
-    `role_details`: JSON object, schema further down
-
-    `role`: Taken from Headers, key is `role`,
+    `role`: Taken from Headers, expected values are hr, manager, staff or invalid
+    `role_details`: JSON object containing the required details
 
     ### Returns:
-    Sampel Text
+    Status code 201 if successful, "message" : "Created!".
 
     ### Example:
     #### Request:
     ```
-
     POST/role/role_listing
     Authorization: <Clerk Token>
-    user-token: "123456789"
     role: "hr"
-
+    ```
+    #### Body:
+    {
+        "role_listing_id": 312513332,
+        "role_id": 234511581,
+        "role_listing_desc": "This is death",
+        "role_listing_source": 123456786,
+        "role_listing_open": "2023-10-22T16:00:00",
+        "role_listing_creator": 123456786,
+        "role_department": "Tech Support",
+        "role_location": "Down Under"
+    }
     ```
     #### Response:
-    ```
-    ```
+    {
+        "message": "Created!"
+    }
     ### Errors:
-    `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
-    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
+    `401 Unauthorized`: User is not authorized to access this endpoint.<br /><br />
+    TODO: Work on more detailed error handling for this.
+    `500 Internal Server Error`: Generic server error, can be due to role details not being found, integrity issue.<br /><br />
     """
     # Authenticate user
     if not common_services.authenticate_user(role):
