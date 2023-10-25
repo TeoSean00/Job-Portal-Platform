@@ -106,7 +106,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "user-token": userToken,
         role: String(userRole),
       },
       body: JSON.stringify(transformedData),
@@ -143,7 +142,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
     (url: string) =>
       fetcherWithHeaders(url, {
         headers: {
-          "user-token": userToken,
           role: String(userRole),
         },
       }),

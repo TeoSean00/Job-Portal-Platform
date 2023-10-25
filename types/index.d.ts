@@ -60,7 +60,15 @@ declare type StaffIdAPIResponse = {
   sys_role: string;
 };
 
+declare type AllSkillAPIResponse = {
+  skills: SkillDetail[];
+};
+
 declare type FetcherOptions = RequestInit;
+
+declare type RoleAPIResponse = {
+  role_details: RoleDetail[];
+};
 
 declare type RoleFormProps = {
   departments: Department[];
