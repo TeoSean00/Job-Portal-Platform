@@ -62,3 +62,17 @@ declare type RoleFormValues = {
     to: Date;
   };
 };
+
+declare type RoleSkill = {
+  skill_id: number;
+  skill_name: string;
+  skill_status: string;
+};
+
+declare type RoleItem = {
+  role_id: number;
+  role_name: string;
+  role_desc: string;
+  role_status: string;
+  skills: RoleSkill[];
+};
