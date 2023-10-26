@@ -1,7 +1,9 @@
 import datetime as dt
 
 from fastapi import HTTPException
+from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import aliased
 
 from database.database import SessionLocal
 from database.models import (
@@ -22,9 +24,8 @@ from database.models import (
 def healthcheck():
     try:
         db = SessionLocal()
-
         # Attempt a simple query to check the database connection
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         return True  # Database is reachable
     except OperationalError:
         return False  # Database is not reachable
@@ -33,6 +34,79 @@ def healthcheck():
 
 
 # RoleDetails CRUD operations
+def get_all_role_listings_info():
+    role_skills_alias = aliased(RoleSkills, name="s")
+    skills_details_alias = aliased(SkillDetails, name="sd")
+    role_details_alias = aliased(RoleDetails, name="d")
+    role_listings_alias = aliased(RoleListings, name="l")
+
+    db = SessionLocal()
+    role_listing_query = db.query(
+        role_listings_alias, role_details_alias
+    ).outerjoin(
+        role_details_alias,
+        role_listings_alias.role_id == role_details_alias.role_id,
+    )
+    role_skills_details_query = (
+        db.query(role_details_alias, role_skills_alias, skills_details_alias)
+        .join(
+            role_skills_alias,
+            role_details_alias.role_id == role_skills_alias.role_id,
+        )
+        .join(
+            skills_details_alias,
+            skills_details_alias.skill_id == role_skills_alias.skill_id,
+        )
+    )
+
+    return role_listing_query.all(), role_skills_details_query.all()
+
+
+def get_all_roles_details():
+    """
+    Unused function that gets all the relevant details from a role details.
+    """
+    db = SessionLocal()
+
+    role_details_alias = aliased(RoleDetails, name="d")
+    role_skills_alias = aliased(RoleSkills, name="s")
+    skill_details_alias = aliased(SkillDetails, name="sd")
+
+    query = (
+        db.query(role_details_alias, role_skills_alias, skill_details_alias)
+        .outerjoin(
+            role_skills_alias,
+            role_details_alias.role_id == role_skills_alias.role_id,
+        )
+        .outerjoin(
+            skill_details_alias,
+            role_skills_alias.skill_id == skill_details_alias.skill_id,
+        )
+    )
+
+    return query.all()
+
+
+def get_all_role_info(role_id: int):
+    db = SessionLocal()
+    role_details_alias = aliased(RoleDetails, name="d")
+    role_skills_alias = aliased(RoleSkills, name="s")
+    skill_details_alias = aliased(SkillDetails, name="sd")
+
+    query = (
+        db.query(role_details_alias, role_skills_alias, skill_details_alias)
+        .outerjoin(
+            role_skills_alias,
+            role_details_alias.role_id == role_skills_alias.role_id,
+        )
+        .outerjoin(
+            skill_details_alias,
+            role_skills_alias.skill_id == skill_details_alias.skill_id,
+        )
+    )
+    query = query.filter(role_details_alias.role_id == role_id)
+
+    return query.all()
 
 
 def get_role_details(role_id: int):
@@ -322,6 +396,7 @@ def get_all_role_listings():
 
 
 def create_role_listing(
+    role_listing_id: int,
     role_id: int,
     role_listing_desc: str,
     role_listing_source: int,
@@ -332,9 +407,12 @@ def create_role_listing(
     role_listing_ts_create: dt.datetime,
     role_listing_updater: int,
     role_listing_ts_update: dt.datetime,
+    role_department: str,
+    role_location: str,
 ):
     db = SessionLocal()
     role_listing = RoleListings(
+        role_listing_id=role_listing_id,
         role_id=role_id,
         role_listing_desc=role_listing_desc,
         role_listing_source=role_listing_source,
@@ -345,6 +423,8 @@ def create_role_listing(
         role_listing_ts_create=role_listing_ts_create,
         role_listing_updater=role_listing_updater,
         role_listing_ts_update=role_listing_ts_update,
+        role_department=role_department,
+        role_location=role_location,
     )
     db.add(role_listing)
     db.commit()

@@ -24,19 +24,18 @@ def test_success_create_role_listing(mock_create_role_listing):
         Tests a successful, authorized POST request to create a role listing.
     """
     role_details = {
-        "role_id": 234511581,  # Existing ID
-        "role_name": "Pokemon",
-        "role_listing_desc": "Additional Description",
-        "role_listing_source": 123456,
+        "role_listing_id": 315132,
+        "role_id": 234511581,
+        "role_listing_desc": "This is death",
+        "role_listing_source": 123456786,
         "role_listing_open": "2023-10-22T16:00:00",
-        "role_listing_close": "2023-10-25T16:00:00",
-        "role_listing_hide": "2023-10-25T16:00:00",
-        "role_listing_creator": 123123,
-        "role_listing_updater": 2,
+        "role_listing_creator": 123456786,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
     }
 
     # Define headers
-    headers = {"user-token": "123456789", "role": "hr"}
+    headers = {"role": "hr"}
 
     # Set the behavior of the mock function
     mock_create_role_listing.return_value = {"message": "Created!"}
@@ -61,19 +60,18 @@ def test_unauthorized_create_role_listing():
         Tests a unauthorized POST request to create a role listing.
     """
     role_details = {
-        "role_id": 234511581,  # Existing ID
-        "role_name": "Pokemon",
-        "role_listing_desc": "Additional Description",
-        "role_listing_source": 123456,
+        "role_listing_id": 315132,
+        "role_id": 234511581,
+        "role_listing_desc": "This is death",
+        "role_listing_source": 123456786,
+        "role_listing_creator": 123456786,
         "role_listing_open": "2023-10-22T16:00:00",
-        "role_listing_close": "2023-10-25T16:00:00",
-        "role_listing_hide": "2023-10-25T16:00:00",
-        "role_listing_creator": 123123,
-        "role_listing_updater": 2,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
     }
 
     # Define headers
-    headers = {"user-token": "123456789", "role": "invalid"}
+    headers = {"role": "invalid"}
 
     response = client.post(
         "/role/role_listing", json=role_details, headers=headers
@@ -93,19 +91,18 @@ def test_invalid_create_role_listing():
         are no valid.
     """
     role_details = {
-        "role_id": 234511581,  # Existing ID
-        "role_name": "Pokemon",
+        "role_listing_id": 315132,
+        "role_id": 234511581,
         "role_listing_desc": "This is an invalid role listing.",
-        "role_listing_source": 123456,
+        "role_listing_source": 123456786,
         "role_listing_open": "2023-10-22T16:00:00",
-        "role_listing_close": "2023-10-25T16:00:00",
-        "role_listing_hide": "2023-10-25T16:00:00",
-        "role_listing_creator": 123123,
-        "role_listing_updater": 2,
+        "role_listing_creator": 123456786,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
     }
 
     # Define headers
-    headers = {"user-token": "123456789", "role": "hr"}
+    headers = {"role": "hr"}
 
     response = client.post(
         "/role/role_listing", json=role_details, headers=headers
@@ -139,6 +136,8 @@ def test_success_get_all_role_listings(mock_get_all_role_listings):
                 "role_listing_ts_create": "2023-10-01T15:41:52",
                 "role_listing_updater": 123456789,
                 "role_listing_ts_update": "2023-10-01T15:41:52",
+                "role_department": "Group Technology",
+                "role_location": "Front Office, Hong Kong SAR",
             },
             {
                 "role_listing_id": 1,
@@ -152,6 +151,8 @@ def test_success_get_all_role_listings(mock_get_all_role_listings):
                 "role_listing_ts_create": "2023-09-22T14:38:42",
                 "role_listing_updater": 123456787,
                 "role_listing_ts_update": "2023-09-22T14:38:42",
+                "role_department": "Group Technology",
+                "role_location": "Front Office, Hong Kong SAR",
             },
             {
                 "role_listing_id": 2,
@@ -165,11 +166,13 @@ def test_success_get_all_role_listings(mock_get_all_role_listings):
                 "role_listing_ts_create": "2023-09-22T14:38:42",
                 "role_listing_updater": 123456787,
                 "role_listing_ts_update": "2023-09-22T14:38:42",
+                "role_department": "Group Technology",
+                "role_location": "Front Office, Hong Kong SAR",
             },
         ]
     }
 
-    headers = {"user-token": "123456789", "role": "hr"}
+    headers = {"role": "hr"}
 
     response = client.get("/role/role_listing", headers=headers)
     print(response.json())
@@ -200,10 +203,12 @@ def test_success_get_role_listings(mock_get_role_listings):
             "role_listing_ts_create": "2023-10-01T15:41:52",
             "role_listing_updater": 123456789,
             "role_listing_ts_update": "2023-10-01T15:41:52",
+            "role_department": "Group Technology",
+            "role_location": "Front Office, Hong Kong SAR",
         }
     }
 
-    headers = {"user-token": "123456789", "role": "hr"}
+    headers = {"role": "hr"}
 
     response = client.get(
         "/role/role_listing?role_listing_id=0", headers=headers
@@ -226,7 +231,7 @@ def test_failure_role_listing_not_exist(mock_get_role_listings):
     # Define headers
     mock_get_role_listings.return_value = None
 
-    headers = {"user-token": "123456789", "role": "hr"}
+    headers = {"role": "hr"}
 
     response = client.get(
         "/role/role_listing?role_listing_id=0", headers=headers
@@ -246,7 +251,7 @@ def test_failure_not_authorized_get_role_listings():
         401
     """
     # Define headers
-    headers = {"user-token": "123456789", "role": "invalid"}
+    headers = {"role": "invalid"}
 
     response = client.get(
         "/role/role_listing?role_listing_id=0", headers=headers
@@ -282,7 +287,7 @@ def test_success_get_all_role_details(mock_get_all_role_details):
     }
 
     # Define headers
-    headers = {"user-token": "123456789", "role": "manager"}
+    headers = {"role": "manager"}
 
     response = client.get("/role/role_details", headers=headers)
 
@@ -313,7 +318,7 @@ def test_success_get_role_details(mock_get_role_details):
         ]
     }
     # Define headers
-    headers = {"user-token": "123456789", "role": "manager"}
+    headers = {"role": "manager"}
 
     response = client.get(
         "/role/role_details?role_id=234511581", headers=headers
@@ -337,7 +342,7 @@ def test_failure_role_not_exist_get_role_details(mock_get_role_details):
     # Set the behavior of the mock function
     mock_get_role_details.return_value = None
     # Define headers
-    headers = {"user-token": "123456789", "role": "manager"}
+    headers = {"role": "manager"}
     # Act
     response = client.get("/role/role_details?role_id=123", headers=headers)
 
@@ -356,7 +361,7 @@ def test_not_authorized_get_role_details():
         401
     """
     # Arrange
-    headers = {"user-token": "123456789", "role": "invalid"}
+    headers = {"role": "invalid"}
     response = client.get("/role/role_details", headers=headers)
 
     assert response.status_code == 401
@@ -380,11 +385,9 @@ def test_success_get_role_skills(mock_get_role_skills):
         ]
     }
 
-    # headers = {"user-token": "123456789", "role": "hr"}
-
     response = client.get(
         "/role/role_skills?role_id=23456789",
-        headers={"user-token": "123456789", "role": "hr"},
+        headers={"role": "hr"},
     )
 
     assert response.status_code == 200
@@ -400,7 +403,7 @@ def test_unauthorized_get_role_skills():
         200
     """
 
-    headers = {"user-token": "123456789", "role": "invalid"}
+    headers = {"role": "invalid"}
 
     response = client.get(
         "/role/role_skills?role_id=23456789", headers=headers
@@ -409,6 +412,56 @@ def test_unauthorized_get_role_skills():
     # Assert
     assert response.status_code == 401
     assert response.json() == {"detail": "Unauthorized user!"}
+
+
+@patch("api.routers.roles.db_services.get_all_role_listings_info")
+def test_success_get_roles_info(mock_get_all_role_listings_info):
+    mock_get_all_role_listings_info.return_value = (
+        {
+            "234567892": {
+                "role_id": 234567892,
+                "role_name": "Learning Facilitator / Trainer",
+                "role_desc": "The Learning Facilitator delivers learning products and services in a variety of environments, using multiple learning delivery modes and methods. He/She assesses learning needs and adapts the facilitation approach to reflect desired learning outcomes and learner needs. He is responsible for knowledge and skills transfer by delivering learning content, facilitating group discussions and responding to queries. He drives learner development and commitment to continuous learning by actively providing feedback and learner support. He evaluates curriculum effectiveness and recommends improvement areas by collecting learner feedback as well as analysing learning delivery approaches and materials.\nHe is a strong communicator who builds trusted relationships and creates a cooperative and engaging learning environment. He is adaptable and adept at managing multiple stakeholders. He works in multiple different environments, including different learning venues and client sites, and regularly interacts with digital systems.",
+                "role_status": "active",
+                "skills": [],
+            },
+            "234567899": {
+                "role_id": 234567899,
+                "role_name": "Butcher",
+                "role_desc": "added by elton on 22/9/23 10.12pm to fix fk constraints",
+                "role_status": "active",
+                "skills": [
+                    {
+                        "skill_id": 345678790,
+                        "skill_name": "Typescript Developer",
+                        "skill_status": "active",
+                    },
+                    {
+                        "skill_id": 345678866,
+                        "skill_name": "Java Developer",
+                        "skill_status": "active",
+                    },
+                    {
+                        "skill_id": 345678922,
+                        "skill_name": "React Beast",
+                        "skill_status": "active",
+                    },
+                ],
+            },
+        },
+        None,
+    )
+
+    headers = {"role": "hr"}
+    response = client.get("/role/role_listings_info", headers=headers)
+    mock_get_all_role_listings_info.assert_called()
+    assert response.status_code == 200
+
+
+def test_unauthorized_get_role_info():
+    headers = {"role": "invalid"}
+    response = client.get("/role/role_listings_info", headers=headers)
+    assert response.status_code == 401
 
 
 # =========================== End: Role Details  ===========================
