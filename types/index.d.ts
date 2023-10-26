@@ -76,3 +76,10 @@ declare type RoleItem = {
   role_status: string;
   skills: RoleSkill[];
 };
+
+declare type SpecificRoleInfo = {
+  role_name: string;
+  role_desc: string;
+  role_status: string;
+  skills: RoleSkill[];
+};

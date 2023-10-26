@@ -29,13 +29,12 @@ const RolesPage = () => {
   const userRole = user?.publicMetadata?.role;
 
   const [data, setData] = useState<ProcessedRole[]>([]);
-  console.log(userToken, userRole);
   const fetchRoles = () => {
     fetch(`/api/role/role_info`, {
       method: "GET",
       headers: {
-        "user-token": userToken,
-        role: String(userRole),
+        "user-token": userToken || "", // Make sure it's not undefined
+        role: String(userRole || ""),
       },
     })
       .then((res) => {

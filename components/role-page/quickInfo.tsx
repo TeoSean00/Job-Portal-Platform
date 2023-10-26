@@ -46,19 +46,7 @@ export function QuickInfo(props: RoleData) {
         </div>
         <div className="flex flex-col">
           <h4 className=" font-bold">Role Description</h4>
-          <span>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus
-            tenetur, quisquam adipisci labore ea nisi. Ipsam unde modi suscipit,
-            recusandae aperiam eum exercitationem error consequatur? Possimus
-            commodi in impedit perspiciatis optio et aperiam quaerat velit
-            temporibus repellendus dolor quo molestiae quidem sunt, perferendis,
-            totam non aliquid voluptate vel, omnis explicabo. Quam fuga rerum
-            nostrum quia quis numquam eveniet sint illo odio quo. Reiciendis hic
-            repellendus voluptates iusto placeat sint, tenetur quae, dolore ea
-            corrupti dolorem doloribus dignissimos cum dolores tempore?
-            Asperiores officiis quibusdam ad unde quam id est veniam minus quae
-            libero culpa magni porro molestiae distinctio, ut tenetur officia.
-          </span>
+          <span> {roleInfo.roleDescription}</span>
         </div>
       </CardContent>
       <CardFooter className="flex space-x-4">
