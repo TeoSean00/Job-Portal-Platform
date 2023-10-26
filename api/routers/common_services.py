@@ -7,7 +7,8 @@ def authenticate_user(user_role: str):
     """
     Function to authenticate user. Hard coded.
     """
-    if user_role == "invalid":
+    accepted_roles = ["hr", "manager", "staff"]
+    if user_role not in accepted_roles:
         return False
     return True
 
