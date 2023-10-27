@@ -2,8 +2,8 @@ name: PR Telegram Notifications
 
 on:
   schedule:
-    # Runs at 9:00, 13:00, and 17:00 on weekdays and saturdays
-    - cron: '0 9,13,17 * * 1-6'
+    # Runs at 9:00, 13:00, 17:00 and 22:00 on weekdays and saturdays
+    - cron: '0 9,13,17,22 * * 1-6'
   workflow_dispatch:
 
 env:
@@ -23,11 +23,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+      - name: Install dependencies
+        run: |
+          npm install @octokit/rest
 
       - name: Get open PRs
         id: get-open-prs
         run: |
-          echo "::set-output name=open_prs::$(node get-open-prs.js)"
+          echo "::set-output name=open_prs::$(node .github/workflows/get-open-prs.js)"
+        env:
+          REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Send telegram message if there are open PRs
         if: steps.get-open-prs.outputs.open_prs != ''
