@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
 
-   PR to Telegram:
+  PR to Telegram:
     runs-on: ubuntu-latest
     steps:
       - name: send telegram message on PR open
@@ -30,7 +30,7 @@ jobs:
             Repository: ${{ github.repository }}
             
             See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-
+  
   lint-next:
     runs-on: ubuntu-latest
     continue-on-error: false
