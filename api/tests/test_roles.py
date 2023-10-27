@@ -414,68 +414,53 @@ def test_unauthorized_get_role_skills():
     assert response.json() == {"detail": "Unauthorized user!"}
 
 
-@patch("api.routers.roles.db_services.get_all_roles_info")
-def test_success_get_roles_info(mock_get_all_roles_info):
-    mock_get_all_roles_info.return_value = {
-        "234567892": {
-            "role_id": 234567892,
-            "role_name": "Learning Facilitator / Trainer",
-            "role_desc": "The Learning Facilitator delivers learning products and services in a variety of environments, using multiple learning delivery modes and methods. He/She assesses learning needs and adapts the facilitation approach to reflect desired learning outcomes and learner needs. He is responsible for knowledge and skills transfer by delivering learning content, facilitating group discussions and responding to queries. He drives learner development and commitment to continuous learning by actively providing feedback and learner support. He evaluates curriculum effectiveness and recommends improvement areas by collecting learner feedback as well as analysing learning delivery approaches and materials.\nHe is a strong communicator who builds trusted relationships and creates a cooperative and engaging learning environment. He is adaptable and adept at managing multiple stakeholders. He works in multiple different environments, including different learning venues and client sites, and regularly interacts with digital systems.",
-            "role_status": "active",
-            "skills": [],
+@patch("api.routers.roles.db_services.get_all_role_listings_info")
+def test_success_get_roles_info(mock_get_all_role_listings_info):
+    mock_get_all_role_listings_info.return_value = (
+        {
+            "234567892": {
+                "role_id": 234567892,
+                "role_name": "Learning Facilitator / Trainer",
+                "role_desc": "The Learning Facilitator delivers learning products and services in a variety of environments, using multiple learning delivery modes and methods. He/She assesses learning needs and adapts the facilitation approach to reflect desired learning outcomes and learner needs. He is responsible for knowledge and skills transfer by delivering learning content, facilitating group discussions and responding to queries. He drives learner development and commitment to continuous learning by actively providing feedback and learner support. He evaluates curriculum effectiveness and recommends improvement areas by collecting learner feedback as well as analysing learning delivery approaches and materials.\nHe is a strong communicator who builds trusted relationships and creates a cooperative and engaging learning environment. He is adaptable and adept at managing multiple stakeholders. He works in multiple different environments, including different learning venues and client sites, and regularly interacts with digital systems.",
+                "role_status": "active",
+                "skills": [],
+            },
+            "234567899": {
+                "role_id": 234567899,
+                "role_name": "Butcher",
+                "role_desc": "added by elton on 22/9/23 10.12pm to fix fk constraints",
+                "role_status": "active",
+                "skills": [
+                    {
+                        "skill_id": 345678790,
+                        "skill_name": "Typescript Developer",
+                        "skill_status": "active",
+                    },
+                    {
+                        "skill_id": 345678866,
+                        "skill_name": "Java Developer",
+                        "skill_status": "active",
+                    },
+                    {
+                        "skill_id": 345678922,
+                        "skill_name": "React Beast",
+                        "skill_status": "active",
+                    },
+                ],
+            },
         },
-        "234567899": {
-            "role_id": 234567899,
-            "role_name": "Butcher",
-            "role_desc": "added by elton on 22/9/23 10.12pm to fix fk constraints",
-            "role_status": "active",
-            "skills": [
-                {
-                    "skill_id": 345678790,
-                    "skill_name": "Typescript Developer",
-                    "skill_status": "active",
-                },
-                {
-                    "skill_id": 345678866,
-                    "skill_name": "Java Developer",
-                    "skill_status": "active",
-                },
-                {
-                    "skill_id": 345678922,
-                    "skill_name": "React Beast",
-                    "skill_status": "active",
-                },
-            ],
-        },
-    }
+        None,
+    )
 
     headers = {"role": "hr"}
-    response = client.get("/role/role_info", headers=headers)
-    mock_get_all_roles_info.assert_called()
-    assert response.status_code == 200
-
-
-@patch("api.routers.roles.db_services.get_all_role_info")
-def test_success_get_role_info(mock_get_all_role_info):
-    mock_get_all_role_info.return_value = {
-        "234567892": {
-            "role_id": 234567892,
-            "role_name": "Learning Facilitator / Trainer",
-            "role_desc": "The Learning Facilitator delivers learning products and services in a variety of environments, using multiple learning delivery modes and methods. He/She assesses learning needs and adapts the facilitation approach to reflect desired learning outcomes and learner needs. He is responsible for knowledge and skills transfer by delivering learning content, facilitating group discussions and responding to queries. He drives learner development and commitment to continuous learning by actively providing feedback and learner support. He evaluates curriculum effectiveness and recommends improvement areas by collecting learner feedback as well as analysing learning delivery approaches and materials.\nHe is a strong communicator who builds trusted relationships and creates a cooperative and engaging learning environment. He is adaptable and adept at managing multiple stakeholders. He works in multiple different environments, including different learning venues and client sites, and regularly interacts with digital systems.",
-            "role_status": "active",
-            "skills": [],
-        },
-    }
-
-    headers = {"role": "hr"}
-    response = client.get("/role/role_info?role_id=123", headers=headers)
-    mock_get_all_role_info.assert_called()
+    response = client.get("/role/role_listings_info", headers=headers)
+    mock_get_all_role_listings_info.assert_called()
     assert response.status_code == 200
 
 
 def test_unauthorized_get_role_info():
     headers = {"role": "invalid"}
-    response = client.get("/role/role_info", headers=headers)
+    response = client.get("/role/role_listings_info", headers=headers)
     assert response.status_code == 401
 
 

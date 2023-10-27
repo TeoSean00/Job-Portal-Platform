@@ -34,8 +34,40 @@ def healthcheck():
 
 
 # RoleDetails CRUD operations
-def get_all_roles_info():
+def get_all_role_listings_info():
+    role_skills_alias = aliased(RoleSkills, name="s")
+    skills_details_alias = aliased(SkillDetails, name="sd")
+    role_details_alias = aliased(RoleDetails, name="d")
+    role_listings_alias = aliased(RoleListings, name="l")
+
     db = SessionLocal()
+    role_listing_query = db.query(
+        role_listings_alias, role_details_alias
+    ).outerjoin(
+        role_details_alias,
+        role_listings_alias.role_id == role_details_alias.role_id,
+    )
+    role_skills_details_query = (
+        db.query(role_details_alias, role_skills_alias, skills_details_alias)
+        .join(
+            role_skills_alias,
+            role_details_alias.role_id == role_skills_alias.role_id,
+        )
+        .join(
+            skills_details_alias,
+            skills_details_alias.skill_id == role_skills_alias.skill_id,
+        )
+    )
+
+    return role_listing_query.all(), role_skills_details_query.all()
+
+
+def get_all_roles_details():
+    """
+    Unused function that gets all the relevant details from a role details.
+    """
+    db = SessionLocal()
+
     role_details_alias = aliased(RoleDetails, name="d")
     role_skills_alias = aliased(RoleSkills, name="s")
     skill_details_alias = aliased(SkillDetails, name="sd")
