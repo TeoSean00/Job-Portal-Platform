@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
 
-  PR to Telegram:
+  PR-notif-telegram:
     runs-on: ubuntu-latest
     steps:
       - name: send telegram message on PR open
