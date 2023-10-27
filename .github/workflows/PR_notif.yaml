@@ -1,0 +1,44 @@
+name: PR Telegram Notifications
+
+on:
+  schedule:
+    # Runs at 9:00, 13:00, and 17:00 on weekdays and saturdays
+    - cron: '0 9,13,17 * * 1-6'
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: "18.x"
+
+concurrency:
+  group: scheduled-pr-check
+
+jobs:
+  PR-notif-telegram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Get open PRs
+        id: get-open-prs
+        run: |
+          echo "::set-output name=open_prs::$(node get-open-prs.js)"
+
+      - name: Send telegram message if there are open PRs
+        if: steps.get-open-prs.outputs.open_prs != ''
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Open PRs:
+            ${{ steps.get-open-prs.outputs.open_prs }}
+            
+            Repository: ${{ github.repository }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
