@@ -2,8 +2,8 @@ name: PR Telegram Notifications
 
 on:
   schedule:
-    # Runs at 9:00, 13:00, and 17:00 on weekdays and saturdays
-    - cron: '0 9,13,17 * * 1-6'
+    # Runs at 9:00, 13:00, 17:00 and 22:00 on weekdays and saturdays
+    - cron: '0 9,13,17,22 * * 1-6'
   workflow_dispatch:
 
 env:
