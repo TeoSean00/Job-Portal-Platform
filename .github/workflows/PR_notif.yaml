@@ -31,6 +31,8 @@ jobs:
         id: get-open-prs
         run: |
           echo "::set-output name=open_prs::$(node .github/workflows/get-open-prs.js)"
+        env:
+          REPO_ACCESS_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Send telegram message if there are open PRs
         if: steps.get-open-prs.outputs.open_prs != ''
