@@ -15,22 +15,6 @@ concurrency:
 
 jobs:
 
-  PR-notif-telegram:
-    runs-on: ubuntu-latest
-    steps:
-      - name: send telegram message on PR open
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            ${{ github.actor }} created PR:
-            PR Title: ${{ github.event.pull_request.title }}
-            PR Description: ${{ github.event.pull_request.body }}
-            
-            Repository: ${{ github.repository }}
-            See changes: ${{ github.event.pull_request.html_url }}
-  
   lint-next:
     runs-on: ubuntu-latest
     continue-on-error: false
