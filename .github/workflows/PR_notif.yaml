@@ -27,7 +27,7 @@ jobs:
       - name: Get open PRs
         id: get-open-prs
         run: |
-          echo "::set-output name=open_prs::$(node get-open-prs.js)"
+          echo "::set-output name=open_prs::$(node .github/workflows/get-open-prs.js)"
 
       - name: Send telegram message if there are open PRs
         if: steps.get-open-prs.outputs.open_prs != ''
