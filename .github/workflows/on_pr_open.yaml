@@ -25,11 +25,11 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
             ${{ github.actor }} created PR:
-            Commit message: ${{ github.event.commits[0].message }}
+            PR Title: ${{ github.event.pull_request.title }}
+            PR Description: ${{ github.event.pull_request.body }}
             
             Repository: ${{ github.repository }}
-            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+            See changes: ${{ github.event.pull_request.html_url }}
   
   lint-next:
     runs-on: ubuntu-latest
