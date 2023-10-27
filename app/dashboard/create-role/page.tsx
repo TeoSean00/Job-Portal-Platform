@@ -1,27 +1,20 @@
 "use client";
 
-import type { Department, RoleDetail, SkillDetail } from "@/types";
+import type {
+  AllSkillAPIResponse,
+  RoleAPIResponse,
+  RoleDetail,
+  SkillDetail,
+} from "@/types";
 
 import { useSession } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
+import useSWR from "swr";
 
+import { fetcherWithHeaders } from "@/components/AuthProvider";
 import RoleForm from "@/components/create-role/RoleForm";
 import { Separator } from "@/components/ui";
-
-const departments: Department[] = ["HR", "IT", "Sales", "Finance"].map(
-  (department) => ({
-    value: department,
-    label: department,
-  }),
-);
-
-interface RoleAPIResponse {
-  role_details: RoleDetail[];
-}
-
-interface SkillAPIResponse {
-  skills: SkillDetail[];
-}
+import { departments } from "@/lib/constants";
 
 const CreateRole = () => {
   const { session } = useSession();
@@ -34,59 +27,48 @@ const CreateRole = () => {
   const [roleDetails, setRoleDetails] = useState<RoleDetail[]>([]);
   const [allSkills, setAllSkills] = useState<SkillDetail[]>([]);
 
-  const fetchRoles = () => {
-    fetch(`/api/role/role_details`, {
-      method: "GET",
-      headers: {
-        "user-token": userToken,
-        role: String(userRole),
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network error");
-        }
-        return res.json();
-      })
-      .then((data: RoleAPIResponse) => {
-        setRoleDetails(data.role_details);
-      })
-      .catch((err) => {
-        console.log("Error fetching role details:", err);
-      });
-  };
+  const { data: roleData, error: roleError } = useSWR<RoleAPIResponse>(
+    `/api/role/role_details`,
+    (url: string) =>
+      fetcherWithHeaders(url, {
+        headers: {
+          role: String(userRole),
+        },
+      }),
+  );
 
-  const fetchSkills = () => {
-    fetch(`/api/skill/get-all`, {
-      method: "GET",
-      headers: {
-        "user-token": userToken,
-        role: String(userRole),
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network error");
-        }
-        return res.json();
-      })
-      .then((data: SkillAPIResponse) => {
-        setAllSkills(data.skills);
-      })
-      .catch((err) => {
-        console.log("Error fetching role details:", err);
-      });
-  };
+  const { data: skillData, error: skillError } = useSWR<AllSkillAPIResponse>(
+    `/api/skill/get-all`,
+    (url: string) =>
+      fetcherWithHeaders(url, {
+        headers: {
+          role: String(userRole),
+        },
+      }),
+  );
 
   useEffect(() => {
-    fetchRoles();
-    fetchSkills();
-  }, []);
+    if (roleData) {
+      setRoleDetails(roleData.role_details);
+    }
+    if (roleError) {
+      console.log("Error fetching role details:", roleError);
+    }
+  }, [roleData, roleError]);
+
+  useEffect(() => {
+    if (skillData) {
+      setAllSkills(skillData.skills);
+    }
+    if (skillError) {
+      console.log("Error fetching all skills:", skillError);
+    }
+  }, [skillData, skillError]);
 
   return (
     <div className="flex h-screen flex-col space-y-6">
       <div>
-        <h3 className="text-xl font-medium">Role Creation</h3>
+        <h3 className="text-xl font-medium">Add Role Listing</h3>
       </div>
       <Separator />
       {roleDetails && (
