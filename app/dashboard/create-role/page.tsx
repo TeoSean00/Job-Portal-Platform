@@ -11,10 +11,10 @@ import { useSession } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
-import { fetcherWithHeaders } from "@/components/AuthProvider";
 import RoleForm from "@/components/create-role/RoleForm";
 import { Separator } from "@/components/ui";
 import { departments } from "@/lib/constants";
+import { fetcherWithHeaders } from "@/lib/utils";
 
 const CreateRole = () => {
   const { session } = useSession();

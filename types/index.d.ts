@@ -136,3 +136,25 @@ export interface DataTableFilterableColumn<TData>
   extends DataTableSearchableColumn<TData> {
   options: Option[];
 }
+
+export type TRoleApplicantDetails = {
+  biz_address: string;
+  dept: string;
+  email: string;
+  fname: string;
+  lname: string;
+  phone: string;
+  role_app_id: number;
+  role_app_status: string;
+  role_app_ts_create: string;
+  role_listing_id: number;
+  staff_id: number;
+  sys_role: string;
+};
+
+export type TRoleDetails = {
+  role_id: number;
+  role_name: string;
+  role_description: string;
+  role_status: string;
+};

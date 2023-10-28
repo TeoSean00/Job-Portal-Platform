@@ -6,8 +6,9 @@ import { useSession, SignOutButton } from "@clerk/nextjs";
 import React, { useContext } from "react";
 import useSWR from "swr";
 
-import { AuthContext, fetcher } from "@/components/AuthProvider";
+import { AuthContext } from "@/components/AuthProvider";
 import { Button } from "@/components/ui";
+import { fetcher } from "@/lib/utils";
 
 const DashboardPage = () => {
   const { isLoaded, session } = useSession();

@@ -14,11 +14,7 @@ import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
 
-import {
-  AuthContext,
-  fetcher,
-  fetcherWithHeaders,
-} from "@/components/AuthProvider";
+import { AuthContext } from "@/components/AuthProvider";
 import {
   Button,
   Combobox,
@@ -44,7 +40,7 @@ import {
   Locations,
 } from "@/lib/constants";
 import { roleFormSchema } from "@/lib/schema";
-import { longDateTime } from "@/lib/utils";
+import { fetcher, fetcherWithHeaders, longDateTime } from "@/lib/utils";
 
 // This can come from your database or API.
 const defaultValues: Partial<RoleFormValues> = {
