@@ -52,7 +52,7 @@ TableFooter.displayName = "TableFooter";
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
   {
-    roleId: number; // Define the prop for roleId
+    roleId: unknown; // Define the prop for roleId
   } & React.HTMLAttributes<HTMLTableRowElement>
 >(({ className, roleId, ...props }, ref) => {
   const router = useRouter(); // Call the useRouter hook within a component
