@@ -3,7 +3,7 @@
 import type {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
-} from "@/components/types";
+} from "@/types";
 import type {
   ColumnDef,
   ColumnFiltersState,
@@ -30,7 +30,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/Table";
-import { Input } from "@/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

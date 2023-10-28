@@ -3,7 +3,7 @@
 import type {
   DataTableFilterableColumn,
   DataTableSearchableColumn,
-} from "@/components/types";
+} from "@/types";
 import type { Table } from "@tanstack/react-table";
 
 import { Cross2Icon } from "@radix-ui/react-icons";
