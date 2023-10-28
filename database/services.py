@@ -202,6 +202,19 @@ def get_all_staff_details():
         db.close()
 
 
+def get_all_manager_details():
+    db = SessionLocal()
+    try:
+        manager = (
+            db.query(StaffDetails)
+            .filter(StaffDetails.sys_role == "manager")
+            .all()
+        )
+        return manager
+    finally:
+        db.close()
+
+
 def get_staff_details(staff_id: int):
     db = SessionLocal()
     try:
