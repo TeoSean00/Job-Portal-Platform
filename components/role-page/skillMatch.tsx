@@ -17,14 +17,14 @@ export interface SkillInfo {
   skillMissing: string[];
 }
 interface SkillData {
-  data: SkillInfo;
+  data: SkillInfo | undefined;
 }
 export function SkillMatch(props: SkillData) {
   const [obtainedSkills, setObtainedSkills] = React.useState(
-    props.data.skillObtained,
+    props.data?.skillObtained || [],
   );
   const [missingSkills, setMissingSkills] = React.useState(
-    props.data.skillMissing,
+    props.data?.skillMissing || [],
   );
   // console.log(props);
   return (

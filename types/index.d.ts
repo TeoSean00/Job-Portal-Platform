@@ -82,4 +82,12 @@ declare type SpecificRoleInfo = {
   role_desc: string;
   role_status: string;
   skills: RoleSkill[];
+  role_department: string;
+  role_location: string;
+};
+
+declare type SkillMatchType = {
+  active: RoleSkill[];
+  in_progress: RoleSkill[];
+  unverified: RoleSkill[];
 };

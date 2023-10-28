@@ -24,12 +24,12 @@ export function QuickInfo(props: RoleData) {
     <Card className="w-full">
       <CardHeader>
         <CardTitle>{roleInfo.roleName}</CardTitle>
-        <CardDescription>Department Name</CardDescription>
+        <CardDescription>{roleInfo.roleDepartment}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col pb-10">
           <h4 className=" font-bold">Role Details</h4>
-          <span>Location:New York</span>
+          <span>Location:{roleInfo.roleLocation}</span>
           <span>Salary Range:$60,000 - $80,000</span>
           <span>
             Skills Required:

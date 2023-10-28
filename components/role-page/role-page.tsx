@@ -2,6 +2,7 @@
 
 import type { PageData } from "../../app/dashboard/roles/[roleid]/page";
 import type { SkillInfo } from "@/components/role-page/skillMatch";
+import type { SkillMatchType } from "@/types";
 
 import { useSession } from "@clerk/nextjs";
 import React, { useEffect, useContext } from "react";
@@ -13,12 +14,15 @@ import { SkillMatch } from "@/components/role-page/skillMatch";
 interface RoleData {
   data: PageData;
 }
+interface SkillMatchAPIResponse {
+  match: SkillMatchType;
+}
 const RoleListing = (props: RoleData) => {
   const staffId = useContext(AuthContext);
   const [roleInfo, setRoleInfo] = React.useState(props.data);
+  const [skillInfo, setSkillInfo] = React.useState<SkillInfo | undefined>();
   const fetchRoleSkillMatch = () => {
-    console.log(staffId, roleInfo.roleid);
-    fetch(`/api/staff/role-skills-match/${staffId}/312513332`, {
+    fetch(`/api/staff/role-skills-match/${staffId}/${roleInfo.roleid}`, {
       method: "GET",
       // headers: {
       //   "user-token": userToken || "", // Make sure it's not undefined
@@ -31,9 +35,18 @@ const RoleListing = (props: RoleData) => {
         }
         return res.json();
       })
-      .then((apiData: RoleAPIResponse) => {
-        console.log("ROLESKILL");
-        console.log(apiData);
+      .then((apiData: SkillMatchAPIResponse) => {
+        // console.log("ROLESKILL");
+        // console.log(apiData);
+        const obtained = apiData.match.active.concat(apiData.match.in_progress);
+        const temp = {
+          skillObtained: obtained.map((skill) => skill.skill_name),
+          skillMissing: apiData.match.unverified.map(
+            (skill) => skill.skill_name,
+          ),
+        };
+        // console.log(temp);
+        setSkillInfo(temp);
         // Object.keys(apiData).forEach((item: string) => {
         //   const role = apiData[Number(item)];
         //   const temp = {
@@ -52,16 +65,19 @@ const RoleListing = (props: RoleData) => {
   useEffect(() => {
     fetchRoleSkillMatch();
   }, []);
-  console.log(roleInfo.roleid);
-  const skillInfo: SkillInfo = {
-    skillObtained: ["Python", "React", "Javascript"],
-    skillMissing: ["Java", "C++", "C#"],
-  };
+  // const skillInfo: SkillInfo = {
+  //   skillObtained: ["Python", "React", "Javascript"],
+  //   skillMissing: ["Java", "C++", "C#"],
+  // };
   return (
     <>
       <div className="flex w-full flex-col space-y-10">
         <QuickInfo data={roleInfo} />
-        <SkillMatch data={skillInfo} />
+        {skillInfo === undefined ? (
+          <div>Loading...</div>
+        ) : (
+          <SkillMatch data={skillInfo} />
+        )}
       </div>
     </>
   );

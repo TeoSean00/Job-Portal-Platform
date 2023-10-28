@@ -15,10 +15,12 @@ export interface PageData {
   roleName: string;
   roleDescription: string;
   skillsRequired: string[];
+  roleDepartment: string;
+  roleLocation: string;
 }
 
 interface RoleAPIResponse {
-  [role_id: number]: SpecificRoleInfo;
+  [key: number]: SpecificRoleInfo;
 }
 
 const RolePage = (props: PageProps) => {
@@ -30,8 +32,8 @@ const RolePage = (props: PageProps) => {
   const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
   const [data, setData] = useState<PageData>();
-  const fetchRoleDetail = () => {
-    fetch(`/api/role/role_info?role_id=${props.params.roleid}`, {
+  const fetchRoles = () => {
+    fetch(`/api/role/role_listings_info`, {
       method: "GET",
       headers: {
         "user-token": userToken || "", // Make sure it's not undefined
@@ -45,17 +47,19 @@ const RolePage = (props: PageProps) => {
         return res.json();
       })
       .then((apiData: RoleAPIResponse) => {
-        console.log(apiData);
-        Object.keys(apiData).forEach((item: string) => {
-          const role = apiData[Number(item)];
-          const temp = {
-            roleid: props.params.roleid,
-            roleName: role.role_name,
-            roleDescription: role.role_desc,
-            skillsRequired: role.skills.map((skill) => skill.skill_name),
-          };
-          setData(temp);
-        });
+        // console.log(apiData[Number(props.params.roleid)]);
+        const roleListingData = apiData[Number(props.params.roleid)];
+        const temp = {
+          roleid: props.params.roleid,
+          roleName: roleListingData.role_name,
+          roleDescription: roleListingData.role_desc,
+          skillsRequired: roleListingData.skills.map(
+            (skill) => skill.skill_name,
+          ),
+          roleDepartment: roleListingData.role_department,
+          roleLocation: roleListingData.role_location,
+        };
+        setData(temp);
       })
       .catch((err) => {
         console.log("Error fetching role details:", err);
@@ -68,16 +72,13 @@ const RolePage = (props: PageProps) => {
   //   skillsRequired: ["Python", "React", "Javascript", "Java", "C++", "C#"],
   // };
   useEffect(() => {
-    fetchRoleDetail();
+    fetchRoles();
+    // fetchRoleDetail();
   }, []);
   return (
     <>
-      {data === undefined ? (
-        <div>Loading...</div>
-      ) : (
-        <RoleListing data={data} />
-      )}
-      </>
+      {data === undefined ? <div>Loading...</div> : <RoleListing data={data} />}
+    </>
   );
 };
 export default RolePage;

@@ -30,7 +30,7 @@ const RolesPage = () => {
 
   const [data, setData] = useState<ProcessedRole[]>([]);
   const fetchRoles = () => {
-    fetch(`/api/role/role_info`, {
+    fetch(`/api/role/role_listings_info`, {
       method: "GET",
       headers: {
         "user-token": userToken || "", // Make sure it's not undefined
@@ -44,12 +44,12 @@ const RolesPage = () => {
         return res.json();
       })
       .then((apiData: RoleAPIResponse) => {
-        console.log(apiData);
+        // console.log(apiData);
         const processedRoles: ProcessedRole[] = [];
         Object.keys(apiData).forEach((item: string) => {
           const role = apiData[Number(item)];
           const processedRole = {
-            roleId: role.role_id,
+            roleId: Number(item),
             roleName: role.role_name,
             roleDescription: role.role_desc,
             roleStatus: role.role_status,
@@ -57,7 +57,6 @@ const RolesPage = () => {
           };
           processedRoles.push(processedRole);
         });
-        console.log(processedRoles);
         setData(processedRoles);
       })
       .catch((err) => {
@@ -72,14 +71,14 @@ const RolesPage = () => {
   ];
   // const data: ProcessedRole[] = [
   // {
-  //   roleId: 1,
+  //   roleListingId: 1,
   //   roleName: "Temp Role 1",
   //   roleDescription: "This is a temporary role 1",
   //   roleStatus: "active",
   //   skillRequired: ["skill 1", "skill 2"],
   // },
   // {
-  //   roleId: 2,
+  //   roleListingId: 2,
   //   roleName: "Temp Role 2",
   //   roleDescription:
   //     "This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2",
@@ -87,7 +86,7 @@ const RolesPage = () => {
   //   skillRequired: ["skill 2", "skill 3"],
   // },
   // {
-  //   roleId: 3,
+  //   roleListingId: 3,
   //   roleName: "Temp Inactive Role",
   //   roleDescription: "This is a temporary inactive role",
   //   roleStatus: "inactive",
