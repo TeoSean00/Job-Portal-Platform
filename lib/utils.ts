@@ -1,3 +1,5 @@
+import type { FetcherOptions } from "@/types";
+
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -17,3 +19,10 @@ export const longDateTime = new Intl.DateTimeFormat("en-sg", {
 });
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
+export const fetcherWithHeaders = (url: string, options: FetcherOptions) =>
+  fetch(url, options).then((res) => {
+    if (!res.ok) {
+      throw new Error("Network error");
+    }
+    return res.json();
+  });
