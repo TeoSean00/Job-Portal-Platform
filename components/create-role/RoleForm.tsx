@@ -59,13 +59,12 @@ const RoleForm: React.FC<RoleFormProps> = ({
   roles,
   allSkills,
 }) => {
-  const { session } = useSession();
+  const { isLoaded, session } = useSession();
   const user = session?.user;
-  if (!user?.id || !user?.publicMetadata?.role) {
-    throw new Error("User token or role is not defined!");
-  }
+  // if (!user?.id || !user?.publicMetadata?.role) {
+  //   throw new Error("User token or role is not defined!");
+  // }
   const staffId = useContext(AuthContext);
-  const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
   const [skillIdList, setSkillId] = useState<SkillAPIResponse[]>([]);
   const [managerDetails, setManagerDetails] = useState<StaffIdAPIResponse[]>(
@@ -133,19 +132,19 @@ const RoleForm: React.FC<RoleFormProps> = ({
       });
   }
 
-  const { data: managerData } = useSWR<StaffIdAPIResponse[]>(
-    "/api/staff/manager",
-    fetcher,
-  );
-  const { data: roleSkillsData } = useSWR<RoleSkillAPIResponse>(
-    `/api/role/role_skills?role_id=${form.getValues().roleName}`,
-    (url: string) =>
-      fetcherWithHeaders(url, {
-        headers: {
-          role: String(userRole),
-        },
-      }),
-  );
+  const { data: managerData, isLoading: managerLoading } = useSWR<
+    StaffIdAPIResponse[]
+  >("/api/staff/manager", fetcher);
+  const { data: roleSkillsData, isLoading: roleSkillLoading } =
+    useSWR<RoleSkillAPIResponse>(
+      `/api/role/role_skills?role_id=${form.getValues().roleName}`,
+      (url: string) =>
+        fetcherWithHeaders(url, {
+          headers: {
+            role: String(userRole),
+          },
+        }),
+    );
 
   useEffect(() => {
     if (managerData) {
@@ -181,111 +180,89 @@ const RoleForm: React.FC<RoleFormProps> = ({
 
   return (
     <>
-      <Form {...form}>
-        <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex w-full flex-grow space-x-4">
-            <FormField
-              control={form.control}
-              name="roleName"
-              render={() => (
-                <FormItem className="w-full">
-                  <FormLabel className="text-base">Role</FormLabel>
-                  <Controller
-                    control={form.control}
-                    name="roleName"
-                    render={({ field }) => (
-                      <Combobox
-                        items={roles.map((role) => ({
-                          value: role.role_id.toString(),
-                          label: role.role_name,
-                        }))}
-                        placeholder="Select a Role"
-                        value={field.value}
-                        onChange={(selectedRoleId) =>
-                          field.onChange(selectedRoleId)
-                        }
-                      />
-                    )}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="listingId"
-              render={() => (
-                <FormItem className="w-full">
-                  <FormLabel className="text-base">Listing Id</FormLabel>
-                  <Controller
-                    control={form.control}
-                    name="listingId"
-                    render={({ field }) => (
-                      <Input placeholder="id" type="number" {...field} />
-                    )}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormField
-            control={form.control}
-            name="roleDescription"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">Listing Description</FormLabel>
-                <FormDescription>Describe the role in detail.</FormDescription>
-                <FormControl>
-                  <Textarea className=" resize-y" placeholder="" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="roleManager"
-            render={() => (
-              <FormItem className="w-full">
-                <FormLabel className="text-base">Role&apos;s Manager</FormLabel>
-                <FormDescription>Select role&apos;s manager.</FormDescription>
-                <Controller
-                  control={form.control}
-                  name="roleManager"
-                  render={({ field }) => (
-                    <Combobox
-                      items={formattedManagerDetails}
-                      placeholder="Select a Manager"
-                      value={field.value}
-                      onChange={field.onChange}
+      {isLoaded && user && !managerLoading ? (
+        <Form {...form}>
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex w-full flex-grow space-x-4">
+              <FormField
+                control={form.control}
+                name="roleName"
+                render={() => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-base">Role</FormLabel>
+                    <Controller
+                      control={form.control}
+                      name="roleName"
+                      render={({ field }) => (
+                        <Combobox
+                          items={roles.map((role) => ({
+                            value: role.role_id.toString(),
+                            label: role.role_name,
+                          }))}
+                          placeholder="Select a Role"
+                          value={field.value}
+                          onChange={(selectedRoleId) =>
+                            field.onChange(selectedRoleId)
+                          }
+                        />
+                      )}
                     />
-                  )}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex w-full flex-grow space-x-4">
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="listingId"
+                render={() => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-base">Listing Id</FormLabel>
+                    <Controller
+                      control={form.control}
+                      name="listingId"
+                      render={({ field }) => (
+                        <Input placeholder="id" type="number" {...field} />
+                      )}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
-              name="location"
+              name="roleDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base">
+                    Listing Description
+                  </FormLabel>
+                  <FormDescription>
+                    Describe the role in detail.
+                  </FormDescription>
+                  <FormControl>
+                    <Textarea className=" resize-y" placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="roleManager"
               render={() => (
                 <FormItem className="w-full">
-                  <FormLabel className=" text-base">Location</FormLabel>
-                  <FormDescription>
-                    Select the location of role.
-                  </FormDescription>
+                  <FormLabel className="text-base">
+                    Role&apos;s Manager
+                  </FormLabel>
+                  <FormDescription>Select role&apos;s manager.</FormDescription>
                   <Controller
                     control={form.control}
-                    name="location"
+                    name="roleManager"
                     render={({ field }) => (
                       <Combobox
-                        items={Locations.map((location) => ({
-                          value: location,
-                          label: location,
-                        }))}
-                        placeholder={locationPlaceholder}
+                        items={formattedManagerDetails}
+                        placeholder="Select a Manager"
                         value={field.value}
                         onChange={field.onChange}
                       />
@@ -295,84 +272,118 @@ const RoleForm: React.FC<RoleFormProps> = ({
                 </FormItem>
               )}
             />
+            <div className="flex w-full flex-grow space-x-4">
+              <FormField
+                control={form.control}
+                name="location"
+                render={() => (
+                  <FormItem className="w-full">
+                    <FormLabel className=" text-base">Location</FormLabel>
+                    <FormDescription>
+                      Select the location of role.
+                    </FormDescription>
+                    <Controller
+                      control={form.control}
+                      name="location"
+                      render={({ field }) => (
+                        <Combobox
+                          items={Locations.map((location) => ({
+                            value: location,
+                            label: location,
+                          }))}
+                          placeholder={locationPlaceholder}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="departments"
+                render={() => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-base">Department</FormLabel>
+                    <FormDescription>
+                      Select the department the role.
+                    </FormDescription>
+                    <Controller
+                      control={form.control}
+                      name="departments"
+                      render={({ field }) => (
+                        <Combobox
+                          items={departments}
+                          placeholder={departmentPlaceholder}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
-              name="departments"
-              render={() => (
-                <FormItem className="w-full">
-                  <FormLabel className="text-base">Department</FormLabel>
-                  <FormDescription>
-                    Select the department the role.
-                  </FormDescription>
-                  <Controller
-                    control={form.control}
-                    name="departments"
-                    render={({ field }) => (
-                      <Combobox
-                        items={departments}
-                        placeholder={departmentPlaceholder}
-                        value={field.value}
-                        onChange={field.onChange}
-                      />
-                    )}
+              name="skills"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base">Skills</FormLabel>
+                  <FormDescription>Skills required for role.</FormDescription>
+                  <SelectComponent
+                    createAble={true}
+                    isMulti={true}
+                    options={skillIdList.map((skill) => ({
+                      value: skill.skill_id.toString(),
+                      label: skill.skill_name,
+                    }))}
+                    placeholder="Select Skills"
+                    {...field}
                   />
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-          <FormField
-            control={form.control}
-            name="skills"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">Skills</FormLabel>
-                <FormDescription>Skills required for role.</FormDescription>
-                <SelectComponent
-                  createAble={true}
-                  isMulti={true}
-                  options={skillIdList.map((skill) => ({
-                    value: skill.skill_id.toString(),
-                    label: skill.skill_name,
-                  }))}
-                  placeholder="Select Skills"
-                  {...field}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="startDate"
-            render={({ fieldState }) => (
-              <FormItem>
-                <FormLabel className="text-base">Start Date</FormLabel>
-                <FormDescription>
-                  Select the date for this listing to be shown.
-                </FormDescription>
-                <Controller
-                  control={form.control}
-                  name="startDate"
-                  render={({ field: { onChange, value } }) => (
-                    <DatePickerWithPresets
-                      className="w-full"
-                      value={value}
-                      onChange={(date) => {
-                        onChange(date);
-                      }}
-                    />
-                  )}
-                />
-                <FormMessage>
-                  {fieldState.error && fieldState.error.message}
-                </FormMessage>
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Create Role</Button>
-        </form>
-      </Form>
+            <FormField
+              control={form.control}
+              name="startDate"
+              render={({ fieldState }) => (
+                <FormItem>
+                  <FormLabel className="text-base">Start Date</FormLabel>
+                  <FormDescription>
+                    Select the date for this listing to be shown.
+                  </FormDescription>
+                  <Controller
+                    control={form.control}
+                    name="startDate"
+                    render={({ field: { onChange, value } }) => (
+                      <DatePickerWithPresets
+                        className="w-full"
+                        value={value}
+                        onChange={(date) => {
+                          onChange(date);
+                        }}
+                      />
+                    )}
+                  />
+                  <FormMessage>
+                    {fieldState.error && fieldState.error.message}
+                  </FormMessage>
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Create Role</Button>
+          </form>
+        </Form>
+      ) : (
+        <div className="px-4 py-5 text-gray-700 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          Loading data...
+        </div>
+      )}
     </>
   );
 };

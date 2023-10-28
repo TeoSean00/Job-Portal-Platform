@@ -17,12 +17,8 @@ import { Separator } from "@/components/ui";
 import { departments } from "@/lib/constants";
 
 const CreateRole = () => {
-  const { session } = useSession();
+  const { isLoaded, session } = useSession();
   const user = session?.user;
-  if (!user?.id || !user?.publicMetadata?.role) {
-    throw new Error("User token or role is not defined!");
-  }
-  const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
   const [roleDetails, setRoleDetails] = useState<RoleDetail[]>([]);
   const [allSkills, setAllSkills] = useState<SkillDetail[]>([]);
@@ -71,12 +67,16 @@ const CreateRole = () => {
         <h3 className="text-xl font-medium">Add Role Listing</h3>
       </div>
       <Separator />
-      {roleDetails && (
+      {isLoaded && user && roleData && skillData ? (
         <RoleForm
           allSkills={allSkills}
           departments={departments}
           roles={roleDetails}
         />
+      ) : (
+        <div className="px-4 py-5 text-gray-700 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          Loading data...
+        </div>
       )}
     </div>
   );
