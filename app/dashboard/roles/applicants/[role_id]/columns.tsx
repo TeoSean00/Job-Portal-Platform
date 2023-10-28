@@ -1,6 +1,7 @@
 import type { TRoleApplicantDetails } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 
+import { Button } from "@/components/ui";
 import { cn, longDateTime } from "@/lib/utils";
 
 export const ApplicantsColumns: ColumnDef<TRoleApplicantDetails>[] = [
@@ -59,5 +60,16 @@ export const ApplicantsColumns: ColumnDef<TRoleApplicantDetails>[] = [
       const formattedDate = longDateTime.format(date).split(",")[1];
       return <div className="">{formattedDate}</div>;
     },
+  },
+  {
+    id: "skills",
+    header: () => <div className="">Skills</div>,
+    cell: ({ row }) => (
+      <div>
+        <Button className="text-xs" size="sm">
+          skill match
+        </Button>
+      </div>
+    ),
   },
 ];
