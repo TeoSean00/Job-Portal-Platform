@@ -260,6 +260,143 @@ def test_failure_not_authorized_get_role_listings():
     assert response.status_code == 401
 
 
+@patch("api.routers.roles.db_services.update_role_listing")
+@patch("api.routers.roles.db_services.get_role_listings")
+def test_success_update_role_listing(
+    mock_get_role_listings, mock_update_role_listing
+):
+    """
+    Endpoint Tested:
+        PUT /role_listing/{role_listing_id}
+    Scenario:
+        Tests a successful, authorized PUT request to update a role listing.
+    """
+    role_details = {
+        "role_listing_id": 315132,  # Existing role listing ID
+        "role_listing_desc": "This is an updated description",
+        "role_listing_source": 123456786,
+        "role_listing_open": "2023-10-22T16:00:00",
+        "role_listing_creator": 123456786,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
+    }
+
+    # Define headers
+    headers = {"role": "hr"}
+
+    # Set the behavior of the mock functions
+    mock_get_role_listings.return_value = {
+        "role_listing_id": 315132,
+        "role_id": 234511581,
+        "role_listing_desc": "This is an existing description",
+        "role_listing_source": 123456786,
+        "role_listing_open": "2023-10-22T16:00:00",
+        "role_listing_creator": 123456786,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
+    }
+    mock_update_role_listing.return_value = {"message": "Updated!"}
+
+    # Act
+    response = client.put(
+        "/role_listing/315132", json=role_details, headers=headers
+    )
+    mock_get_role_listings.assert_called_with(315132)
+    mock_update_role_listing.assert_called_with(315132, role_details)
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "message": "Updated!"
+    }, "Response content does not match expected JSON"
+
+
+def test_unauthorized_update_role_listing():
+    """
+    Endpoint Tested:
+        PUT /role_listing/{role_listing_id}
+    Scenario:
+        Tests an unauthorized PUT request to update a role listing.
+    """
+    role_details = {
+        "role_listing_id": 315132,  # Existing role listing ID
+        "role_listing_desc": "This is an updated description",
+        "role_listing_source": 123456786,
+        "role_listing_open": "2023-10-22T16:00:00",
+        "role_listing_creator": 123456786,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
+    }
+
+    # Define headers
+    headers = {"role": "invalid"}
+
+    response = client.put(
+        "/role_listing/315132", json=role_details, headers=headers
+    )
+
+    # Assert
+    assert response.status_code == 401
+    assert response.json() == {"detail": "Unauthorized user!"}
+
+
+def test_not_found_update_role_listing():
+    """
+    Endpoint Tested:
+        PUT /role_listing/{role_listing_id}
+    Scenario:
+        Tests a PUT request to update a role listing that does not exist.
+    """
+    role_details = {
+        "role_listing_id": 999999,  # Non-existing role listing ID
+        "role_listing_desc": "This is an updated description",
+        "role_listing_source": 123456786,
+        "role_listing_open": "2023-10-22T16:00:00",
+        "role_listing_creator": 123456786,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
+    }
+
+    # Define headers
+    headers = {"role": "hr"}
+
+    response = client.put(
+        "/role_listing/999999", json=role_details, headers=headers
+    )
+
+    # Assert
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Role listing not found"}
+
+
+def test_invalid_update_role_listing():
+    """
+    Endpoint Tested:
+        PUT /role_listing/{role_listing_id}
+    Scenario:
+        Tests a PUT request to update a role listing with invalid role details.
+    """
+    role_details = {
+        "role_listing_id": 315132,  # Existing role listing ID
+        "role_listing_desc": "This is an invalid role listing.",
+        "role_listing_source": 123456786,
+        "role_listing_open": "2023-10-22T16:00:00",
+        "role_listing_creator": 123456786,
+        "role_department": "HR",
+        "role_location": "Melbourne, Australia",
+    }
+
+    # Define headers
+    headers = {"role": "hr"}
+
+    response = client.put(
+        "/role_listing/315132", json=role_details, headers=headers
+    )
+
+    # Assert
+    assert response.status_code == 400
+    assert response.json() == {"detail": {"message": "Invalid role details!"}}
+
+
 # =========================== End: Role Listings  ===========================
 
 
