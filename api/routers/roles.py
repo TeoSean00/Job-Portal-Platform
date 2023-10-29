@@ -3,7 +3,7 @@ import json
 from collections import defaultdict
 from typing import Optional
 
-from fastapi import APIRouter, Header, HTTPException, Query
+from fastapi import APIRouter, Body, Header, HTTPException, Path, Query
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
@@ -524,9 +524,8 @@ def create_role_listing(
         pass
 
 
-@router.put("/role_listing/{role_listing_id}")
+@router.put("/role_listing")
 def update_role_listing(
-    role_listing_id: int,
     role_listing_details: RoleListingsPydantic,
     role: str = Header(..., description="User role"),
     updater_staff_id: int = Header(..., description="Updater's staff_id"),
@@ -537,7 +536,6 @@ def update_role_listing(
 
     ### Parameters:
     `role`: Taken from Headers, expected values are hr, manager, staff, or invalid.<br>
-    `role_listing_id`: Path parameter for the ID of the role listing to update.<br>
     `role_details`: JSON object containing the updated role details.<br>
     `updater_staff_id`: Taken from headers, updater's staff_id.<br>
 
@@ -548,10 +546,10 @@ def update_role_listing(
     ### Example:
     #### Request:
     ```
-    PUT /role_listing/312513332
+    PUT /role_listing
     Authorization: <Clerk Token>
     role: "hr"
-    updater_staff_id: 123456789
+    updater-staff-id: 123456789
     ```
     #### Body:
     ```
@@ -564,7 +562,7 @@ def update_role_listing(
         "role_listing_close": "2023-10-25T16:00:00",
         "role_listing_hide": "2023-11-25T16:00:00",
         "role_listing_creator": 123456789,
-        "role_listing_ts_create": "2023-09-22T14:38",
+        "role_listing_ts_create": "2023-09-22T14:38:00",
         "role_department": "Group Technology",
         "role_location": "Front Office, Hong Kong SAR"
     }
@@ -584,7 +582,9 @@ def update_role_listing(
 
     try:
         # Check if the role listing with the specified ID exists
-        existing_role_listing = db_services.get_role_listings(role_listing_id)
+        existing_role_listing = db_services.get_role_listings(
+            role_listing_details.role_listing_id
+        )
         if existing_role_listing is None:
             raise HTTPException(
                 status_code=404, detail="Role listing not found"
@@ -593,21 +593,23 @@ def update_role_listing(
         # Validate and update role details
         if validate_role_listing(role_listing_details):
             updated_data = {
-                "role_listing_id": role_listing_id,
+                "role_listing_id": role_listing_details.role_listing_id,
                 "role_id": role_listing_details.role_id,
                 "role_listing_desc": role_listing_details.role_listing_desc,
                 "role_listing_source": role_listing_details.role_listing_source,
                 "role_listing_open": common_services.convert_str_to_datetime(
                     role_listing_details.role_listing_open
                 ),
-                "role_listing_close": common_services.add_days_to_str_datetime(
-                    role_listing_details.role_listing_open, 14
+                "role_listing_close": common_services.convert_str_to_datetime(
+                    role_listing_details.role_listing_open
                 ),
-                "role_listing_hide": common_services.add_days_to_str_datetime(
-                    role_listing_details.role_listing_hide, 14
+                "role_listing_hide": common_services.convert_str_to_datetime(
+                    role_listing_details.role_listing_hide
                 ),
                 "role_listing_creator": role_listing_details.role_listing_creator,
-                "role_listing_ts_create": role_listing_details.role_listing_ts_create,
+                "role_listing_ts_create": common_services.convert_str_to_datetime(
+                    role_listing_details.role_listing_ts_create
+                ),
                 "role_listing_updater": updater_staff_id,
                 "role_listing_ts_update": common_services.convert_str_to_datetime(
                     dt.datetime.utcnow()
