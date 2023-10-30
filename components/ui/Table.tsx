@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -50,17 +51,30 @@ TableFooter.displayName = "TableFooter";
 
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
-  <tr
-    ref={ref}
-    className={cn(
-      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-      className,
-    )}
-    {...props}
-  />
-));
+  {
+    roleId: unknown; // Define the prop for roleId
+  } & React.HTMLAttributes<HTMLTableRowElement>
+>(({ className, roleId, ...props }, ref) => {
+  const router = useRouter(); // Call the useRouter hook within a component
+  let routerLink = "/dashboard/roles";
+  if (roleId !== 0) {
+    routerLink = `/dashboard/roles/${String(roleId)}`;
+  }
+  return (
+    <tr
+      ref={ref}
+      className={cn(
+        "border-b transition-colors hover:cursor-pointer hover:bg-muted/80 data-[state=selected]:bg-muted",
+        className,
+      )}
+      onClick={() => {
+        // console.log(roleId);
+        router.push(routerLink); // Navigate to the details page
+      }}
+      {...props}
+    />
+  );
+});
 TableRow.displayName = "TableRow";
 
 const TableHead = React.forwardRef<
@@ -85,7 +99,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "flex-auto p-4 align-middle [&:has([role=checkbox])]:pr-0",
+      "max-w-sm truncate p-4 align-middle [&:has([role=checkbox])]:pr-0",
       className,
     )}
     {...props}

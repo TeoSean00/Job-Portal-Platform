@@ -62,6 +62,7 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
+
   return (
     <div>
       <DataTableToolbar
@@ -73,7 +74,7 @@ export function DataTable<TData, TValue>({
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} roleId={0}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
@@ -93,6 +94,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  roleId={row.getVisibleCells()[0].getContext().getValue()}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -105,7 +107,7 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+              <TableRow roleId={0}>
                 <TableCell
                   className="h-24 text-center"
                   colSpan={columns.length}

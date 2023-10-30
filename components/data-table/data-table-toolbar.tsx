@@ -9,7 +9,7 @@ import type { Table } from "@tanstack/react-table";
 import { Cross2Icon } from "@radix-ui/react-icons";
 
 import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
-import { DataTableViewOptions } from "@/components/data-table/data-table-view-options";
+// import { DataTableViewOptions } from "@/components/data-table/data-table-view-options";
 import { Button, Input } from "@/components/ui";
 
 interface DataTableToolbarProps<TData> {
@@ -74,7 +74,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      {/* <DataTableViewOptions table={table} /> */}
     </div>
   );
 }
