@@ -54,10 +54,17 @@ class SkillDetailsPydantic(BaseModel):
         orm_mode = True
 
 
+class StaffSkillDetailsPydantic(SkillDetailsPydantic):
+    ss_status: VerificationStatusEnum
+
+    class Config:
+        orm_mode = True
+
+
 class MatchStatus(BaseModel):
-    active: List[SkillDetailsPydantic] = []
-    in_progress: List[SkillDetailsPydantic] = []
-    unverified: List[SkillDetailsPydantic] = []
+    active: List[StaffSkillDetailsPydantic] = []
+    in_progress: List[StaffSkillDetailsPydantic] = []
+    unverified: List[StaffSkillDetailsPydantic] = []
 
     class Config:
         orm_mode = True
