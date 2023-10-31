@@ -2,6 +2,8 @@
 
 import type { PageData } from "../../app/dashboard/roles/[roleid]/page";
 
+import { useSession } from "@clerk/nextjs";
+import Link from "next/link";
 import React, { useEffect, useContext } from "react";
 
 import { AuthContext } from "@/components/AuthProvider";
@@ -21,6 +23,8 @@ interface RoleData {
   data: PageData;
 }
 export function QuickInfo(props: RoleData) {
+  const { session } = useSession();
+  const user = session?.user;
   const staffId = useContext(AuthContext);
   const [roleInfo, setRoleInfo] = React.useState(props.data);
   const applyRole = () => {
@@ -53,13 +57,23 @@ export function QuickInfo(props: RoleData) {
         console.log("Error fetching role details:", err);
       });
   };
+
   // console.log(roleInfo);
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle>{roleInfo.roleName}</CardTitle>
-        <CardDescription>{roleInfo.roleDepartment}</CardDescription>
-      </CardHeader>
+      <div className="flex items-center justify-between px-3">
+        <CardHeader>
+          <CardTitle>{roleInfo.roleName}</CardTitle>
+          <CardDescription>{roleInfo.roleDepartment}</CardDescription>
+        </CardHeader>
+        {user?.publicMetadata.role === "hr" ? (
+          <Link href={`/dashboard/roles/applicants/${roleInfo.roleid}`}>
+            <Button>Applicants</Button>{" "}
+          </Link>
+        ) : (
+          ""
+        )}
+      </div>
       <CardContent>
         <div className="flex flex-col pb-10">
           <h4 className=" font-bold">Role Details</h4>
