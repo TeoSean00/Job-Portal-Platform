@@ -404,3 +404,105 @@ def test_unsuccessful_get_staff_skills():
     assert response.json() == {
         "detail": f"Staff with staff_id: '{staff_id}' does not exist in the system"
     }
+
+
+# Unit tests for get_staff_role_listing_skills_match endpoint
+@patch("api.routers.staff.db_services.get_staff_role_skills_match")
+def test_success_get_staff_role_skills_match(mock_get_staff_role_skills_match):
+    """
+    Endpoint Tested:
+      - GET /staff/role-skills-match/{staff_id}/{role_listing_id}
+    Scenario:
+      - Tests a successful GET request to get the matches and mismatches between staff skills and given role_listing required skills
+    """
+    # Provided role_id
+    staff_id = 123456789
+    role_listing_id = 312
+
+    # Set the behavior of the mock function
+    mock_get_staff_role_skills_match.return_value = {
+        "match": {
+            "active": [
+                {
+                    "skill_id": 345678866,
+                    "skill_name": "Java Developer",
+                    "skill_status": "active",
+                    "ss_status": "active",
+                }
+            ],
+            "in_progress": [
+                {
+                    "skill_id": 345678790,
+                    "skill_name": "Typescript Developer",
+                    "skill_status": "active",
+                    "ss_status": "in-progress",
+                }
+            ],
+            "unverified": [],
+        },
+        "missing": [
+            {
+                "skill_id": 345678922,
+                "skill_name": "React Beast",
+                "skill_status": "active",
+            }
+        ],
+    }
+
+    # Act
+    response = client.get(
+        f"/staff/role-skills-match/{staff_id}/{role_listing_id}"
+    )
+    mock_get_staff_role_skills_match.assert_called()
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "match": {
+            "active": [
+                {
+                    "skill_id": 345678866,
+                    "skill_name": "Java Developer",
+                    "skill_status": "active",
+                    "ss_status": "active",
+                }
+            ],
+            "in_progress": [
+                {
+                    "skill_id": 345678790,
+                    "skill_name": "Typescript Developer",
+                    "skill_status": "active",
+                    "ss_status": "in-progress",
+                }
+            ],
+            "unverified": [],
+        },
+        "missing": [
+            {
+                "skill_id": 345678922,
+                "skill_name": "React Beast",
+                "skill_status": "active",
+            }
+        ],
+    }, "Response body matches the expected response"
+
+
+def test_unsuccessful_get_staff_role_skills_match():
+    """
+    Endpoint Tested:
+      - GET /staff/role-skills-match/{staff_id}/{role_listing_id}
+    Scenario:
+      - Tests an unsuccessful GET request to get the matches and mismatches between staff skills and given role_listing required skills
+    """
+    # Provided role_id
+    staff_id = 123456789
+    role_listing_id = 312312313
+
+    # Act
+    response = client.get(
+        f"/staff/role-skills-match/{staff_id}/{role_listing_id}"
+    )
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "detail": f"Staff with staff_id: '{staff_id}' or role_listing with role_listing_id: '{role_listing_id}' does not exist in the system."
+    }
