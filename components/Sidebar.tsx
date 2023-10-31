@@ -2,7 +2,8 @@
 
 import type { SidebarNavItem } from "@/types";
 
-import { ChevronRight, List, UserCircle, UserPlus } from "lucide-react";
+import { useSession } from "@clerk/nextjs";
+import { ChevronRight, List, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
@@ -12,12 +13,7 @@ import { HamburgerToggle } from "./HamburgerToggle";
 import { poppins } from "@/fonts";
 import { cn } from "@/lib/utils";
 
-const sidebarLinks: SidebarNavItem[] = [
-  {
-    title: "Profile",
-    href: "/dashboard/profile",
-    icon: <UserCircle />,
-  },
+const adminSidebarLinks: SidebarNavItem[] = [
   {
     title: "Roles",
     href: "/dashboard/roles",
@@ -30,10 +26,20 @@ const sidebarLinks: SidebarNavItem[] = [
   },
 ];
 
+const staffSidebarLinks: SidebarNavItem[] = [
+  {
+    title: "Roles",
+    href: "/dashboard/roles",
+    icon: <List />,
+  },
+];
+
 const Sidebar = () => {
+  const { session } = useSession();
   const [open, setOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
-
+  const role = session?.user.publicMetadata.role as string;
+  const sidebarLinks = role === "hr" ? adminSidebarLinks : staffSidebarLinks;
   const location = usePathname();
   return (
     <div>
