@@ -276,3 +276,131 @@ def test_unsuccessful_get_staff():
     assert response.json() == {
         "detail": f"Staff with staff_id: '{staff_id}' not found"
     }
+
+
+# Unit tests for get_staff_skills endpoint
+@patch("api.routers.staff.db_services.get_staff_skill")
+def test_success_get_staff_skill(mock_get_staff_skill):
+    """
+    Endpoint Tested:
+      - GET /staff/skills/{staff_id}
+    Scenario:
+      - Tests a successful GET request to get staff skills based on given staff_id
+    """
+    # Provided staff_id
+    staff_id = 123456789
+
+    # Set the behavior of the mock function
+    mock_get_staff_skill.return_value = [
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678790,
+            "skill_name": "Typescript Developer",
+            "skill_status": "active",
+            "ss_status": "in-progress",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678866,
+            "skill_name": "Java Developer",
+            "skill_status": "active",
+            "ss_status": "active",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678890,
+            "skill_name": "VMWare Villian",
+            "skill_status": "inactive",
+            "ss_status": "unverified",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678912,
+            "skill_name": "Pascal Programming",
+            "skill_status": "inactive",
+            "ss_status": "active",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678927,
+            "skill_name": "LinkedIn Master",
+            "skill_status": "active",
+            "ss_status": "in-progress",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678935,
+            "skill_name": "MongoDB Maniac",
+            "skill_status": "active",
+            "ss_status": "in-progress",
+        },
+    ]
+
+    # Act
+    response = client.get(f"/staff/skills/{staff_id}")
+    mock_get_staff_skill.assert_called()
+
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678790,
+            "skill_name": "Typescript Developer",
+            "skill_status": "active",
+            "ss_status": "in-progress",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678866,
+            "skill_name": "Java Developer",
+            "skill_status": "active",
+            "ss_status": "active",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678890,
+            "skill_name": "VMWare Villian",
+            "skill_status": "inactive",
+            "ss_status": "unverified",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678912,
+            "skill_name": "Pascal Programming",
+            "skill_status": "inactive",
+            "ss_status": "active",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678927,
+            "skill_name": "LinkedIn Master",
+            "skill_status": "active",
+            "ss_status": "in-progress",
+        },
+        {
+            "staff_id": 123456789,
+            "skill_id": 345678935,
+            "skill_name": "MongoDB Maniac",
+            "skill_status": "active",
+            "ss_status": "in-progress",
+        },
+    ], "Response body matches the expected response"
+
+
+def test_unsuccessful_get_staff_skills():
+    """
+    Endpoint Tested:
+      - GET /staff/skills/{staff_id}
+    Scenario:
+      - Tests an unsuccessful GET request to get staff skills based on given staff_id
+    """
+    # Provided staff_id
+    staff_id = 12345678912312414
+
+    # Act
+    response = client.get(f"/staff/skills/{staff_id}")
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "detail": f"Staff with staff_id: '{staff_id}' does not exist in the system"
+    }
