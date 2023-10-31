@@ -3,10 +3,12 @@
 import type { RoleItem, RoleSkill } from "@/types";
 
 import { useSession } from "@clerk/nextjs";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 import { DataTable } from "@/components/data-table/DataTable";
-import { Separator, columns } from "@/components/ui";
+
+import { Separator, Button, columns } from "@/components/ui/";
 
 type SkillAPIResponse = {
   skills: RoleSkill[];
@@ -92,7 +94,7 @@ const RolesPage = () => {
           label: skill.skill_name,
           value: skill.skill_name,
         }));
-        console.log(temp);
+        // console.log(temp);
         setSkills(temp);
       })
       .catch((err) => {
@@ -108,6 +110,9 @@ const RolesPage = () => {
       <div className="space-y-3">
         <h3 className="text-xl font-medium">Available Roles</h3>
         <Separator />
+          <Link href="/dashboard/roles/update/99385">
+            <Button>click here to update role 99385</Button>
+          </Link>
 
         <DataTable
           columns={columns}
