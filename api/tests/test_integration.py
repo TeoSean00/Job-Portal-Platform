@@ -40,10 +40,20 @@ class TestIntegration:
         )
 
     def test_cru_role_listing(self):
-        headers = {"role": "hr"}
+        # ========================== Headers ==========================
+        headers = {
+            "role": "hr",
+            "updater-staff-id": "123456787",
+        }
 
         role_id = 234511581
         role_listing_id = 999666999
+
+        # Deleting to clear, if not found will not crash.
+        delete_role_listing = client.delete(
+            f"/role/role_listing/{role_listing_id}", headers=headers
+        )
+        # ========================== Read ==========================
 
         # Get all role details
         role_details = client.get(
@@ -57,6 +67,7 @@ class TestIntegration:
             f"CRU RoleListing: Successfully queried role details of {role_id}."
         )
 
+        # ========================== Create ==========================
         create_role_listing_body = {
             "role_listing_id": role_listing_id,
             "role_id": role_id,
@@ -74,6 +85,7 @@ class TestIntegration:
             json=create_role_listing_body,
             headers=headers,
         )
+        print(role_listing.json())
         # Assert that there is a response
         assert role_listing.status_code == 201
         assert role_listing.json() == {"message": "Created!"}
@@ -81,7 +93,7 @@ class TestIntegration:
             f"CRU RoleListing: Successfully created role listing {role_listing_id}."
         )
 
-        # Query role listing
+        # ========================== Update ==========================
         role_listing = client.get(
             f"/role/role_listing?role_listing_id={role_listing_id}",
             headers=headers,
@@ -94,9 +106,35 @@ class TestIntegration:
         print("CRU RoleListing: Successfully queried created role listing.")
 
         # Update role listing
-        print("Update role listing not implemented yet")
+        update_role_listing_body = role_listing.json()["role_listing"]
+        update_role_listing_body["role_listing"][
+            "role_listing_desc"
+        ] = "Updated text!"
 
-        # Delete role listing
+        role_listing = client.put(
+            "/role/role_listing",
+            json=update_role_listing_body["role_listing"],
+            headers=headers,
+        )
+        assert role_listing.status_code == 200
+        assert role_listing.json() == {"message": "Updated!"}
+
+        # Query role listing to check update
+        role_listing = client.get(
+            f"/role/role_listing?role_listing_id={role_listing_id}",
+            headers=headers,
+        )
+        # Assert that there is a response
+        assert role_listing.status_code == 200
+        assert (
+            role_listing.json()["role_listing"]["role_listing"][
+                "role_listing_desc"
+            ]
+            == "Updated text!"
+        )
+        print("CRU RoleListing: Successfully updated created role listing.")
+
+        # ========================== Delete ==========================
         delete_role_listing = client.delete(
             f"/role/role_listing/{role_listing_id}", headers=headers
         )
@@ -113,3 +151,17 @@ class TestIntegration:
             f"CRU RoleListing: Successfully cleaned up role listing {role_listing_id}."
         )
         print("CRU RoleListing: Successfully completed.")
+
+    # def test_view_skills_of_applicants():
+    #     pass
+
+    # def test_browse_and_filter_role_listing():
+    #     # Get all role listings info
+    #     role_listings = client.get("/role/role_listings_info")
+    #     assert role_listings.status_code == 200
+    #     assert role_listings.json().get("role_listings_info") is not None
+    #     # Filtering is done on front end so
+
+    # def test_role_skill_match():
+    #     # This seems to just call /role-skills-match, not rly an integration testing?
+    #     pass
