@@ -92,7 +92,7 @@ const RolesPage = () => {
           label: skill.skill_name,
           value: skill.skill_name,
         }));
-        console.log(temp);
+        // console.log(temp);
         setSkills(temp);
       })
       .catch((err) => {
