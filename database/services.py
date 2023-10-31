@@ -268,7 +268,7 @@ def get_staff_role_skills_match(staff_id: int, role_listing_id: int):
         result = {
             "match": {
                 "active": [],
-                "in-progress": [],
+                "in_progress": [],
                 "unverified": [],
             },
             "missing": [],
@@ -297,9 +297,13 @@ def get_staff_role_skills_match(staff_id: int, role_listing_id: int):
                     "skill_status": skill.skill_status,
                     "ss_status": matching_staff_skill.ss_status,
                 }
-                result["match"][matching_staff_skill.ss_status].append(
-                    match_object
-                )
+                # Python does not allow '-' in variable names, thus in-progress has to be handled separately
+                if matching_staff_skill.ss_status == "in-progress":
+                    result["match"]["in_progress"].append(match_object)
+                else:
+                    result["match"][matching_staff_skill.ss_status].append(
+                        match_object
+                    )
             else:
                 mismatch_object = {
                     "skill_id": role_skill.skill_id,
