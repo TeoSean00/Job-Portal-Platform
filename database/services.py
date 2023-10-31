@@ -458,6 +458,8 @@ def update_role_listing(
     role_listing_ts_create: dt.datetime,
     role_listing_updater: int,
     role_listing_ts_update: dt.datetime,
+    role_department: str,
+    role_location: str,
 ):
     db = SessionLocal()
     role_listing = (
@@ -476,6 +478,8 @@ def update_role_listing(
         role_listing.role_listing_ts_create = role_listing_ts_create
         role_listing.role_listing_updater = role_listing_updater
         role_listing.role_listing_ts_update = role_listing_ts_update
+        role_listing.role_department = role_department
+        role_listing.role_location = role_location
         db.commit()
         db.refresh(role_listing)
         db.close()

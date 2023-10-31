@@ -3,10 +3,11 @@
 import type { RoleItem, RoleSkill } from "@/types";
 
 import { useSession } from "@clerk/nextjs";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 import { DataTable } from "@/components/data-table/DataTable";
-import { columns } from "@/components/ui/";
+import { Button, columns } from "@/components/ui/";
 
 type SkillAPIResponse = {
   skills: RoleSkill[];
@@ -137,6 +138,11 @@ const RolesPage = () => {
     <>
       <div className="">
         Roles
+        <div>
+          <Link href="/dashboard/roles/update/99385">
+            <Button>click here to update role 99385</Button>
+          </Link>
+        </div>
         <DataTable
           columns={columns}
           data={data}
