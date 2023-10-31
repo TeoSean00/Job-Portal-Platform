@@ -53,7 +53,6 @@ const RolesPage = () => {
         return res.json();
       })
       .then((apiData: RoleAPIResponse) => {
-        // console.log(apiData);
         const processedRoles: ProcessedRole[] = [];
         Object.keys(apiData).forEach((item: string) => {
           const role = apiData[Number(item)];
@@ -72,6 +71,7 @@ const RolesPage = () => {
         console.log("Error fetching role details:", err);
       });
   };
+
   const fetchSkills = () => {
     fetch(`/api/skill/get-all`, {
       method: "GET",
@@ -99,36 +99,6 @@ const RolesPage = () => {
         console.log("Error fetching role details:", err);
       });
   };
-  const tempSkills = [
-    { label: "Skill 1", value: "skill 1" },
-    { label: "Skill 2", value: "skill 2" },
-    { label: "Skill 3", value: "skill 3" },
-    { label: "Skill 4", value: "skill 4" },
-  ];
-  // const data: ProcessedRole[] = [
-  // {
-  //   roleListingId: 1,
-  //   roleName: "Temp Role 1",
-  //   roleDescription: "This is a temporary role 1",
-  //   roleStatus: "active",
-  //   skillRequired: ["skill 1", "skill 2"],
-  // },
-  // {
-  //   roleListingId: 2,
-  //   roleName: "Temp Role 2",
-  //   roleDescription:
-  //     "This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2",
-  //   roleStatus: "active",
-  //   skillRequired: ["skill 2", "skill 3"],
-  // },
-  // {
-  //   roleListingId: 3,
-  //   roleName: "Temp Inactive Role",
-  //   roleDescription: "This is a temporary inactive role",
-  //   roleStatus: "inactive",
-  //   skillRequired: ["skill 3", "skill 4"],
-  // },
-  // ];
   useEffect(() => {
     fetchRoles();
     fetchSkills();

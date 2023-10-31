@@ -4,9 +4,20 @@ import type { PageData } from "../../app/dashboard/roles/[roleid]/page";
 
 import { useSession } from "@clerk/nextjs";
 import Link from "next/link";
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 
 import { AuthContext } from "@/components/AuthProvider";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -58,10 +69,9 @@ export function QuickInfo(props: RoleData) {
       });
   };
 
-  // console.log(roleInfo);
   return (
     <Card className="w-full">
-      <div className="flex items-center justify-between px-3">
+      <div className="flex items-center justify-between pr-6">
         <CardHeader>
           <CardTitle>{roleInfo.roleName}</CardTitle>
           <CardDescription>{roleInfo.roleDepartment}</CardDescription>
@@ -98,7 +108,25 @@ export function QuickInfo(props: RoleData) {
         </div>
       </CardContent>
       <CardFooter className="flex space-x-4">
-        <Button onClick={applyRole}>Apply</Button>
+        <AlertDialog>
+          <AlertDialogTrigger>
+            <Button>Apply</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure you want to apply for this role?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                We will send you application to HR to review.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={applyRole}>Apply</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <Button variant="outline">Save</Button>
       </CardFooter>
     </Card>
