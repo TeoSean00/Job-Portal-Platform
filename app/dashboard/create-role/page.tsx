@@ -19,14 +19,10 @@ import { fetcherWithHeaders } from "@/lib/utils";
 const CreateRole = () => {
   const { session } = useSession();
   const user = session?.user;
-  if (!user?.id || !user?.publicMetadata?.role) {
-    throw new Error("User token or role is not defined!");
-  }
   const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
   const [roleDetails, setRoleDetails] = useState<RoleDetail[]>([]);
   const [allSkills, setAllSkills] = useState<SkillDetail[]>([]);
-
   const { data: roleData, error: roleError } = useSWR<RoleAPIResponse>(
     `/api/role/role_details`,
     (url: string) =>
@@ -55,7 +51,7 @@ const CreateRole = () => {
       console.log("Error fetching role details:", roleError);
     }
   }, [roleData, roleError]);
-
+  useEffect(() => {}, [userToken]);
   useEffect(() => {
     if (skillData) {
       setAllSkills(skillData.skills);
@@ -66,7 +62,7 @@ const CreateRole = () => {
   }, [skillData, skillError]);
 
   return (
-    <div className="flex h-screen flex-col space-y-6">
+    <div className="flex h-screen flex-col space-y-3 px-3">
       <div>
         <h3 className="text-xl font-medium">Add Role Listing</h3>
       </div>

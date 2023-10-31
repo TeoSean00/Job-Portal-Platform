@@ -2,54 +2,46 @@
 
 import type { User } from "@/types";
 
-import { useSession, SignOutButton } from "@clerk/nextjs";
+import { useSession } from "@clerk/nextjs";
+import Link from "next/link";
 import React, { useContext } from "react";
 import useSWR from "swr";
 
 import { AuthContext } from "@/components/AuthProvider";
+import { Icons } from "@/components/icons/icons";
 import { Button } from "@/components/ui";
 import { fetcher } from "@/lib/utils";
 
 const DashboardPage = () => {
   const { isLoaded, session } = useSession();
   const user = session?.user;
-
-  // An example of how you can retrive staff id from context to pass to API endpoints
   const staffId = useContext(AuthContext);
   const { data } = useSWR<User>(`/api/staff/${staffId}`, fetcher);
-
-  /* Just to show how we can access user/session data (role, name, image etc) from clerk. */
   return (
     <div className="pt-10">
-      <div className="mx-auto flex h-full w-full max-w-md flex-col gap-y-4">
-        {session && (
-          <div>
-            <h2 className="text-primary">Role:</h2>
-            <span>{session.user.publicMetadata.role as string}</span>
-            <div>{JSON.stringify(data)}</div>
+      <div className="mx-auto flex h-full w-full max-w-md flex-col ">
+        {isLoaded && user && data ? (
+          <div className="space-y-10 text-center">
+            <div className="text-3xl font-semibold tracking-wide [text-wrap:balance]">
+              Hi{" "}
+              <span className=" text-primary underline decoration-wavy underline-offset-4">
+                {data.fname} {data.lname}
+              </span>
+              !
+            </div>
+            <div className="mx-auto flex justify-between text-start text-sm">
+              <div>
+                <div>Welcome to your Role Application Portal</div>
+                <div>Start applying to different roles now!</div>
+              </div>
+              <Link href={`/dashboard/roles`}>
+                <Button>Available Roles</Button>
+              </Link>
+            </div>
           </div>
-        )}
-
-        {isLoaded && user ? (
-          <>
-            <div>
-              <h2 className="text-primary">User ID:</h2>
-              <span>{user.id}</span>
-            </div>
-            <div>
-              <h2 className="text-primary">Staff ID:</h2>
-              <span>{staffId}</span>
-            </div>
-          </>
         ) : (
-          <div className="px-4 py-5 text-gray-700 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            Loading user data...
-          </div>
+          <Icons.spinner className="mx-auto my-10 animate-spin text-primary" />
         )}
-
-        <SignOutButton>
-          <Button variant={"destructive"}>Sign Out</Button>
-        </SignOutButton>
       </div>
     </div>
   );

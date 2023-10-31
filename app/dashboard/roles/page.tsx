@@ -6,7 +6,7 @@ import { useSession } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 
 import { DataTable } from "@/components/data-table/DataTable";
-import { columns } from "@/components/ui/";
+import { Separator, columns } from "@/components/ui";
 
 type SkillAPIResponse = {
   skills: RoleSkill[];
@@ -105,8 +105,10 @@ const RolesPage = () => {
   }, []);
   return (
     <>
-      <div className="">
-        Roles
+      <div className="space-y-3">
+        <h3 className="text-xl font-medium">Available Roles</h3>
+        <Separator />
+
         <DataTable
           columns={columns}
           data={data}
