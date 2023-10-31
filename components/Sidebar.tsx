@@ -1,23 +1,21 @@
 "use client";
 
-import type { SidebarNavItem } from "@/types";
+import type { SidebarNavItem, User } from "@/types";
 
-import { ChevronRight, List, UserCircle, UserPlus } from "lucide-react";
+import { SignedIn, useSession, UserButton } from "@clerk/nextjs";
+import { ChevronRight, List, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import useSWR from "swr";
 
+import { AuthContext } from "./AuthProvider";
 import { HamburgerToggle } from "./HamburgerToggle";
 
 import { poppins } from "@/fonts";
-import { cn } from "@/lib/utils";
+import { cn, fetcher } from "@/lib/utils";
 
-const sidebarLinks: SidebarNavItem[] = [
-  {
-    title: "Profile",
-    href: "/dashboard/profile",
-    icon: <UserCircle />,
-  },
+const adminSidebarLinks: SidebarNavItem[] = [
   {
     title: "Roles",
     href: "/dashboard/roles",
@@ -30,9 +28,22 @@ const sidebarLinks: SidebarNavItem[] = [
   },
 ];
 
+const staffSidebarLinks: SidebarNavItem[] = [
+  {
+    title: "Roles",
+    href: "/dashboard/roles",
+    icon: <List />,
+  },
+];
+
 const Sidebar = () => {
+  const { isLoaded, session } = useSession();
   const [open, setOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const role = session?.user.publicMetadata.role as string;
+  const sidebarLinks = role === "hr" ? adminSidebarLinks : staffSidebarLinks;
+  const staffId = useContext(AuthContext);
+  const { data } = useSWR<User>(`/api/staff/${staffId}`, fetcher);
 
   const location = usePathname();
   return (
@@ -40,7 +51,7 @@ const Sidebar = () => {
       <div
         className={`${
           open ? "w-52" : "w-fit"
-        }  relative hidden h-screen border-r border-border px-3 pt-4 sm:block`}
+        }  relative hidden  h-screen border-r border-border px-3 pt-4 sm:block`}
       >
         <div
           className="absolute -right-6 top-7 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-border bg-border p-2"
@@ -49,40 +60,57 @@ const Sidebar = () => {
           <ChevronRight className={cn({ "rotate-180": open })} />
         </div>
 
-        <ul className="flex flex-col gap-y-3 px-2">
-          <Link href="/dashboard">
-            <h1
-              className={cn(
-                poppins.className,
-                "pb-5  text-center text-lg font-bold text-primary",
-              )}
-            >
-              Portal
-            </h1>
-          </Link>
-          {sidebarLinks.map((link, index) => (
-            <Link
-              key={index}
-              className={cn("border-l-4 border-transparent", {
-                " border-l-4 border-primary": location === link.href,
-              })}
-              href={link.href}
-            >
-              <li
+        <ul className="flex h-full flex-col justify-between gap-y-3 px-2">
+          <div>
+            <Link href="/dashboard">
+              <h1
                 className={cn(
-                  "flex cursor-pointer items-center gap-x-6 rounded-lg border border-transparent px-3 py-2 text-base font-normal hover:border-border",
-                  { "rounded-l-none": location === link.href },
+                  poppins.className,
+                  "pb-5  text-center text-lg font-bold text-primary",
                 )}
               >
-                <span className="p-1">{link.icon}</span>
-                <span
-                  className={cn({ hidden: !open }, "origin-left duration-300")}
-                >
-                  {link.title}
-                </span>
-              </li>
+                Portal
+              </h1>
             </Link>
-          ))}
+            <div className="flex flex-col gap-y-3">
+              {sidebarLinks.map((link, index) => (
+                <Link
+                  key={index}
+                  className={cn("border-l-4 border-transparent", {
+                    " border-l-4 border-primary": location === link.href,
+                  })}
+                  href={link.href}
+                >
+                  <li
+                    className={cn(
+                      "flex cursor-pointer items-center gap-x-6 rounded-lg border border-transparent px-3 py-2 text-base font-normal hover:border-border",
+                      { "rounded-l-none": location === link.href },
+                    )}
+                  >
+                    <span className="p-1">{link.icon}</span>
+                    <span
+                      className={cn(
+                        { hidden: !open },
+                        "origin-left duration-300",
+                      )}
+                    >
+                      {link.title}
+                    </span>
+                  </li>
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="ml-1">
+            <li className="mb-5 flex cursor-pointer items-center gap-x-2 text-base font-normal ">
+              <div className="rounded-lg border border-transparent px-3 py-2 hover:border-border">
+                <UserButton afterSignOutUrl="/" />
+              </div>
+              {open && isLoaded && data && (
+                <span className="text-xs">{data.fname}</span>
+              )}
+            </li>
+          </div>
         </ul>
       </div>
 
@@ -127,6 +155,7 @@ const Sidebar = () => {
               <span>{link.title}</span>
             </Link>
           ))}
+          <UserButton />{" "}
         </div>
       </div>
     </div>
