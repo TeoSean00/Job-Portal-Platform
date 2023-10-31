@@ -380,7 +380,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
                 </FormItem>
               )}
             />
-            <Button type="submit">Create Role</Button>
+            <Button type="submit">Update Role</Button>
           </form>
         </Form>
       ) : (
