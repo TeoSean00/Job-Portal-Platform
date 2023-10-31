@@ -1,0 +1,48 @@
+{
+  "role_listing": {
+    "role_listing": {
+      "role_listing_id": 99385,
+      "role_id": 234511581,
+      "role_listing_desc": "This role is for an experienced Software Engineer",
+      "role_listing_source": 123456787,
+      "role_listing_open": "2023-10-16T16:00:00",
+      "role_listing_close": "2023-10-30T16:00:00",
+      "role_listing_hide": null,
+      "role_listing_creator": 123456788,
+      "role_listing_ts_create": "2023-10-28T07:53:00",
+      "role_listing_updater": null,
+      "role_listing_ts_update": null,
+      "role_department": "IT",
+      "role_location": "Singapore"
+    }
+  }
+}
+
+{
+  "role_listing_id": "99385",
+  "role_id": 234511581,
+  "role_listing_desc": "This is to test if keith's update role works",
+  "role_listing_source": 123456787,
+  "role_listing_open": "2023-10-16T08:00:00",
+  "role_listing_close": "2023-10-30T16:00:00",
+  "role_listing_hide": null,
+  "role_listing_creator": 123456788,
+  "role_listing_ts_create": "2023-10-28T07:53:00",
+  "role_department": "IT",
+  "role_location": "Singapore"
+}
+
+{
+  "role_listing_id": "99385",
+  "role_id": 234511581,
+  "role_listing_desc": "Testing FE and BE",
+  "role_listing_source": 123456787,
+  "role_listing_open": "2023-10-16T00:00:00",
+  "role_listing_close": "2023-10-16T08:00:00",
+  "role_listing_hide": null,
+  "role_listing_creator": 123456788,
+  "role_listing_ts_create": "2023-10-28T07:53:00",
+  "role_department": "IT",
+  "role_location": "Singapore"
+}
+123456788
