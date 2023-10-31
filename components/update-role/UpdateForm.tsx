@@ -101,15 +101,13 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
       role_department: data.departments,
       role_location: data.location,
     };
-    console.log(JSON.stringify(transformedData));
-    console.log(staffId);
     if (staffId) {
       fetch(`/api/role/role_listing`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           role: String(userRole),
-          updater_staff_id: String(staffId),
+          "updater-staff-id": String(staffId),
         },
         body: JSON.stringify(transformedData),
       })
