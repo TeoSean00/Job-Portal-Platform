@@ -616,7 +616,7 @@ async def get_role_applicant_details(
 def update_role_listing(
     role_listing_details: RoleListingsPydantic,
     role: str = Header(..., description="User role"),
-    updater_staff_id: int = Header(..., description="Updater's staff_id"),
+    updater_staff_id: str = Header(..., description="Updater's staff_id"),
 ):
     """
     ### Description:
@@ -698,7 +698,7 @@ def update_role_listing(
                 "role_listing_ts_create": common_services.convert_str_to_datetime(
                     role_listing_details.role_listing_ts_create
                 ),
-                "role_listing_updater": updater_staff_id,
+                "role_listing_updater": int(updater_staff_id),
                 "role_listing_ts_update": common_services.convert_str_to_datetime(
                     dt.datetime.utcnow()
                 ),
@@ -761,6 +761,4 @@ async def delete_role_listing(
         raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail={"message": str(e)})
-
-
 # =========================== End: Role Listing  ===========================

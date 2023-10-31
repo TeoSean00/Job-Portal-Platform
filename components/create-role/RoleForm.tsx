@@ -61,7 +61,6 @@ const RoleForm: React.FC<RoleFormProps> = ({
     throw new Error("User token or role is not defined!");
   }
   const staffId = useContext(AuthContext);
-  const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
   const [skillIdList, setSkillId] = useState<SkillAPIResponse[]>([]);
   const [managerDetails, setManagerDetails] = useState<StaffIdAPIResponse[]>(

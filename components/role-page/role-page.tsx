@@ -2,7 +2,7 @@
 
 import type { PageData } from "../../app/dashboard/roles/[roleid]/page";
 import type { SkillInfo } from "@/components/role-page/skillMatch";
-import type { SkillMatchType } from "@/types";
+import type { SkillMatchType, RoleSkill } from "@/types";
 
 import { useSession } from "@clerk/nextjs";
 import React, { useEffect, useContext } from "react";
@@ -16,11 +16,13 @@ interface RoleData {
 }
 interface SkillMatchAPIResponse {
   match: SkillMatchType;
+  missing: RoleSkill[];
 }
 const RoleListing = (props: RoleData) => {
   const staffId = useContext(AuthContext);
   const [roleInfo, setRoleInfo] = React.useState(props.data);
   const [skillInfo, setSkillInfo] = React.useState<SkillInfo | undefined>();
+  // console.log(staffId, roleInfo.roleid);
   const fetchRoleSkillMatch = () => {
     fetch(`/api/staff/role-skills-match/${staffId}/${roleInfo.roleid}`, {
       method: "GET",
@@ -37,13 +39,12 @@ const RoleListing = (props: RoleData) => {
       })
       .then((apiData: SkillMatchAPIResponse) => {
         // console.log("ROLESKILL");
-        // console.log(apiData);
+        // console.log(apiData).
+        // console.log(apiData.match);
         const obtained = apiData.match.active.concat(apiData.match.in_progress);
         const temp = {
           skillObtained: obtained.map((skill) => skill.skill_name),
-          skillMissing: apiData.match.unverified.map(
-            (skill) => skill.skill_name,
-          ),
+          skillMissing: apiData.missing.map((skill) => skill.skill_name),
         };
         // console.log(temp);
         setSkillInfo(temp);
