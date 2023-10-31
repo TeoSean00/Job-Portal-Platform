@@ -215,3 +215,64 @@ def test_success_get_all_managers(mock_get_all_manager):
             "sys_role": "manager",
         }
     ], "Response body matches the expected response"
+
+
+# Unit tests for get_staff endpoint
+@patch("api.routers.staff.db_services.get_staff_details")
+def test_success_get_staff(mock_get_staff):
+    """
+    Endpoint Tested:
+      - GET /staff/{staff_id}
+    Scenario:
+      - Tests a successful GET request to get staff details based on given staff_id
+    """
+    # Provided staff_id
+    staff_id = 123456789
+
+    # Set the behavior of the mock function
+    mock_get_staff.return_value = {
+        "staff_id": 123456789,
+        "fname": "AH GAO",
+        "lname": "TAN",
+        "dept": "FINANCE",
+        "email": "tan_ah_gao@all-in-one.com.sg",
+        "phone": "65-1234-5678",
+        "biz_address": "60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051",
+        "sys_role": "staff",
+    }
+
+    # Act
+    response = client.get(f"/staff/{staff_id}")
+    mock_get_staff.assert_called()
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "staff_id": 123456789,
+        "fname": "AH GAO",
+        "lname": "TAN",
+        "dept": "FINANCE",
+        "email": "tan_ah_gao@all-in-one.com.sg",
+        "phone": "65-1234-5678",
+        "biz_address": "60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051",
+        "sys_role": "staff",
+    }, "Response body matches the expected response"
+
+
+def test_unsuccessful_get_staff():
+    """
+    Endpoint Tested:
+      - GET /staff/{staff_id}
+    Scenario:
+      - Tests an unsuccessful GET request to get staff details based on given staff_id
+    """
+    # Provided staff_id
+    staff_id = 1234567891234
+
+    # Act
+    response = client.get(f"/staff/{staff_id}")
+
+    # Assert
+    assert response.status_code == 404
+    assert response.json() == {
+        "detail": f"Staff with staff_id: '{staff_id}' not found"
+    }
