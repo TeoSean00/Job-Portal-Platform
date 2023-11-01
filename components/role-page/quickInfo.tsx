@@ -102,9 +102,13 @@ export function QuickInfo(props: RoleData) {
             </ul>
           </span>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col pb-8">
           <h4 className=" font-bold">Role Description</h4>
           <span> {roleInfo.roleDescription}</span>
+        </div>
+        <div className="flex flex-col">
+          <h4 className=" font-bold">Additional Information</h4>
+          <span> {roleInfo.roleListingDesc}</span>
         </div>
       </CardContent>
       <CardFooter className="flex space-x-4">

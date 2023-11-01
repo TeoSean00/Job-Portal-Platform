@@ -39,7 +39,7 @@ const RoleListing = (props: RoleData) => {
       })
       .then((apiData: SkillMatchAPIResponse) => {
         // console.log("ROLESKILL");
-        // console.log(apiData).
+        // console.log(apiData);
         // console.log(apiData.match);
         const obtained = apiData.match.active.concat(apiData.match.in_progress);
         const temp = {

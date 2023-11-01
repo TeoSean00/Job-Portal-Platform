@@ -115,6 +115,7 @@ declare type SpecificRoleInfo = {
   skills: RoleSkill[];
   role_department: string;
   role_location: string;
+  role_listing_desc: string;
 };
 
 declare type SkillMatchType = {
