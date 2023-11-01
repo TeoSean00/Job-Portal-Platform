@@ -9,7 +9,7 @@ const nextConfig = {
         source: "/api/:path*",
         destination:
           process.env.NODE_ENV === "development"
-            ? "http://127.0.0.1:8000/:path*"
+            ? "http://127.0.0.1:8000/api/:path*"
             : "/api/",
       },
       {
@@ -17,7 +17,7 @@ const nextConfig = {
         destination:
           process.env.NODE_ENV === "development"
             ? "http://127.0.0.1:8000/docs"
-            : "/api/docs",
+            : "/docs",
       },
       {
         source: "/openapi.json",

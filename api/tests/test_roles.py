@@ -42,7 +42,7 @@ def test_success_create_role_listing(mock_create_role_listing):
 
     # Act
     response = client.post(
-        "/role/role_listing", json=role_details, headers=headers
+        "/api/role/role_listing", json=role_details, headers=headers
     )
     # mock_create_role_listing.assert_called()
 
@@ -74,7 +74,7 @@ def test_unauthorized_create_role_listing():
     headers = {"role": "invalid"}
 
     response = client.post(
-        "/role/role_listing", json=role_details, headers=headers
+        "/api/role/role_listing", json=role_details, headers=headers
     )
 
     # Assert
@@ -105,7 +105,7 @@ def test_invalid_create_role_listing():
     headers = {"role": "hr"}
 
     response = client.post(
-        "/role/role_listing", json=role_details, headers=headers
+        "/api/role/role_listing", json=role_details, headers=headers
     )
     # Assert
     assert response.status_code == 400
@@ -174,7 +174,7 @@ def test_success_get_all_role_listings(mock_get_all_role_listings):
 
     headers = {"role": "hr"}
 
-    response = client.get("/role/role_listing", headers=headers)
+    response = client.get("/api/role/role_listing", headers=headers)
     print(response.json())
     mock_get_all_role_listings.assert_called()
 
@@ -211,7 +211,7 @@ def test_success_get_role_listings(mock_get_role_listings):
     headers = {"role": "hr"}
 
     response = client.get(
-        "/role/role_listing?role_listing_id=0", headers=headers
+        "/api/role/role_listing?role_listing_id=0", headers=headers
     )
     mock_get_role_listings.assert_called()
 
@@ -234,7 +234,7 @@ def test_failure_role_listing_not_exist(mock_get_role_listings):
     headers = {"role": "hr"}
 
     response = client.get(
-        "/role/role_listing?role_listing_id=0", headers=headers
+        "/api/role/role_listing?role_listing_id=0", headers=headers
     )
     mock_get_role_listings.assert_called()
 
@@ -254,7 +254,7 @@ def test_failure_not_authorized_get_role_listings():
     headers = {"role": "invalid"}
 
     response = client.get(
-        "/role/role_listing?role_listing_id=0", headers=headers
+        "/api/role/role_listing?role_listing_id=0", headers=headers
     )
 
     assert response.status_code == 401
@@ -306,7 +306,7 @@ def test_success_update_role_listing(
 
     # Act
     response = client.put(
-        "role/role_listing", json=role_details, headers=headers
+        "/api/role/role_listing", json=role_details, headers=headers
     )
     mock_get_role_listings.assert_called()
     mock_update_role_listing.assert_called()
@@ -341,7 +341,7 @@ def test_unauthorized_update_role_listing():
     headers = {"role": "invalid", "updater-staff-id": "123456786"}
 
     response = client.put(
-        "role/role_listing", json=role_details, headers=headers
+        "/api/role/role_listing", json=role_details, headers=headers
     )
 
     # Assert
@@ -376,7 +376,7 @@ def test_not_found_update_role_listing():
     headers = {"role": "hr", "updater-staff-id": "123456786"}
 
     response = client.put(
-        "/role/role_listing", json=role_details, headers=headers
+        "/api/role/role_listing", json=role_details, headers=headers
     )
 
     # Assert
@@ -411,7 +411,7 @@ def test_invalid_update_role_listing():
     headers = {"role": "hr", "updater-staff-id": "123456786"}
 
     response = client.put(
-        "/role/role_listing", json=role_details, headers=headers
+        "/api/role/role_listing", json=role_details, headers=headers
     )
 
     # Assert
@@ -448,7 +448,7 @@ def test_success_get_all_role_details(mock_get_all_role_details):
     # Define headers
     headers = {"role": "manager"}
 
-    response = client.get("/role/role_details", headers=headers)
+    response = client.get("/api/role/role_details", headers=headers)
 
     mock_get_all_role_details.assert_called()
 
@@ -480,7 +480,7 @@ def test_success_get_role_details(mock_get_role_details):
     headers = {"role": "manager"}
 
     response = client.get(
-        "/role/role_details?role_id=234511581", headers=headers
+        "/api/role/role_details?role_id=234511581", headers=headers
     )
 
     mock_get_role_details.assert_called()
@@ -503,7 +503,9 @@ def test_failure_role_not_exist_get_role_details(mock_get_role_details):
     # Define headers
     headers = {"role": "manager"}
     # Act
-    response = client.get("/role/role_details?role_id=123", headers=headers)
+    response = client.get(
+        "/api/role/role_details?role_id=123", headers=headers
+    )
 
     mock_get_role_details.assert_called()
 
@@ -521,7 +523,7 @@ def test_not_authorized_get_role_details():
     """
     # Arrange
     headers = {"role": "invalid"}
-    response = client.get("/role/role_details", headers=headers)
+    response = client.get("/api/role/role_details", headers=headers)
 
     assert response.status_code == 401
     assert response.json() == {"detail": "Unauthorized user!"}
@@ -545,7 +547,7 @@ def test_success_get_role_skills(mock_get_role_skills):
     }
 
     response = client.get(
-        "/role/role_skills?role_id=23456789",
+        "/api/role/role_skills?role_id=23456789",
         headers={"role": "hr"},
     )
 
@@ -565,7 +567,7 @@ def test_unauthorized_get_role_skills():
     headers = {"role": "invalid"}
 
     response = client.get(
-        "/role/role_skills?role_id=23456789", headers=headers
+        "/api/role/role_skills?role_id=23456789", headers=headers
     )
 
     # Assert
@@ -612,14 +614,14 @@ def test_success_get_roles_info(mock_get_all_role_listings_info):
     )
 
     headers = {"role": "hr"}
-    response = client.get("/role/role_listings_info", headers=headers)
+    response = client.get("/api/role/role_listings_info", headers=headers)
     mock_get_all_role_listings_info.assert_called()
     assert response.status_code == 200
 
 
 def test_unauthorized_get_role_info():
     headers = {"role": "invalid"}
-    response = client.get("/role/role_listings_info", headers=headers)
+    response = client.get("/api/role/role_listings_info", headers=headers)
     assert response.status_code == 401
 
 

@@ -7,7 +7,7 @@ import database.services as db_services
 from database.schemas import SkillDetailsPydantic, User
 
 router = APIRouter(
-    prefix="/skill",
+    prefix="/api/skill",
     tags=["Skill"],
 )
 

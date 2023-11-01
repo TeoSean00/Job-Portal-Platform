@@ -37,7 +37,7 @@ def test_success_get_clerk_staff(mock_get_clerk_staff):
     }
 
     # Act
-    response = client.get(f"/staff/clerk/{clerk_id}")
+    response = client.get(f"/api/staff/clerk/{clerk_id}")
     mock_get_clerk_staff.assert_called()
 
     assert response.status_code == 200
@@ -64,7 +64,7 @@ def test_unsuccessful_get_clerk_staff():
     clerk_id = "uaffser_2VyiaGNu4nOSAj7ZleHdwpoVORfafaft"
 
     # Act
-    response = client.get(f"/staff/clerk/{clerk_id}")
+    response = client.get(f"/api/staff/clerk/{clerk_id}")
 
     # Assert
     assert response.status_code == 404
@@ -127,7 +127,7 @@ def test_success_get_all_staff(mock_get_all_staff):
     ]
 
     # Act
-    response = client.get("/staff")
+    response = client.get("/api/staff")
     mock_get_all_staff.assert_called()
 
     assert response.status_code == 200
@@ -199,7 +199,7 @@ def test_success_get_all_managers(mock_get_all_manager):
     ]
 
     # Act
-    response = client.get("/staff/manager")
+    response = client.get("/api/staff/manager")
     mock_get_all_manager.assert_called()
 
     assert response.status_code == 200
@@ -242,7 +242,7 @@ def test_success_get_staff(mock_get_staff):
     }
 
     # Act
-    response = client.get(f"/staff/{staff_id}")
+    response = client.get(f"/api/staff/{staff_id}")
     mock_get_staff.assert_called()
 
     assert response.status_code == 200
@@ -269,7 +269,7 @@ def test_unsuccessful_get_staff():
     staff_id = 1234567891234
 
     # Act
-    response = client.get(f"/staff/{staff_id}")
+    response = client.get(f"/api/staff/{staff_id}")
 
     # Assert
     assert response.status_code == 404
@@ -337,7 +337,7 @@ def test_success_get_staff_skill(mock_get_staff_skill):
     ]
 
     # Act
-    response = client.get(f"/staff/skills/{staff_id}")
+    response = client.get(f"/api/staff/skills/{staff_id}")
     mock_get_staff_skill.assert_called()
 
     assert response.status_code == 200
@@ -398,7 +398,7 @@ def test_unsuccessful_get_staff_skills():
     staff_id = 12345678912312414
 
     # Act
-    response = client.get(f"/staff/skills/{staff_id}")
+    response = client.get(f"/api/staff/skills/{staff_id}")
 
     assert response.status_code == 404
     assert response.json() == {
@@ -451,7 +451,7 @@ def test_success_get_staff_role_skills_match(mock_get_staff_role_skills_match):
 
     # Act
     response = client.get(
-        f"/staff/role-skills-match/{staff_id}/{role_listing_id}"
+        f"/api/staff/role-skills-match/{staff_id}/{role_listing_id}"
     )
     mock_get_staff_role_skills_match.assert_called()
 
@@ -499,7 +499,7 @@ def test_unsuccessful_get_staff_role_skills_match():
 
     # Act
     response = client.get(
-        f"/staff/role-skills-match/{staff_id}/{role_listing_id}"
+        f"/api/staff/role-skills-match/{staff_id}/{role_listing_id}"
     )
 
     assert response.status_code == 404
@@ -531,7 +531,7 @@ def test_success_get_staff_role_application(mock_get_staff_role_application):
     }
 
     # Act
-    response = client.get(f"/staff/role/{staff_id}/{role_listing_id}")
+    response = client.get(f"/api/staff/role/{staff_id}/{role_listing_id}")
     mock_get_staff_role_application.assert_called()
 
     assert response.status_code == 200
@@ -556,7 +556,7 @@ def test_unsuccessful_get_staff_role_application():
     role_listing_id = 312312313
 
     # Act
-    response = client.get(f"/staff/role/{staff_id}/{role_listing_id}")
+    response = client.get(f"/api/staff/role/{staff_id}/{role_listing_id}")
 
     assert response.status_code == 404
     assert response.json() == {

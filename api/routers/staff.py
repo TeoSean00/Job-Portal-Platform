@@ -14,7 +14,7 @@ from database.schemas import (
 )
 
 router = APIRouter(
-    prefix="/staff",
+    prefix="/api/staff",
     tags=["Staff"],
 )
 

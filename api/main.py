@@ -35,7 +35,7 @@ app.include_router(roles.router)
 app.include_router(skills.router)
 
 
-@app.get("/healthcheck", response_model=dict)
+@app.get("/api/healthcheck", response_model=dict)
 async def healthcheck():
     db_status = db_services.healthcheck()
     if db_status:

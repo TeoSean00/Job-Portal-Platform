@@ -32,7 +32,7 @@ class TestIntegration:
         """
         # Asserting that backend and database is working
         print("Testing health")
-        healthcheck = client.get("/healthcheck")
+        healthcheck = client.get("/api/healthcheck")
         assert healthcheck.status_code == 200
         assert (
             healthcheck.json().get("database")
@@ -51,13 +51,13 @@ class TestIntegration:
 
         # Deleting to clear, if not found will not crash.
         delete_role_listing = client.delete(
-            f"/role/role_listing/{role_listing_id}", headers=headers
+            f"/api/role/role_listing/{role_listing_id}", headers=headers
         )
         # ========================== Read ==========================
 
         # Get all role details
         role_details = client.get(
-            f"/role/role_details?role_id={role_id}", headers=headers
+            f"/api/role/role_details?role_id={role_id}", headers=headers
         )
         # Assert that there is a response
         assert role_details.status_code == 200
@@ -81,7 +81,7 @@ class TestIntegration:
 
         # Create a role listing
         role_listing = client.post(
-            "/role/role_listing",
+            "/api/role/role_listing",
             json=create_role_listing_body,
             headers=headers,
         )
@@ -95,7 +95,7 @@ class TestIntegration:
 
         # ========================== Update ==========================
         role_listing = client.get(
-            f"/role/role_listing?role_listing_id={role_listing_id}",
+            f"/api/role/role_listing?role_listing_id={role_listing_id}",
             headers=headers,
         )
 
@@ -112,7 +112,7 @@ class TestIntegration:
         ] = "Updated text!"
 
         role_listing = client.put(
-            "/role/role_listing",
+            "/api/role/role_listing",
             json=update_role_listing_body["role_listing"],
             headers=headers,
         )
@@ -121,7 +121,7 @@ class TestIntegration:
 
         # Query role listing to check update
         role_listing = client.get(
-            f"/role/role_listing?role_listing_id={role_listing_id}",
+            f"/api/role/role_listing?role_listing_id={role_listing_id}",
             headers=headers,
         )
         # Assert that there is a response
@@ -136,14 +136,14 @@ class TestIntegration:
 
         # ========================== Delete ==========================
         delete_role_listing = client.delete(
-            f"/role/role_listing/{role_listing_id}", headers=headers
+            f"/api/role/role_listing/{role_listing_id}", headers=headers
         )
         # Assert that there is a response
         assert delete_role_listing.status_code == 200
 
         # Assert that it is deleted
         role_listing = client.get(
-            f"/role/role_listing?role_listing_id={role_listing_id}",
+            f"/api/role/role_listing?role_listing_id={role_listing_id}",
             headers=headers,
         )
         assert role_listing.status_code == 404

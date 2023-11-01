@@ -40,7 +40,7 @@ def test_success_get_all_skills(mock_get_all_skills):
     # Define headers
     headers = {"role": "manager"}
 
-    response = client.get("/skill/get-all", headers=headers)
+    response = client.get("/api/skill/get-all", headers=headers)
     mock_get_all_skills.assert_called()
 
     assert response.status_code == 200

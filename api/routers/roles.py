@@ -12,7 +12,7 @@ import database.services as db_services
 from database.schemas import RoleListingsPydantic, User
 
 router = APIRouter(
-    prefix="/role",
+    prefix="/api/role",
     tags=["Role"],
 )
 
@@ -761,4 +761,6 @@ async def delete_role_listing(
         raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail={"message": str(e)})
+
+
 # =========================== End: Role Listing  ===========================
