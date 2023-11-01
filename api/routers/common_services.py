@@ -1,6 +1,6 @@
 import datetime as dt
 
-from database.schemas import User
+from api.database.schemas import User
 
 
 def authenticate_user(user_role: str):

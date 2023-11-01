@@ -5,8 +5,8 @@ from unittest.mock import call, patch
 from fastapi.testclient import TestClient
 
 import api.routers.common_services as common_services
+from api.database.schemas import RoleListingsPydantic, User
 from api.main import app
-from database.schemas import RoleListingsPydantic, User
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)

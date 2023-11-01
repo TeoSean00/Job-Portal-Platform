@@ -2,9 +2,9 @@ from typing import List
 
 from fastapi import APIRouter, Header, HTTPException, Query
 
+import api.database.services as db_services
 import api.routers.common_services as common_services
-import database.services as db_services
-from database.schemas import SkillDetailsPydantic, User
+from api.database.schemas import SkillDetailsPydantic, User
 
 router = APIRouter(
     prefix="/skill",

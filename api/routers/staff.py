@@ -3,10 +3,11 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 
-import database.services as db_services
-from database.database import SessionLocal
-from database.models import StaffDetails
-from database.schemas import (
+import api.database.services as db_services
+from api.database.database import SessionLocal
+
+# from api.database.models import StaffDetails
+from api.database.schemas import (
     MatchResult,
     RoleApplicationsPydantic,
     StaffDetailsPydantic,
