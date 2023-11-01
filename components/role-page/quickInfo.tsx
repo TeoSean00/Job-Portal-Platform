@@ -87,10 +87,10 @@ export function QuickInfo(props: RoleData) {
       <CardContent>
         <div className="flex flex-col pb-10">
           <h4 className=" font-bold">Role Details</h4>
-          <span>Location:{roleInfo.roleLocation}</span>
-          <span>Salary Range:$60,000 - $80,000</span>
+          <span>Location: {roleInfo.roleLocation}</span>
+          <span>Salary Range: $60,000 - $80,000</span>
           <span>
-            Skills Required:
+            Skills Required:{" "}
             <ul className="inline-block">
               {roleInfo.skillsRequired.map((skill, index) => (
                 <li key={index} className="inline-block pr-2">
