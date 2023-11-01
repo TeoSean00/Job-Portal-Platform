@@ -17,6 +17,7 @@ export interface PageData {
   skillsRequired: string[];
   roleDepartment: string;
   roleLocation: string;
+  roleListingDesc: string;
 }
 
 interface RoleAPIResponse {
@@ -58,6 +59,7 @@ const RolePage = (props: PageProps) => {
           ),
           roleDepartment: roleListingData.role_department,
           roleLocation: roleListingData.role_location,
+          roleListingDesc: roleListingData.role_listing_desc,
         };
         setData(temp);
       })

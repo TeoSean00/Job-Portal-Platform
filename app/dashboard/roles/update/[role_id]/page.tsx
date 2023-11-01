@@ -4,25 +4,32 @@ import type {
   AllSkillAPIResponse,
   RoleAPIResponse,
   RoleDetail,
+  RoleListing,
   SkillDetail,
+  RoleToUpdateData,
 } from "@/types";
 
 import { useSession } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 
-import RoleForm from "@/components/create-role/RoleForm";
 import { Separator } from "@/components/ui";
+import UpdateForm from "@/components/update-role/UpdateForm";
 import { departments } from "@/lib/constants";
 import { fetcherWithHeaders } from "@/lib/utils";
 
-const CreateRole = () => {
-  const { session } = useSession();
+const fetcherHR = (url: string) =>
+  fetch(url, { headers: { role: "hr" } }).then((res) => res.json());
+
+const CreateRole = ({ params }: { params: { role_id: string } }) => {
+  const id = params.role_id;
+  const { isLoaded, session } = useSession();
   const user = session?.user;
-  const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
   const [roleDetails, setRoleDetails] = useState<RoleDetail[]>([]);
   const [allSkills, setAllSkills] = useState<SkillDetail[]>([]);
+  const [roleListingData, setRoleListingData] = useState<RoleListing>();
+
   const { data: roleData, error: roleError } = useSWR<RoleAPIResponse>(
     `/api/role/role_details`,
     (url: string) =>
@@ -32,6 +39,12 @@ const CreateRole = () => {
         },
       }),
   );
+
+  const { data: roleToUpdateData, error: roleToUpdateError } =
+    useSWR<RoleToUpdateData>(
+      `/api/role/role_listing?role_listing_id=${id}`,
+      fetcherHR,
+    );
 
   const { data: skillData, error: skillError } = useSWR<AllSkillAPIResponse>(
     `/api/skill/get-all`,
@@ -50,8 +63,14 @@ const CreateRole = () => {
     if (roleError) {
       console.log("Error fetching role details:", roleError);
     }
-  }, [roleData, roleError]);
-  useEffect(() => {}, [userToken]);
+    if (roleToUpdateData) {
+      setRoleListingData(roleToUpdateData.role_listing.role_listing);
+    }
+    if (roleToUpdateError) {
+      console.log("Error fetching role listing:", roleToUpdateError);
+    }
+  }, [roleData, roleError, roleToUpdateData, roleToUpdateError]);
+
   useEffect(() => {
     if (skillData) {
       setAllSkills(skillData.skills);
@@ -62,16 +81,17 @@ const CreateRole = () => {
   }, [skillData, skillError]);
 
   return (
-    <div className="flex h-screen flex-col space-y-3 px-3">
+    <div className="flex h-screen flex-col space-y-6">
       <div>
-        <h3 className="text-xl font-medium">Add Role Listing</h3>
+        <h3 className="text-xl font-medium">Update Role Listing</h3>
       </div>
       <Separator />
-      {roleDetails && (
-        <RoleForm
+      {isLoaded && roleDetails && roleListingData && (
+        <UpdateForm
           allSkills={allSkills}
           departments={departments}
           roles={roleDetails}
+          roleToUpdateData={roleListingData}
         />
       )}
     </div>

@@ -57,11 +57,7 @@ const RoleForm: React.FC<RoleFormProps> = ({
 }) => {
   const { session } = useSession();
   const user = session?.user;
-  if (!user?.id || !user?.publicMetadata?.role) {
-    throw new Error("User token or role is not defined!");
-  }
   const staffId = useContext(AuthContext);
-  const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
   const [skillIdList, setSkillId] = useState<SkillAPIResponse[]>([]);
   const [managerDetails, setManagerDetails] = useState<StaffIdAPIResponse[]>(
@@ -178,7 +174,10 @@ const RoleForm: React.FC<RoleFormProps> = ({
   return (
     <>
       <Form {...form}>
-        <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="space-y-3 rounded-md border p-5"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
           <div className="flex w-full flex-grow space-x-4">
             <FormField
               control={form.control}

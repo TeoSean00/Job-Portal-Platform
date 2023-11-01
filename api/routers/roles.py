@@ -612,4 +612,153 @@ async def get_role_applicant_details(
         raise HTTPException(status_code=500, detail={"message": str(e)})
 
 
+@router.put("/role_listing")
+def update_role_listing(
+    role_listing_details: RoleListingsPydantic,
+    role: str = Header(..., description="User role"),
+    updater_staff_id: str = Header(..., description="Updater's staff_id"),
+):
+    """
+    ### Description:
+    This endpoint updates an existing role listing in the database.
+
+    ### Parameters:
+    `role`: Taken from Headers, expected values are hr, manager, staff, or invalid.<br>
+    `role_details`: JSON object containing the updated role details.<br>
+    `updater_staff_id`: Taken from headers, updater's staff_id.<br>
+
+
+    ### Returns:
+    Status code 200 if successful, "message": "Updated!".
+
+    ### Example:
+    #### Request:
+    ```
+    PUT /role_listing
+    Authorization: <Clerk Token>
+    role: "hr"
+    updater-staff-id: 123456789
+    ```
+    #### Body:
+    ```
+    {
+        "role_listing_id": 0,
+        "role_id": 234511581,
+        "role_listing_desc": "This is an updated description",
+        "role_listing_source": 123456789,
+        "role_listing_open": "2023-10-22T16:00:00",
+        "role_listing_close": "2023-10-25T16:00:00",
+        "role_listing_hide": "2023-11-25T16:00:00",
+        "role_listing_creator": 123456789,
+        "role_listing_ts_create": "2023-09-22T14:38:00",
+        "role_department": "Group Technology",
+        "role_location": "Front Office, Hong Kong SAR"
+    }
+    ```
+    #### Response:
+    {
+        "message": "Updated!"
+    }
+    ### Errors:
+    `401 Unauthorized`: User is not authorized to access this endpoint.
+    `404 Not Found`: Role listing with the specified ID not found.
+    `500 Internal Server Error`: Generic server error, can be due to role details not being found, integrity issue.
+    """
+    # Authenticate user
+    if not common_services.authenticate_user(role):
+        raise HTTPException(status_code=401, detail="Unauthorized user!")
+
+    try:
+        # Check if the role listing with the specified ID exists
+        existing_role_listing = db_services.get_role_listings(
+            role_listing_details.role_listing_id
+        )
+        if existing_role_listing is None:
+            raise HTTPException(
+                status_code=404, detail="Role listing not found"
+            )
+
+        # Validate and update role details
+        if validate_role_listing(role_listing_details):
+            updated_data = {
+                "role_listing_id": role_listing_details.role_listing_id,
+                "role_id": role_listing_details.role_id,
+                "role_listing_desc": role_listing_details.role_listing_desc,
+                "role_listing_source": role_listing_details.role_listing_source,
+                "role_listing_open": common_services.convert_str_to_datetime(
+                    role_listing_details.role_listing_open
+                ),
+                "role_listing_close": common_services.convert_str_to_datetime(
+                    role_listing_details.role_listing_open
+                ),
+                "role_listing_hide": common_services.convert_str_to_datetime(
+                    role_listing_details.role_listing_hide
+                ),
+                "role_listing_creator": role_listing_details.role_listing_creator,
+                "role_listing_ts_create": common_services.convert_str_to_datetime(
+                    role_listing_details.role_listing_ts_create
+                ),
+                "role_listing_updater": int(updater_staff_id),
+                "role_listing_ts_update": common_services.convert_str_to_datetime(
+                    dt.datetime.utcnow()
+                ),
+                "role_department": role_listing_details.role_department,
+                "role_location": role_listing_details.role_location,
+            }
+            # Update role listing
+            db_services.update_role_listing(**updated_data)
+        else:
+            raise HTTPException(
+                status_code=400, detail={"message": "Invalid role details!"}
+            )
+
+        return JSONResponse(content={"message": "Updated!"}, status_code=200)
+
+    except ValidationError as e:
+        raise HTTPException(
+            status_code=400, detail={"message": f"{e}. Invalid role details!"}
+        )
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        # This catches all other exceptions
+        raise HTTPException(status_code=500, detail={"message": str(e)})
+    finally:
+        pass
+
+
+@router.delete("/role_listing/{role_listing_id}")
+async def delete_role_listing(
+    role_listing_id: Annotated[int, Path(Title="required id of role listing")],
+):
+    """
+    Description: This endpoint deletes the role listing and is meant only for TESTING.
+
+    Parameters:
+    - role_listing_id: Required.
+
+    Returns:
+       {"message": "Deleted!"}
+
+    Errors:
+    - 404 Not Found: No role details matching the given role details ID found in the system.
+    - 500 Internal Server Error: Generic server error that can occur for various reasons.
+
+    Example Request:
+    ```
+    DELETE /role/role_listing/123
+    Authorization: <Clerk Token>
+    role: "hr"
+    ```
+
+    ```
+    """
+    try:
+        db_services.delete_role_listing(role_listing_id)
+        return {"message": "Deleted!"}
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail={"message": str(e)})
 # =========================== End: Role Listing  ===========================

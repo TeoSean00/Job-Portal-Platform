@@ -57,7 +57,7 @@ const TableRow = React.forwardRef<
 >(({ className, roleId, ...props }, ref) => {
   const router = useRouter(); // Call the useRouter hook within a component
   let routerLink = "/dashboard/roles";
-  if (roleId !== 0) {
+  if (roleId !== null) {
     routerLink = `/dashboard/roles/${String(roleId)}`;
   }
   return (
