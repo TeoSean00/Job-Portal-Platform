@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
-from api.database.enums import (
+from database.enums import (
     RoleApplicationStatusEnum,
     RoleTypeEnum,
     StatusEnum,

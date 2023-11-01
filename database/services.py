@@ -5,8 +5,8 @@ from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import aliased
 
-from api.database.database import SessionLocal
-from api.database.models import (
+from database.database import SessionLocal
+from database.models import (
     ClerkStaffMatch,
     RoleApplications,
     RoleDetails,

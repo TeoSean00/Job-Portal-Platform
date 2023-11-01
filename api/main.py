@@ -1,16 +1,14 @@
 import datetime as dt
+from enum import Enum, auto
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 # Import database services
-import api.database.services as db_services  # This is for npm run dev
+import database.services as db_services  # This is for npm run dev
 
 from .routers import roles, skills, staff
-
-# from enum import Enum, auto
-
 
 app = FastAPI()
 

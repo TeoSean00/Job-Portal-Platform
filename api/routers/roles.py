@@ -7,9 +7,9 @@ from fastapi import APIRouter, Header, HTTPException, Path, Query
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
-import api.database.services as db_services
 import api.routers.common_services as common_services
-from api.database.schemas import RoleListingsPydantic, User
+import database.services as db_services
+from database.schemas import RoleListingsPydantic, User
 
 router = APIRouter(
     prefix="/role",
@@ -761,6 +761,4 @@ async def delete_role_listing(
         raise e
     except Exception as e:
         raise HTTPException(status_code=500, detail={"message": str(e)})
-
-
 # =========================== End: Role Listing  ===========================
