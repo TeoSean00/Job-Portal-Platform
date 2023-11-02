@@ -4,7 +4,7 @@ from unittest.mock import call, patch
 
 from fastapi.testclient import TestClient
 
-from api.main import app
+from api.index import app
 from database.schemas import User
 
 current = os.path.dirname(os.path.realpath(__file__))

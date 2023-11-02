@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from pytest import raises
 
 import api.routers.common_services as common_services
-from api.main import app
+from api.index import app
 from database.schemas import RoleListingsPydantic, User
 
 client = TestClient(app)

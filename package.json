@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "fastapi-dev": "pipenv install --dev && pipenv run uvicorn api.main:app --reload",
+    "fastapi-dev": "pipenv install --dev && pipenv run uvicorn api.index:app --reload",
     "next-dev": "next dev",
     "dev": "concurrently \"npm run next-dev\" \"npm run fastapi-dev\"",
     "build": "tsc && next build",
