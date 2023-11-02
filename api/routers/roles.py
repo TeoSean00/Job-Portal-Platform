@@ -1,7 +1,7 @@
 import datetime as dt
 import json
 from collections import defaultdict
-from typing import Annotated, Optional
+from typing import Annotated, Dict, List, Optional
 
 from fastapi import APIRouter, Header, HTTPException, Path, Query
 from fastapi.responses import JSONResponse
@@ -16,77 +16,73 @@ router = APIRouter(
     tags=["Role"],
 )
 
-
-@router.get("/")
-def default_message():
-    return {
-        "role router endpoints, refer to staff router endpoints for template!"
-    }
-
-
 # =========================== Master: Get Roles  ===========================
+
+
 @router.get("/role_listings_info")
 def get_role_info(
     role: str = Header(..., description="User role"),
 ):
     """
-    Description: This endpoint is a compiled end point that returns all information about all role_listings in the database.
+    ### Description:
+    This endpoint is a compiled end point that returns all information about all role_listings in the database.
 
-    Parameters:
-    - role: Taken from Headers, key is `role`.
+    ### Parameters:
+    `role`: Taken from Headers, key is role.
 
-    Returns:
+    ### Returns:
     A JSON object containing the details of role_listings.
 
-    Errors:
-    - 500 Internal Server Error: Generic server error that can occur for various reasons.
-
-    Example Request:
+    ### Example
+    #### Request:
     ```
     GET /role/role_details
     Authorization: <Clerk Token>
     role: "hr"
     ```
-
-    Example Response:
+    #### Response:
     ```
-        {
+    {
         "2": {
-        "role_id": 234567899,
-        "role_listing_desc": "Role Listing 234567899 Description",
-        "role_listing_source": 123456787,
-        "role_listing_open": "2023-09-16T00:00:00",
-        "role_listing_close": "2023-10-05T00:00:00",
-        "role_listing_hide": "2023-10-29T00:00:00",
-        "role_listing_creator": 123456787,
-        "role_listing_ts_create": "2023-09-22T14:38:42",
-        "role_listing_updater": 123456787,
-        "role_listing_ts_update": "2023-09-22T14:38:42",
-        "role_department": "Group Technology",
-        "role_location": "Front Office, Hong Kong SAR",
-        "role_name": "Butcher",
-        "role_desc": "added by elton on 22/9/23 10.12pm to fix fk constraints",
-        "role_status": "active",
-        "skills": [
-            {
-                "skill_id": 345678790,
-                "skill_name": "Typescript Developer",
-                "skill_status": "active"
+                "role_id": 234567899,
+                "role_listing_desc": "Role Listing 234567899 Description",
+                "role_listing_source": 123456787,
+                "role_listing_open": "2023-09-16T00:00:00",
+                "role_listing_close": "2023-10-05T00:00:00",
+                "role_listing_hide": "2023-10-29T00:00:00",
+                "role_listing_creator": 123456787,
+                "role_listing_ts_create": "2023-09-22T14:38:42",
+                "role_listing_updater": 123456787,
+                "role_listing_ts_update": "2023-09-22T14:38:42",
+                "role_department": "Group Technology",
+                "role_location": "Front Office, Hong Kong SAR",
+                "role_name": "Butcher",
+                "role_desc": "added by elton on 22/9/23 10.12pm to fix fk constraints",
+                "role_status": "active",
+                "skills": [
+                        {
+                            "skill_id": 345678790,
+                            "skill_name": "Typescript Developer",
+                            "skill_status": "active"
+                        },
+                        {
+                            "skill_id": 345678866,
+                            "skill_name": "Java Developer",
+                            "skill_status": "active"
+                        },
+                        {
+                            "skill_id": 345678922,
+                            "skill_name": "React Beast",
+                            "skill_status": "active"
+                        }
+                    ]
             },
-            {
-                "skill_id": 345678866,
-                "skill_name": "Java Developer",
-                "skill_status": "active"
-            },
-            {
-                "skill_id": 345678922,
-                "skill_name": "React Beast",
-                "skill_status": "active"
-            }
-        ]
-    },
     }
     ```
+    ### Errors:
+    `401 Unauthorized`: User is not authorized to access this endpoint.<br /><br />
+    `422 Unprocessable Entity`: Role info missing in header.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons, such as unhandled exceptions in the endpoint, indicates that something went wrong with the server.<br /><br />
     """
     try:
         if not common_services.authenticate_user(role):
@@ -160,7 +156,7 @@ def get_role_details(
     This endpoint returns either all or specific role details from the database.
 
     ### Parameters:
-    `role`: Taken from Headers, expected values are hr, manager, staff or invalid
+    `role`: Taken from Headers, expected values are hr, manager, staff or invalid. <br /><br />
     `role_id`: Optional, if provided returns role details for a specific role. If not specifed, returns all.
 
     ### Returns:
@@ -177,6 +173,7 @@ def get_role_details(
     role: "hr"
     ```
     #### Response:
+    ```
     {
         "role_details": [
             {
@@ -191,7 +188,7 @@ def get_role_details(
     ```
     ### Errors:
     `401 Unauthorized`: User is not authorized to access this endpoint.<br /><br />
-    `404 Not Found: No role details matching the given role details ID found in the system.
+    `404 Not Found: No role details matching the given role details ID found in the system.<br /><br />
     `500 Internal Server Error: Generic server error that can occur for various reasons.
     """
     try:
@@ -259,7 +256,7 @@ def get_role_skills(
     Returns an empty list if no skills associated or if the role does NOT exist.
 
     ### Parameters:
-    `role`: Taken from Headers, expected values are hr, manager, staff or invalid
+    `role`: Taken from Headers, expected values are hr, manager, staff or invalid.<br /><br />
     `role_id`: Specifies the role_id to get the skills for.
 
     ### Returns:
@@ -335,7 +332,9 @@ def validate_role_listing(role_details: RoleListingsPydantic):
     return True
 
 
-@router.get("/role_listing")
+@router.get(
+    "/role_listing",
+)
 def get_role_listing(
     role: str = Header(..., description="User role"),
     role_listing_id: int = Query(None, description="Optional role_listing_id"),
@@ -345,7 +344,7 @@ def get_role_listing(
     This endpoint returns either one or all role listings in the database.
 
     ### Parameters:
-    `role`: Taken from Headers, expected values are hr, manager, staff or invalid
+    `role`: Taken from Headers, expected values are hr, manager, staff or invalid.<br /><br />
     `role_listing_id`: Optional, returns specific listing if provided else all.
 
     ### Returns:
@@ -363,6 +362,7 @@ def get_role_listing(
     role: "hr"
     ```
     #### Response:
+    ```
     {
         "role_listing": {
             "role_listing_id": 0,
@@ -438,7 +438,7 @@ def create_role_listing(
     This endpoint creates a role listings in the database.
 
     ### Parameters:
-    `role`: Taken from Headers, expected values are hr, manager, staff or invalid
+    `role`: Taken from Headers, expected values are hr, manager, staff or invalid.<br /><br />
     `role_details`: JSON object containing the required details
 
     ### Returns:
@@ -452,6 +452,7 @@ def create_role_listing(
     role: "hr"
     ```
     #### Body:
+    ```
     {
         "role_listing_id": 312513332,
         "role_id": 234511581,
@@ -464,13 +465,15 @@ def create_role_listing(
     }
     ```
     #### Response:
+    ```
     {
         "message": "Created!"
     }
+    ```
     ### Errors:
     `401 Unauthorized`: User is not authorized to access this endpoint.<br /><br />
-    TODO: Work on more detailed error handling for this.
-    `500 Internal Server Error`: Generic server error, can be due to role details not being found, integrity issue.<br /><br />
+    `422 Unprocessable Entity`: Incomplete JSON body.<br /><br />
+    `500 Internal Server Error`: Generic server error, can be due to role details not being found or non unique role_listing_id.<br /><br />
     """
     # Authenticate user
     if not common_services.authenticate_user(role):
@@ -530,33 +533,29 @@ async def get_role_applicant_details(
     role_listing_id: Annotated[int, Path(Title="required id of role listing")],
 ):
     """
-     Description: This endpoint returns all staff applicant details for a given role_listing_id.
+     ### Description:
+     This endpoint returns all staff applicant details for a given role_listing_id.
 
+    ###
      Parameters:
      - role_listing_id: Required, returns all applicants for a given role_listing_id.
 
-     Returns:
+    ### Returns:
      A JSON object containing a list of details for each applicant for this particular role_listing
      - role_app_id: ID of the role application
      - role_listing_id: ID of the role listing
      - staff_id: ID of the staff member
      - role_app_status: Status of the role application
 
-
-
-     Errors:
-     - 404 Not Found: No role details matching the given role details ID found in the system.
-     - 500 Internal Server Error: Generic server error that can occur for various reasons.
-
-     Example Request:
+    ### Example Request:
      ```
      GET /role/applicants/1
      Authorization: <Clerk Token>
      role: "hr"
      ```
 
-     Example Response:
-     ```
+    ### Example Response:
+    ```
     { "role_applicants_details": [
          {
              "role_app_id": 1,
@@ -588,17 +587,13 @@ async def get_role_applicant_details(
          }
          ]
      }
-     ```
+    ```
+    ### Errors:
+    `401 Unauthorized`: User is not authorized to access this endpoint.<br /><br />
+    `404 Not Found`: No role details matching the given role details ID found in the system.<br /><br />
+    `500 Internal Server Error`: Generic server error that can occur for various reasons.<br /><br />
     """
     try:
-        # if not common_services.authenticate_user(
-        #     User(user_token=user_token, role=role),
-        #     "ADMIN",
-        #     "STAFF",
-        #     "DIRECTOR",
-        # ):
-        #     raise HTTPException(status_code=401, detail="Unauthorized user!")
-
         role_applicants_details = db_services.get_role_applicant_details(
             role_listing_id
         )
@@ -660,8 +655,8 @@ def update_role_listing(
         "message": "Updated!"
     }
     ### Errors:
-    `401 Unauthorized`: User is not authorized to access this endpoint.
-    `404 Not Found`: Role listing with the specified ID not found.
+    `401 Unauthorized`: User is not authorized to access this endpoint. <br /><br />
+    `404 Not Found`: Role listing with the specified ID not found. <br /><br />
     `500 Internal Server Error`: Generic server error, can be due to role details not being found, integrity issue.
     """
     # Authenticate user
@@ -725,42 +720,6 @@ def update_role_listing(
         raise HTTPException(status_code=500, detail={"message": str(e)})
     finally:
         pass
-
-
-@router.delete("/role_listing/{role_listing_id}")
-async def delete_role_listing(
-    role_listing_id: Annotated[int, Path(Title="required id of role listing")],
-):
-    """
-    Description: This endpoint deletes the role listing and is meant only for TESTING.
-
-    Parameters:
-    - role_listing_id: Required.
-
-    Returns:
-       {"message": "Deleted!"}
-
-    Errors:
-    - 404 Not Found: No role details matching the given role details ID found in the system.
-    - 500 Internal Server Error: Generic server error that can occur for various reasons.
-
-    Example Request:
-    ```
-    DELETE /role/role_listing/123
-    Authorization: <Clerk Token>
-    role: "hr"
-    ```
-
-    ```
-    """
-    try:
-        db_services.delete_role_listing(role_listing_id)
-        return {"message": "Deleted!"}
-
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail={"message": str(e)})
 
 
 # =========================== End: Role Listing  ===========================

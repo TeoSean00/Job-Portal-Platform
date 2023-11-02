@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from fastapi import APIRouter, Header, HTTPException, Query
 
@@ -12,14 +12,7 @@ router = APIRouter(
 )
 
 
-@router.get("/")
-def default_message():
-    return {
-        "skill router endpoints, refer to staff router endpoints for template!"
-    }
-
-
-@router.get("/get-all")
+@router.get("/get-all", response_model=Dict[str, List[SkillDetailsPydantic]])
 def get_all_skills(
     role: str = Header(..., description="User role"),
 ):
@@ -43,6 +36,7 @@ def get_all_skills(
     role: "hr"
     ```
     #### Response:
+    ```
     {
         "skills": [
             {

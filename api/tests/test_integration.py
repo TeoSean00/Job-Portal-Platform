@@ -1,27 +1,16 @@
 import os
 import sys
-from unittest.mock import call, patch
 
 import pytest
 from fastapi.testclient import TestClient
 
-import api.routers.common_services as common_services
+import database.services as db_services
 from api.main import app
-from database.schemas import RoleListingsPydantic, User
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 client = TestClient(app)
-
-# Integraton testing workflow
-# CRU Of role listings
-
-# Steps taken
-# Create a role listing
-# Query role listing
-# Update role listing
-# delete role listing
 
 
 class TestIntegration:
@@ -31,7 +20,6 @@ class TestIntegration:
         Health check first.
         """
         # Asserting that backend and database is working
-        print("Testing health")
         healthcheck = client.get("/healthcheck")
         assert healthcheck.status_code == 200
         assert (
@@ -48,11 +36,11 @@ class TestIntegration:
 
         role_id = 234511581
         role_listing_id = 999666999
-
         # Deleting to clear, if not found will not crash.
-        delete_role_listing = client.delete(
-            f"/role/role_listing/{role_listing_id}", headers=headers
-        )
+        try:
+            db_services.delete_role_listing(role_listing_id)
+        except Exception as e:
+            print(e)
         # ========================== Read ==========================
 
         # Get all role details
@@ -135,11 +123,10 @@ class TestIntegration:
         print("CRU RoleListing: Successfully updated created role listing.")
 
         # ========================== Delete ==========================
-        delete_role_listing = client.delete(
-            f"/role/role_listing/{role_listing_id}", headers=headers
-        )
-        # Assert that there is a response
-        assert delete_role_listing.status_code == 200
+        try:
+            db_services.delete_role_listing(role_listing_id)
+        except Exception as e:
+            print(e)
 
         # Assert that it is deleted
         role_listing = client.get(
@@ -151,17 +138,3 @@ class TestIntegration:
             f"CRU RoleListing: Successfully cleaned up role listing {role_listing_id}."
         )
         print("CRU RoleListing: Successfully completed.")
-
-    # def test_view_skills_of_applicants():
-    #     pass
-
-    # def test_browse_and_filter_role_listing():
-    #     # Get all role listings info
-    #     role_listings = client.get("/role/role_listings_info")
-    #     assert role_listings.status_code == 200
-    #     assert role_listings.json().get("role_listings_info") is not None
-    #     # Filtering is done on front end so
-
-    # def test_role_skill_match():
-    #     # This seems to just call /role-skills-match, not rly an integration testing?
-    #     pass
