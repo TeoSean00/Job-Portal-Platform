@@ -722,4 +722,40 @@ def update_role_listing(
         pass
 
 
+@router.delete("/role_listing/{role_listing_id}")
+async def delete_role_listing(
+    role_listing_id: Annotated[int, Path(Title="required id of role listing")],
+):
+    """
+    Description: This endpoint deletes the role listing and is meant only for TESTING.
+
+    Parameters:
+    - role_listing_id: Required.
+
+    Returns:
+       {"message": "Deleted!"}
+
+    Errors:
+    - 404 Not Found: No role details matching the given role details ID found in the system.
+    - 500 Internal Server Error: Generic server error that can occur for various reasons.
+
+    Example Request:
+    ```
+    DELETE /role/role_listing/123
+    Authorization: <Clerk Token>
+    role: "hr"
+    ```
+
+    ```
+    """
+    try:
+        db_services.delete_role_listing(role_listing_id)
+        return {"message": "Deleted!"}
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail={"message": str(e)})
+
+
 # =========================== End: Role Listing  ===========================
