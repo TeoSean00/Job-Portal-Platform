@@ -115,7 +115,7 @@ jobs:
           pipenv install --dev
       - name: Build FastAPI
         run: |
-          pipenv run uvicorn api.main:app &  # Start in background
+          pipenv run uvicorn api.index:app &  # Start in background
           sleep 5  # Wait for 5 seconds
           kill $!  # Kill the background process
   
