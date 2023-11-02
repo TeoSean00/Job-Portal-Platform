@@ -44,6 +44,17 @@ const CreateRole = () => {
   );
 
   useEffect(() => {
+    fetch("/api/healthcheck")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching healthcheck:", error);
+      });
+  }, []);
+
+  useEffect(() => {
     if (roleData) {
       setRoleDetails(roleData.role_details);
     }
