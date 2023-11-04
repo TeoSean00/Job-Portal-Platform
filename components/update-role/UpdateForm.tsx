@@ -10,6 +10,7 @@ import type {
 
 import { useSession } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
@@ -58,6 +59,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
   const [managerDetails, setManagerDetails] = useState<StaffIdAPIResponse[]>(
     [],
   );
+  const router = useRouter();
 
   const defaultValues: Partial<RoleFormValues> = {
     roleName: roleToUpdateData.role_id.toString(),
@@ -123,6 +125,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
             description: formattedDate,
             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
           });
+          router.push(`/dashboard/roles/${data.listingId}`);
         })
         .catch((err: Error) => {
           console.log(err);

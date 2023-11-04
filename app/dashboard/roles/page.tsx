@@ -104,10 +104,6 @@ const RolesPage = () => {
       <div className="space-y-3">
         <h3 className="text-xl font-medium">Available Roles</h3>
         <Separator />
-        <Link href="/dashboard/roles/update/99385">
-          <Button>click here to update role 99385</Button>
-        </Link>
-
         <DataTable
           columns={columns}
           data={data}
