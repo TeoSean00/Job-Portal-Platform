@@ -186,7 +186,10 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
     <>
       {isLoaded && user ? (
         <Form {...form}>
-          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            className="space-y-8 rounded-md border p-5"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
             <div className="flex w-full flex-grow space-x-4">
               <FormField
                 control={form.control}
@@ -239,7 +242,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base">
-                    Listing Description
+                    Additional Information
                   </FormLabel>
                   <FormDescription>
                     Describe the role in detail.

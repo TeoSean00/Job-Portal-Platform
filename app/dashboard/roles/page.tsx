@@ -85,12 +85,10 @@ const RolesPage = () => {
         return res.json();
       })
       .then((apiData: SkillAPIResponse) => {
-        // console.log(apiData);
         const temp = apiData.skills.map((skill) => ({
           label: skill.skill_name,
           value: skill.skill_name,
         }));
-        // console.log(temp);
         setSkills(temp);
       })
       .catch((err) => {

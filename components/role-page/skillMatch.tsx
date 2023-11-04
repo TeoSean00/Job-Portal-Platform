@@ -6,8 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -20,10 +18,10 @@ interface SkillData {
   data: SkillInfo | undefined;
 }
 export function SkillMatch(props: SkillData) {
-  const [obtainedSkills, setObtainedSkills] = React.useState(
+  const [obtainedSkills,] = React.useState(
     props.data?.skillObtained || [],
   );
-  const [missingSkills, setMissingSkills] = React.useState(
+  const [missingSkills,] = React.useState(
     props.data?.skillMissing || [],
   );
   // console.log(props);

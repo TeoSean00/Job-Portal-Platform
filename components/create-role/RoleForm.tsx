@@ -229,7 +229,9 @@ const RoleForm: React.FC<RoleFormProps> = ({
             name="roleDescription"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base">Listing Description</FormLabel>
+                <FormLabel className="text-base">
+                  Additional Information
+                </FormLabel>
                 <FormDescription>Describe the role in detail.</FormDescription>
                 <FormControl>
                   <Textarea className=" resize-y" placeholder="" {...field} />

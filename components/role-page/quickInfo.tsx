@@ -41,10 +41,6 @@ export function QuickInfo(props: RoleData) {
   const applyRole = () => {
     fetch(`/api/staff/role/${staffId}/${roleInfo.roleid}`, {
       method: "POST",
-      // headers: {
-      //   "user-token": userToken || "", // Make sure it's not undefined
-      //   role: String(userRole || ""),
-      // },
     })
       .then((res) => {
         if (!res.ok) {
