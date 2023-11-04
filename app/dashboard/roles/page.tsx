@@ -31,9 +31,6 @@ type SkillLabel = {
 const RolesPage = () => {
   const { session } = useSession();
   const user = session?.user;
-  // if (!user?.id || !user?.publicMetadata?.role) {
-  //   throw new Error("User token or role is not defined!");
-  // }
   const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
 
@@ -43,7 +40,7 @@ const RolesPage = () => {
     fetch(`/api/role/role_listings_info`, {
       method: "GET",
       headers: {
-        "user-token": userToken || "", // Make sure it's not undefined
+        "user-token": userToken || "",
         role: String(userRole || ""),
       },
     })
@@ -77,7 +74,7 @@ const RolesPage = () => {
     fetch(`/api/skill/get-all`, {
       method: "GET",
       headers: {
-        "user-token": userToken || "", // Make sure it's not undefined
+        "user-token": userToken || "",
         role: String(userRole || ""),
       },
     })

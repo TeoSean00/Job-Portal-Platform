@@ -4,7 +4,6 @@ import type { PageData } from "../../app/dashboard/roles/[roleid]/page";
 import type { SkillInfo } from "@/components/role-page/skillMatch";
 import type { SkillMatchType, RoleSkill } from "@/types";
 
-import { useSession } from "@clerk/nextjs";
 import React, { useEffect, useContext } from "react";
 
 import { AuthContext } from "@/components/AuthProvider";
@@ -20,7 +19,7 @@ interface SkillMatchAPIResponse {
 }
 const RoleListing = (props: RoleData) => {
   const staffId = useContext(AuthContext);
-  const [roleInfo, setRoleInfo] = React.useState(props.data);
+  const [roleInfo] = React.useState(props.data);
   const [skillInfo, setSkillInfo] = React.useState<SkillInfo | undefined>();
   // console.log(staffId, roleInfo.roleid);
   const fetchRoleSkillMatch = () => {

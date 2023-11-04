@@ -37,7 +37,7 @@ export function QuickInfo(props: RoleData) {
   const { session } = useSession();
   const user = session?.user;
   const staffId = useContext(AuthContext);
-  const [roleInfo, setRoleInfo] = React.useState(props.data);
+  const [roleInfo] = React.useState(props.data);
   const applyRole = () => {
     fetch(`/api/staff/role/${staffId}/${roleInfo.roleid}`, {
       method: "POST",
@@ -77,9 +77,14 @@ export function QuickInfo(props: RoleData) {
           <CardDescription>{roleInfo.roleDepartment}</CardDescription>
         </CardHeader>
         {user?.publicMetadata.role === "hr" ? (
-          <Link href={`/dashboard/roles/applicants/${roleInfo.roleid}`}>
-            <Button>Applicants</Button>{" "}
-          </Link>
+          <div className="mt-2 flex flex-col items-stretch space-y-4">
+            <Link href={`/dashboard/roles/applicants/${roleInfo.roleid}`}>
+              <Button className="w-full flex-grow">Applicants</Button>{" "}
+            </Link>
+            <Link href={`/dashboard/roles/update/${roleInfo.roleid}`}>
+              <Button className="w-full flex-grow">Update</Button>{" "}
+            </Link>
+          </div>
         ) : (
           ""
         )}
