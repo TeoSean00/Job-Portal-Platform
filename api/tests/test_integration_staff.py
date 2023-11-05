@@ -83,3 +83,31 @@ class TestIntegrationStaff:
                 "sys_role": "manager",
             }
         ], "Response body matches the expected response"
+
+    def test_get_staff(self):
+        """
+        Endpoint Tested:
+          - GET /staff/{staff_id}
+        Scenario:
+          - Tests a successful GET request to get a staff details based on given staff_id
+        """
+        # Provided staff_id
+        staff_id = 123456789
+
+        # Get staff details based on staff_id by invoking endpoint
+        staff_details = client.get(f"/staff/{staff_id}")
+
+        # Assert that there is a successful response
+        assert staff_details.status_code == 200
+
+        # Assert that there is the matching staff details
+        assert staff_details.json() == {
+            "staff_id": 123456789,
+            "fname": "AH GAO",
+            "lname": "TAN",
+            "dept": "FINANCE",
+            "email": "tan_ah_gao@all-in-one.com.sg",
+            "phone": "65-1234-5678",
+            "biz_address": "60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051",
+            "sys_role": "staff",
+        }
