@@ -173,3 +173,52 @@ class TestIntegrationStaff:
                 "ss_status": "in-progress",
             },
         ]
+
+    def test_get_staff_role_skills_match(self):
+        """
+        Endpoint Tested:
+          - GET /staff/role-skills-match/{staff_id}/{role_listing_id}
+        Scenario:
+          - Tests a successful GET request to get the matches and mismatches between staff skills and given role_listing required skills
+        """
+        # Provided role_id
+        staff_id = 123456789
+        role_listing_id = 312
+
+        # Get staff matched and mismatched skills with role_listing based on staff_id and role_listing_id by invoking endpoint
+        skill_match_details = client.get(
+            f"/staff/role-skills-match/{staff_id}/{role_listing_id}"
+        )
+
+        # Assert that there is a successful response
+        assert skill_match_details.status_code == 200
+
+        # Assert that there are the matching and mistmached staff skills with given role_listing
+        assert skill_match_details.json() == {
+            "match": {
+                "active": [
+                    {
+                        "skill_id": 345678866,
+                        "skill_name": "Java Developer",
+                        "skill_status": "active",
+                        "ss_status": "active",
+                    }
+                ],
+                "in_progress": [
+                    {
+                        "skill_id": 345678790,
+                        "skill_name": "Typescript Developer",
+                        "skill_status": "active",
+                        "ss_status": "in-progress",
+                    }
+                ],
+                "unverified": [],
+            },
+            "missing": [
+                {
+                    "skill_id": 345678922,
+                    "skill_name": "React Beast",
+                    "skill_status": "active",
+                }
+            ],
+        }, "Response body matches the expected response"
