@@ -9,6 +9,7 @@ const octokit = new Octokit({
       owner: process.env.GITHUB_REPOSITORY.split("/")[0],
       repo: process.env.GITHUB_REPOSITORY.split("/")[1],
       state: "open",
+      per_page: 100,
     });
     const openPrs = data
       .map((pr) => `- [${pr.title}](${pr.html_url})`)
