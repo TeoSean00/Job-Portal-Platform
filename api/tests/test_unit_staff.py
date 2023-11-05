@@ -17,7 +17,7 @@ client = TestClient(app)
 def test_success_get_clerk_staff(mock_get_clerk_staff):
     """
     Endpoint Tested:
-      - GET /api/staff/clerk
+      - GET /staff/clerk/{clerk_id}
     Scenario:
       - Tests a successful GET request to get the relevant staff details information based on given clerk_id
     """
@@ -56,7 +56,7 @@ def test_success_get_clerk_staff(mock_get_clerk_staff):
 def test_unsuccessful_get_clerk_staff():
     """
     Endpoint Tested:
-      - GET /api/staff/clerk
+      - GET /staff/clerk/{clerk_id}
     Scenario:
       - Tests an unsuccessful GET request to get the relevant staff details information based on given clerk_id
     """

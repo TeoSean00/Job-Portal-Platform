@@ -13,7 +13,7 @@ sys.path.append(parent)
 client = TestClient(app)
 
 
-class TestIntegration:
+class TestIntegrationRoles:
     @pytest.fixture(autouse=True)
     def setup(self):
         """
