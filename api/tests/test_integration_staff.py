@@ -221,4 +221,32 @@ class TestIntegrationStaff:
                     "skill_status": "active",
                 }
             ],
-        }, "Response body matches the expected response"
+        }
+
+    def test_get_staff_role_listing_application_status(self):
+        """
+        Endpoint Tested:
+          - GET /staff/role/{staff_id}/{role_listing_id}
+        Scenario:
+          - Tests a successful GET request to get the application status of a staff for a given role_listing
+        """
+        # Provided role_id
+        staff_id = 123456789
+        role_listing_id = 312
+
+        # Get staff role_listing_application status based on staff_id and role_listing_id by invoking endpoint
+        staff_role_listing_application = client.get(
+            f"/staff/role/{staff_id}/{role_listing_id}"
+        )
+
+        # Assert that there is a successful response
+        assert staff_role_listing_application.status_code == 200
+
+        # Assert that there is the matching staff role_listing_application
+        assert staff_role_listing_application.json() == {
+            "role_app_status": "applied",
+            "role_app_id": 10,
+            "role_listing_id": 312,
+            "staff_id": 123456789,
+            "role_app_ts_create": "2023-10-30T04:52:25",
+        }
