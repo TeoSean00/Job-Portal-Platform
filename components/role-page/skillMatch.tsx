@@ -52,9 +52,7 @@ export function SkillMatch(props: SkillData) {
             {missingSkills.map((skill, index) => (
               <li key={index} className="">
                 <Badge className="py-1 text-lg" variant="destructive">
-                  {index !== missingSkills.length - 1
-                    ? `${skill},`
-                    : `${skill}`}
+                  {skill}
                 </Badge>
               </li>
             ))}

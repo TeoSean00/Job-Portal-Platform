@@ -41,10 +41,6 @@ export function QuickInfo(props: RoleData) {
   const applyRole = () => {
     fetch(`/api/staff/role/${staffId}/${roleInfo.roleid}`, {
       method: "POST",
-      // headers: {
-      //   "user-token": userToken || "", // Make sure it's not undefined
-      //   role: String(userRole || ""),
-      // },
     })
       .then((res) => {
         if (!res.ok) {
@@ -68,7 +64,6 @@ export function QuickInfo(props: RoleData) {
         console.log("Error fetching role details:", err);
       });
   };
-
   return (
     <Card className="w-full">
       <div className="flex items-center justify-between pr-6">
@@ -77,7 +72,11 @@ export function QuickInfo(props: RoleData) {
           <CardDescription>{roleInfo.roleDepartment}</CardDescription>
         </CardHeader>
         {user?.publicMetadata.role === "hr" ? (
-          <Link href={`/dashboard/roles/applicants/${roleInfo.roleid}`}>
+          <Link
+            href={{
+              pathname: `/dashboard/roles/applicants/${roleInfo.roleid}`,
+            }}
+          >
             <Button>Applicants</Button>{" "}
           </Link>
         ) : (
@@ -87,10 +86,10 @@ export function QuickInfo(props: RoleData) {
       <CardContent>
         <div className="flex flex-col pb-10">
           <h4 className=" font-bold">Role Details</h4>
-          <span>Location:{roleInfo.roleLocation}</span>
-          <span>Salary Range:$60,000 - $80,000</span>
+          <span>Location: {roleInfo.roleLocation}</span>
+          <span>Salary Range: $60,000 - $80,000</span>
           <span>
-            Skills Required:
+            Skills Required:{" "}
             <ul className="inline-block">
               {roleInfo.skillsRequired.map((skill, index) => (
                 <li key={index} className="inline-block pr-2">

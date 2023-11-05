@@ -27,9 +27,7 @@ interface RoleAPIResponse {
 const RolePage = (props: PageProps) => {
   const { session } = useSession();
   const user = session?.user;
-  // if (!user?.id || !user?.publicMetadata?.role) {
-  //   throw new Error("User token or role is not defined!");
-  // }
+
   const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
   const [data, setData] = useState<PageData>();
@@ -37,7 +35,7 @@ const RolePage = (props: PageProps) => {
     fetch(`/api/role/role_listings_info`, {
       method: "GET",
       headers: {
-        "user-token": userToken || "", // Make sure it's not undefined
+        "user-token": userToken || "",
         role: String(userRole || ""),
       },
     })
@@ -67,15 +65,9 @@ const RolePage = (props: PageProps) => {
         console.log("Error fetching role details:", err);
       });
   };
-  // const data: PageData = {
-  //   roleid: props.params.roleid,
-  //   roleName: "Software Engineer",
-  //   roleDescription: "Software Engineer",
-  //   skillsRequired: ["Python", "React", "Javascript", "Java", "C++", "C#"],
-  // };
+
   useEffect(() => {
     fetchRoles();
-    // fetchRoleDetail();
   }, []);
   return (
     <>
