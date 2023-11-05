@@ -114,6 +114,7 @@ const RolesPage = () => {
         </Link>
 
         <DataTable
+          applicants={false}
           columns={columns}
           data={data}
           filterableColumns={[
