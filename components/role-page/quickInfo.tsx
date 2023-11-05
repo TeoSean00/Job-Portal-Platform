@@ -72,7 +72,6 @@ export function QuickInfo(props: RoleData) {
           <CardDescription>{roleInfo.roleDepartment}</CardDescription>
         </CardHeader>
         {user?.publicMetadata.role === "hr" ? (
-<<<<<<< HEAD
           <div className="mt-2 flex flex-col items-stretch space-y-4">
             <Link href={`/dashboard/roles/applicants/${roleInfo.roleid}`}>
               <Button className="w-full flex-grow">Applicants</Button>{" "}
@@ -81,15 +80,6 @@ export function QuickInfo(props: RoleData) {
               <Button className="w-full flex-grow">Update</Button>{" "}
             </Link>
           </div>
-=======
-          <Link
-            href={{
-              pathname: `/dashboard/roles/applicants/${roleInfo.roleid}`,
-            }}
-          >
-            <Button>Applicants</Button>{" "}
-          </Link>
->>>>>>> main
         ) : (
           ""
         )}
