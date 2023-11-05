@@ -2,6 +2,14 @@ import type { TRoleApplicantDetails } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn, longDateTime } from "@/lib/utils";
 
 export const ApplicantsColumns: ColumnDef<TRoleApplicantDetails>[] = [
@@ -62,13 +70,56 @@ export const ApplicantsColumns: ColumnDef<TRoleApplicantDetails>[] = [
     },
   },
   {
+    accessorKey: "skills",
     id: "skills",
     header: () => <div className="">Skills</div>,
     cell: ({ row }) => (
       <div>
-        <Button className="text-xs" size="sm">
-          skill match
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant={`outline`}>Skill Match</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Applicant Skill Match</DialogTitle>
+              <DialogDescription>Missing and Matched skills</DialogDescription>
+            </DialogHeader>
+            <div className="flex-col gap-x-2">
+              Missing:{" "}
+              <div className="space-x-2">
+                {row.original.skills?.missing[0].skill_name === null
+                  ? "None"
+                  : row.original.skills?.missing.map((skill, idx) => (
+                      <span
+                        key={idx}
+                        className="rounded-md border bg-red-300 px-1.5 py-0.5"
+                      >
+                        {skill.skill_name}
+                      </span>
+                    ))}
+              </div>
+              Obtained:{" "}
+              <div className="space-x-2">
+                {row.original.skills?.match.active.concat(
+                  row.original.skills?.match.in_progress,
+                ) === null ? (
+                  <span>None</span>
+                ) : (
+                  row.original.skills?.match.active
+                    .concat(row.original.skills?.match.in_progress)
+                    .map((skill, idx) => (
+                      <span
+                        key={idx}
+                        className="rounded-md border bg-red-300 px-1.5 py-0.5"
+                      >
+                        {skill}
+                      </span>
+                    ))
+                )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     ),
   },

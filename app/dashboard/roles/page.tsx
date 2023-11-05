@@ -105,6 +105,7 @@ const RolesPage = () => {
         <h3 className="text-xl font-medium">Available Roles</h3>
         <Separator />
         <DataTable
+          applicants={false}
           columns={columns}
           data={data}
           filterableColumns={[

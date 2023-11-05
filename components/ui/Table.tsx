@@ -52,11 +52,12 @@ TableFooter.displayName = "TableFooter";
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
   {
+    applicants: boolean;
     roleId: unknown; // Define the prop for roleId
   } & React.HTMLAttributes<HTMLTableRowElement>
->(({ className, roleId, ...props }, ref) => {
+>(({ className, applicants, roleId, ...props }, ref) => {
   const router = useRouter(); // Call the useRouter hook within a component
-  let routerLink = "/dashboard/roles";
+  let routerLink = "/";
   if (roleId !== null) {
     routerLink = `/dashboard/roles/${String(roleId)}`;
   }
@@ -68,8 +69,7 @@ const TableRow = React.forwardRef<
         className,
       )}
       onClick={() => {
-        // console.log(roleId);
-        router.push(routerLink); // Navigate to the details page
+        if (!applicants) router.push(routerLink); // Navigate to the details page
       }}
       {...props}
     />

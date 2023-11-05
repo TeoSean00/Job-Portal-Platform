@@ -158,6 +158,16 @@ export type TRoleApplicantDetails = {
   role_listing_id: number;
   staff_id: number;
   sys_role: string;
+  skills?: {
+    missing: [
+      {
+        skill_id: number;
+        skill_name: string;
+        skill_status: string;
+      },
+    ];
+    match: { active: []; in_progress: []; verified: [] };
+  };
 };
 
 export type TRoleDetails = {
