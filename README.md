@@ -63,6 +63,12 @@ pipenv shell
 
 The FastApi server will be running on http://127.0.0.1:8000 – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
 
+## Running Unit and Integration Tests
+```
+
+```
+
+
 ## Fixing Typescript Linting error 
 
 1. Install ESLint extension for VSCode, other helpful extensions are Prettier, Tailwind CSS, and Error Lens.
