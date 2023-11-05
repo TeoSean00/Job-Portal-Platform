@@ -111,3 +111,65 @@ class TestIntegrationStaff:
             "biz_address": "60 Paya Lebar Rd, #06-33 Paya Lebar Square, Singapore 409051",
             "sys_role": "staff",
         }
+
+    def test_get_staff_skills(self):
+        """
+        Endpoint Tested:
+          - GET /staff/skills/{staff_id}
+        Scenario:
+          - Tests a successful GET request to get staff skills based on given staff_id
+        """
+        # Provided staff_id
+        staff_id = 123456789
+
+        # Get staff skills based on staff_id by invoking endpoint
+        staff_skills = client.get(f"/staff/skills/{staff_id}")
+
+        # Assert that there is a successful response
+        assert staff_skills.status_code == 200
+
+        # Assert that there are the matching staff skills
+        assert staff_skills.json() == [
+            {
+                "staff_id": 123456789,
+                "skill_id": 345678790,
+                "skill_name": "Typescript Developer",
+                "skill_status": "active",
+                "ss_status": "in-progress",
+            },
+            {
+                "staff_id": 123456789,
+                "skill_id": 345678866,
+                "skill_name": "Java Developer",
+                "skill_status": "active",
+                "ss_status": "active",
+            },
+            {
+                "staff_id": 123456789,
+                "skill_id": 345678890,
+                "skill_name": "VMWare Villian",
+                "skill_status": "inactive",
+                "ss_status": "unverified",
+            },
+            {
+                "staff_id": 123456789,
+                "skill_id": 345678912,
+                "skill_name": "Pascal Programming",
+                "skill_status": "inactive",
+                "ss_status": "active",
+            },
+            {
+                "staff_id": 123456789,
+                "skill_id": 345678927,
+                "skill_name": "LinkedIn Master",
+                "skill_status": "active",
+                "ss_status": "in-progress",
+            },
+            {
+                "staff_id": 123456789,
+                "skill_id": 345678935,
+                "skill_name": "MongoDB Maniac",
+                "skill_status": "active",
+                "ss_status": "in-progress",
+            },
+        ]
