@@ -64,10 +64,11 @@ pipenv shell
 The FastApi server will be running on http://127.0.0.1:8000 – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
 
 ## Running Unit and Integration Tests
-```
 
+Run the command below to run all backend unit and integration tests, -v and -s are optional flags to show more details about the tests and to show print statements respectively. Ensure 'pipenv shell' is activated before running the command.
 ```
-
+pytest . -v -s
+```
 
 ## Fixing Typescript Linting error 
 
