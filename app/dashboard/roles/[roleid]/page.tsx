@@ -27,7 +27,6 @@ interface RoleAPIResponse {
 const RolePage = (props: PageProps) => {
   const { session } = useSession();
   const user = session?.user;
-
   const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
   const [data, setData] = useState<PageData>();
@@ -46,7 +45,6 @@ const RolePage = (props: PageProps) => {
         return res.json();
       })
       .then((apiData: RoleAPIResponse) => {
-        // console.log(apiData[Number(props.params.roleid)]);
         const roleListingData = apiData[Number(props.params.roleid)];
         const temp = {
           roleid: props.params.roleid,
@@ -65,7 +63,6 @@ const RolePage = (props: PageProps) => {
         console.log("Error fetching role details:", err);
       });
   };
-
   useEffect(() => {
     fetchRoles();
   }, []);

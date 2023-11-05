@@ -31,9 +31,6 @@ type SkillLabel = {
 const RolesPage = () => {
   const { session } = useSession();
   const user = session?.user;
-  // if (!user?.id || !user?.publicMetadata?.role) {
-  //   throw new Error("User token or role is not defined!");
-  // }
   const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
 
@@ -43,7 +40,7 @@ const RolesPage = () => {
     fetch(`/api/role/role_listings_info`, {
       method: "GET",
       headers: {
-        "user-token": userToken || "", // Make sure it's not undefined
+        "user-token": userToken || "",
         role: String(userRole || ""),
       },
     })
@@ -77,7 +74,7 @@ const RolesPage = () => {
     fetch(`/api/skill/get-all`, {
       method: "GET",
       headers: {
-        "user-token": userToken || "", // Make sure it's not undefined
+        "user-token": userToken || "",
         role: String(userRole || ""),
       },
     })
@@ -88,12 +85,10 @@ const RolesPage = () => {
         return res.json();
       })
       .then((apiData: SkillAPIResponse) => {
-        // console.log(apiData);
         const temp = apiData.skills.map((skill) => ({
           label: skill.skill_name,
           value: skill.skill_name,
         }));
-        // console.log(temp);
         setSkills(temp);
       })
       .catch((err) => {
@@ -109,10 +104,6 @@ const RolesPage = () => {
       <div className="space-y-3">
         <h3 className="text-xl font-medium">Available Roles</h3>
         <Separator />
-        <Link href="/dashboard/roles/update/99385">
-          <Button>click here to update role 99385</Button>
-        </Link>
-
         <DataTable
           applicants={false}
           columns={columns}

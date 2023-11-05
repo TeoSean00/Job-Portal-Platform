@@ -10,6 +10,7 @@ import type {
 
 import { useSession } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import useSWR from "swr";
@@ -58,6 +59,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
   const [managerDetails, setManagerDetails] = useState<StaffIdAPIResponse[]>(
     [],
   );
+  const router = useRouter();
 
   const defaultValues: Partial<RoleFormValues> = {
     roleName: roleToUpdateData.role_id.toString(),
@@ -123,6 +125,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
             description: formattedDate,
             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
           });
+          router.push(`/dashboard/roles/${data.listingId}`);
         })
         .catch((err: Error) => {
           console.log(err);
@@ -186,7 +189,10 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
     <>
       {isLoaded && user ? (
         <Form {...form}>
-          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            className="space-y-8 rounded-md border p-5"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
             <div className="flex w-full flex-grow space-x-4">
               <FormField
                 control={form.control}
@@ -239,7 +245,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base">
-                    Listing Description
+                    Additional Information
                   </FormLabel>
                   <FormDescription>
                     Describe the role in detail.

@@ -19,7 +19,7 @@ interface SkillMatchAPIResponse {
 }
 const RoleListing = (props: RoleData) => {
   const staffId = useContext(AuthContext);
-  const [roleInfo, setRoleInfo] = React.useState(props.data);
+  const [roleInfo] = React.useState(props.data);
   const [skillInfo, setSkillInfo] = React.useState<SkillInfo>();
   const fetchRoleSkillMatch = () => {
     fetch(`/api/staff/role-skills-match/${staffId}/${roleInfo.roleid}`, {
