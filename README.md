@@ -2,6 +2,21 @@
 
 This is a hybrid Next.js + Python app that uses Next.js as the frontend and FastAPI as the API backend.
 
+## Table of Contents
+
+1. [How it Works](#how-it-works)
+2. [Getting Started](#getting-started)
+3. [Running Unit and Integration Tests](#running-unit-and-integration-tests)
+4. [Fixing Typescript Linting error](#fixing-typescript-linting-error)
+5. [Staging Commits](#staging-commits)
+6. [Branching and opening pull requests](#branching-and-opening-pull-requests)
+7. [Database Migrations](#database-migrations)
+8. [Continous Integration](#continous-integration)
+9. [Continous Deployment](#continous-deployment)
+10. [Scheduled Telegram PR Reminders](#scheduled-telegram-pr-reminders)
+11. [Icons used](#icons)
+12. [Theming System](#theming-system)
+
 ## How it works
 
 The Python/FastAPI server is mapped into to Next.js app under /api/.
@@ -78,7 +93,7 @@ pytest . -v -s
 
 ## Staging Commits
 
-Pre-commit offloads some of the work of github CI unit testing to local dev environment for
+`Pre-commit` offloads some of the work of github CI unit testing to local dev environment for
 1. Speed in identifying failed tests
 2. Ease of use instead of running unit tests manually each time
 3. Security in case bad code is written - tests are broken and user is notified even before committing
@@ -94,7 +109,7 @@ Pre-commit offloads some of the work of github CI unit testing to local dev envi
 
 4. Commit as you normally would, since we are not tracking commits.
 
-5. When opening or merging a PR, make sure to include the Linear issue ID in the title, e.g. `Completed spm-4: Connect GitHub or GitLab`.
+5. When opening or merging a PR, make sure to link the PR on linear.
 
 6. An auto-generated URL to the Linear issue should have been automatically added to the PR description. The Linear issue will be automatically updated accordingly with the new timeline and URL to the Github PR too.
 
@@ -124,6 +139,26 @@ alembic downgrade -1
 # alternatively specify the revision hash initials to downgrade to a specific version 
 # or alembic downgrade base to reset to initial state
 ```
+
+## Continous Integration
+
+We have 2 CI workflows: `on_main.yaml` and `on_pr_open.yaml`. These integrations are run on every push to main and every PR open respectively.
+
+Within each workflow, we run an assortment of checks and tests to ensure that the code is up to standard. These include:
+- linting-next
+- build-next
+- unit-test-next
+- linting-fastapi
+- build-fastapi
+- unit-test-fastapi
+
+## Continous Deployment
+
+We have CD which deploys to preview on every PR open and to production on every push to main. This is done via Vercel's Github integration.
+
+## Scheduled Telegram PR Reminders
+
+We have a scheduled telegram reminder that sends a message to the telegram group every 4 hours to remind users to review PRs. This is done via Github Actions and a Telegram bot the script for it can be found in the .github/workflows folder labeled `PR_notif.yaml` and `get-open-prs.js`.
 
 ## Icons
 
