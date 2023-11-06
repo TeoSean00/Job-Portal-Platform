@@ -11,11 +11,11 @@ This is a hybrid Next.js + Python app that uses Next.js as the frontend and Fast
 5. [Staging Commits](#staging-commits)
 6. [Branching and opening pull requests](#branching-and-opening-pull-requests)
 7. [Database Migrations](#database-migrations)
-8. [Icons used](#icons)
-9. [Theming System](#theming-system)
-10. [Continous Integration](#continous-integration)
-11. [Continous Deployment](#continous-deployment)
-12. [Scheduled Telegram PR Reminders](#scheduled-telegram-pr-reminders)
+8. [Continous Integration](#continous-integration)
+9. [Continous Deployment](#continous-deployment)
+10. [Scheduled Telegram PR Reminders](#scheduled-telegram-pr-reminders)
+11. [Icons used](#icons)
+12. [Theming System](#theming-system)
 
 ## How it works
 
@@ -140,18 +140,6 @@ alembic downgrade -1
 # or alembic downgrade base to reset to initial state
 ```
 
-## Icons
-
-We are using [Radix icons](https://www.radix-ui.com/icons) or [Lucide](https://lucide.dev/) for our icons.
-
-## Theming System
-
-We are using shadcn's [theme](https://ui.shadcn.com/themes) for convenience.
-
-Refer to `tailwind.config.ts` for list of classes (under `theme.extend.colors`) that can be used to style the components. e.g. `bg-primary`.
-
-Do not use the default tailwind classes (e.g. `bg-blue-500`).
-
 ## Continous Integration
 
 We have 2 CI workflows: `on_main.yaml` and `on_pr_open.yaml`. These integrations are run on every push to main and every PR open respectively.
@@ -171,3 +159,15 @@ We have CD which deploys to preview on every PR open and to production on every 
 ## Scheduled Telegram PR Reminders
 
 We have a scheduled telegram reminder that sends a message to the telegram group every 4 hours to remind users to review PRs. This is done via Github Actions and a Telegram bot the script for it can be found in the .github/workflows folder labeled `PR_notif.yaml` and `get-open-prs.js`.
+
+## Icons
+
+We are using [Radix icons](https://www.radix-ui.com/icons) or [Lucide](https://lucide.dev/) for our icons.
+
+## Theming System
+
+We are using shadcn's [theme](https://ui.shadcn.com/themes) for convenience.
+
+Refer to `tailwind.config.ts` for list of classes (under `theme.extend.colors`) that can be used to style the components. e.g. `bg-primary`.
+
+Do not use the default tailwind classes (e.g. `bg-blue-500`).
