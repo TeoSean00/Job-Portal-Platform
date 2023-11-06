@@ -13,17 +13,18 @@ from .routers import roles, skills, staff
 app = FastAPI()
 
 # CORS policy for backend to interact with the frontend
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "https://is-212-spm.vercel.app",
-    "*",
-]
+# origins = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+#     "http://localhost:8000",
+#     "http://127.0.0.1:8000",
+#     "https://is-212-spm.vercel.app",
+#     "*",
+# ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
