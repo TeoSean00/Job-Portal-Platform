@@ -3,6 +3,7 @@
 This is a hybrid Next.js + Python app that uses Next.js as the frontend and FastAPI as the API backend.
 
 ## Table of Contents
+
 1. [How it Works](#how-it-works)
 2. [Getting Started](#getting-started)
 3. [Running Unit and Integration Tests](#running-unit-and-integration-tests)
@@ -14,6 +15,7 @@ This is a hybrid Next.js + Python app that uses Next.js as the frontend and Fast
 9. [Theming System](#theming-system)
 10. [Continous Integration](#continous-integration)
 11. [Continous Deployment](#continous-deployment)
+12. [Scheduled Telegram PR Reminders](#scheduled-telegram-pr-reminders)
 
 ## How it works
 
@@ -151,6 +153,7 @@ Refer to `tailwind.config.ts` for list of classes (under `theme.extend.colors`) 
 Do not use the default tailwind classes (e.g. `bg-blue-500`).
 
 ## Continous Integration
+
 We have 2 CI workflows: `on_main.yaml` and `on_pr_open.yaml`. These integrations are run on every push to main and every PR open respectively.
 
 Within each workflow, we run an assortment of checks and tests to ensure that the code is up to standard. These include:
@@ -162,5 +165,9 @@ Within each workflow, we run an assortment of checks and tests to ensure that th
 - unit-test-fastapi
 
 ## Continous Deployment
+
 We have CD which deploys to preview on every PR open and to production on every push to main. This is done via Vercel's Github integration.
 
+## Scheduled Telegram PR Reminders
+
+We have a scheduled telegram reminder that sends a message to the telegram group every 4 hours to remind users to review PRs. This is done via Github Actions and a Telegram bot the script for it can be found in the .github/workflows folder labeled `PR_notif.yaml` and `get-open-prs.js`.
