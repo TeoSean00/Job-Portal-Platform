@@ -3,7 +3,7 @@
 
 This is a hybrid Next.js + Python app that uses Next.js as the frontend and FastAPI as the API backend.
 
-<summary><h4>Login Credentials</h4></summary>
+<h4>Login Credentials</h4>
 <table>
 <thead>
     <tr>
@@ -61,7 +61,7 @@ Automated Doc with [Swagger UI](https://fastapi.tiangolo.com/features/) has been
 
 ## Getting Started
 
-#### setting up pipenv
+#### Setting up pipenv
 ##### if using pip as package manager
 ```bash
 pip install pipenv
@@ -77,6 +77,8 @@ First, install the dependencies
 ```bash
 # nodejs / js
 npm i
+or
+npm install
 
 # python (additional dependencies needed to be specified as an argument after 'install', pipfile will auto update)
 pipenv install 
