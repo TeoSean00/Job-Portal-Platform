@@ -2,9 +2,22 @@
 
 import type { PageData } from "../../app/dashboard/roles/[roleid]/page";
 
-import React, { useEffect, useContext } from "react";
+import { useSession } from "@clerk/nextjs";
+import Link from "next/link";
+import React, { useContext } from "react";
 
 import { AuthContext } from "@/components/AuthProvider";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,15 +34,13 @@ interface RoleData {
   data: PageData;
 }
 export function QuickInfo(props: RoleData) {
+  const { session } = useSession();
+  const user = session?.user;
   const staffId = useContext(AuthContext);
-  const [roleInfo, setRoleInfo] = React.useState(props.data);
+  const [roleInfo] = React.useState(props.data);
   const applyRole = () => {
     fetch(`/api/staff/role/${staffId}/${roleInfo.roleid}`, {
       method: "POST",
-      // headers: {
-      //   "user-token": userToken || "", // Make sure it's not undefined
-      //   role: String(userRole || ""),
-      // },
     })
       .then((res) => {
         if (!res.ok) {
@@ -53,20 +64,33 @@ export function QuickInfo(props: RoleData) {
         console.log("Error fetching role details:", err);
       });
   };
-  // console.log(roleInfo);
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle>{roleInfo.roleName}</CardTitle>
-        <CardDescription>{roleInfo.roleDepartment}</CardDescription>
-      </CardHeader>
+      <div className="flex items-center justify-between pr-6">
+        <CardHeader>
+          <CardTitle>{roleInfo.roleName}</CardTitle>
+          <CardDescription>{roleInfo.roleDepartment}</CardDescription>
+        </CardHeader>
+        {user?.publicMetadata.role === "hr" ? (
+          <div className="mt-2 flex flex-col items-stretch space-y-4">
+            <Link href={`/dashboard/roles/applicants/${roleInfo.roleid}`}>
+              <Button className="w-full flex-grow">Applicants</Button>{" "}
+            </Link>
+            <Link href={`/dashboard/roles/update/${roleInfo.roleid}`}>
+              <Button className="w-full flex-grow">Update</Button>{" "}
+            </Link>
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
       <CardContent>
         <div className="flex flex-col pb-10">
           <h4 className=" font-bold">Role Details</h4>
-          <span>Location:{roleInfo.roleLocation}</span>
-          <span>Salary Range:$60,000 - $80,000</span>
+          <span>Location: {roleInfo.roleLocation}</span>
+          <span>Salary Range: $60,000 - $80,000</span>
           <span>
-            Skills Required:
+            Skills Required:{" "}
             <ul className="inline-block">
               {roleInfo.skillsRequired.map((skill, index) => (
                 <li key={index} className="inline-block pr-2">
@@ -78,13 +102,35 @@ export function QuickInfo(props: RoleData) {
             </ul>
           </span>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col pb-8">
           <h4 className=" font-bold">Role Description</h4>
           <span> {roleInfo.roleDescription}</span>
         </div>
+        <div className="flex flex-col">
+          <h4 className=" font-bold">Additional Information</h4>
+          <span> {roleInfo.roleListingDesc}</span>
+        </div>
       </CardContent>
       <CardFooter className="flex space-x-4">
-        <Button onClick={applyRole}>Apply</Button>
+        <AlertDialog>
+          <AlertDialogTrigger className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+            Apply
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure you want to apply for this role?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                We will send you application to HR to review.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={applyRole}>Apply</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <Button variant="outline">Save</Button>
       </CardFooter>
     </Card>

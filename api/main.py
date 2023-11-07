@@ -1,9 +1,7 @@
-import datetime as dt
-from enum import Enum, auto
+from typing import Dict
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
 # Import database services
 import database.services as db_services  # This is for npm run dev
@@ -35,11 +33,34 @@ app.include_router(roles.router)
 app.include_router(skills.router)
 
 
-@app.get("/healthcheck", response_model=dict)
+@app.get("/healthcheck", response_model=Dict[str, str])
 async def healthcheck():
+    """
+    ### Description:
+    This endpoint connects to the backend and database and provides a status.
+
+    ### Returns:
+    Status code 200 if successfully connected to backend.
+    Database connection will be reflected in string.
+
+    ### Example:
+    #### Request:
+    ```
+    GET/healthcheck
+    ```
+    #### Response:
+    ```
+    {
+        "fastapi": "Successfully connected to FastAPI!",
+        "database": "Database connection successful!"
+    }
+    ```
+    ### Errors:
+    `500 Internal Server Error`: Generic server error.
+    """
     db_status = db_services.healthcheck()
     if db_status:
-        msg = "Database connection successful! "
+        msg = "Database connection successful!"
     else:
         msg = "Database connection failed!"
     return {"fastapi": "Successfully connected to FastAPI!", "database": msg}

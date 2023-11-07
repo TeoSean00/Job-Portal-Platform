@@ -7,7 +7,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 import { DataTable } from "@/components/data-table/DataTable";
-import { Button, columns } from "@/components/ui/";
+import { Separator, Button, columns } from "@/components/ui/";
 
 type SkillAPIResponse = {
   skills: RoleSkill[];
@@ -31,9 +31,6 @@ type SkillLabel = {
 const RolesPage = () => {
   const { session } = useSession();
   const user = session?.user;
-  // if (!user?.id || !user?.publicMetadata?.role) {
-  //   throw new Error("User token or role is not defined!");
-  // }
   const userToken = user?.id;
   const userRole = user?.publicMetadata?.role;
 
@@ -43,7 +40,7 @@ const RolesPage = () => {
     fetch(`/api/role/role_listings_info`, {
       method: "GET",
       headers: {
-        "user-token": userToken || "", // Make sure it's not undefined
+        "user-token": userToken || "",
         role: String(userRole || ""),
       },
     })
@@ -54,7 +51,6 @@ const RolesPage = () => {
         return res.json();
       })
       .then((apiData: RoleAPIResponse) => {
-        // console.log(apiData);
         const processedRoles: ProcessedRole[] = [];
         Object.keys(apiData).forEach((item: string) => {
           const role = apiData[Number(item)];
@@ -73,11 +69,12 @@ const RolesPage = () => {
         console.log("Error fetching role details:", err);
       });
   };
+
   const fetchSkills = () => {
     fetch(`/api/skill/get-all`, {
       method: "GET",
       headers: {
-        "user-token": userToken || "", // Make sure it's not undefined
+        "user-token": userToken || "",
         role: String(userRole || ""),
       },
     })
@@ -88,62 +85,27 @@ const RolesPage = () => {
         return res.json();
       })
       .then((apiData: SkillAPIResponse) => {
-        // console.log(apiData);
         const temp = apiData.skills.map((skill) => ({
           label: skill.skill_name,
           value: skill.skill_name,
         }));
-        console.log(temp);
         setSkills(temp);
       })
       .catch((err) => {
         console.log("Error fetching role details:", err);
       });
   };
-  const tempSkills = [
-    { label: "Skill 1", value: "skill 1" },
-    { label: "Skill 2", value: "skill 2" },
-    { label: "Skill 3", value: "skill 3" },
-    { label: "Skill 4", value: "skill 4" },
-  ];
-  // const data: ProcessedRole[] = [
-  // {
-  //   roleListingId: 1,
-  //   roleName: "Temp Role 1",
-  //   roleDescription: "This is a temporary role 1",
-  //   roleStatus: "active",
-  //   skillRequired: ["skill 1", "skill 2"],
-  // },
-  // {
-  //   roleListingId: 2,
-  //   roleName: "Temp Role 2",
-  //   roleDescription:
-  //     "This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2 This is a temporary long description 2",
-  //   roleStatus: "active",
-  //   skillRequired: ["skill 2", "skill 3"],
-  // },
-  // {
-  //   roleListingId: 3,
-  //   roleName: "Temp Inactive Role",
-  //   roleDescription: "This is a temporary inactive role",
-  //   roleStatus: "inactive",
-  //   skillRequired: ["skill 3", "skill 4"],
-  // },
-  // ];
   useEffect(() => {
     fetchRoles();
     fetchSkills();
   }, []);
   return (
     <>
-      <div className="">
-        Roles
-        <div>
-          <Link href="/dashboard/roles/update/99385">
-            <Button>click here to update role 99385</Button>
-          </Link>
-        </div>
+      <div className="space-y-3">
+        <h3 className="text-xl font-medium">Available Roles</h3>
+        <Separator />
         <DataTable
+          applicants={false}
           columns={columns}
           data={data}
           filterableColumns={[

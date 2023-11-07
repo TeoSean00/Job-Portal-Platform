@@ -417,7 +417,7 @@ async def get_staff_role_listing_skills_match(
                         "ss_status": "active"
                     }
                 ],
-                "in-progress": [
+                "in_progress": [
                     {
                         "skill_id": 345678790,
                         "skill_name": "Typescript Developer",

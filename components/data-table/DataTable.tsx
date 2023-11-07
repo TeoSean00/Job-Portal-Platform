@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/Table";
 
 interface DataTableProps<TData, TValue> {
+  applicants: boolean;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filterableColumns?: DataTableFilterableColumn<TData>[];
@@ -39,6 +40,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({
+  applicants,
   columns,
   data,
   filterableColumns = [],
@@ -74,7 +76,11 @@ export function DataTable<TData, TValue>({
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} roleId={0}>
+              <TableRow
+                key={headerGroup.id}
+                applicants={applicants}
+                roleId={null}
+              >
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
@@ -93,6 +99,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
+                  applicants={applicants}
                   data-state={row.getIsSelected() && "selected"}
                   roleId={row.getVisibleCells()[0].getContext().getValue()}
                 >
@@ -107,7 +114,7 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow roleId={0}>
+              <TableRow applicants={applicants} roleId={0}>
                 <TableCell
                   className="h-24 text-center"
                   colSpan={columns.length}

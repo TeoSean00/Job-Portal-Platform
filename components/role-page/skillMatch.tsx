@@ -3,14 +3,7 @@
 import * as React from "react";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export interface SkillInfo {
   skillObtained: string[];
@@ -20,12 +13,8 @@ interface SkillData {
   data: SkillInfo | undefined;
 }
 export function SkillMatch(props: SkillData) {
-  const [obtainedSkills, setObtainedSkills] = React.useState(
-    props.data?.skillObtained || [],
-  );
-  const [missingSkills, setMissingSkills] = React.useState(
-    props.data?.skillMissing || [],
-  );
+  const [obtainedSkills] = React.useState(props.data?.skillObtained || []);
+  const [missingSkills] = React.useState(props.data?.skillMissing || []);
   // console.log(props);
   return (
     <Card className="w-full">
@@ -40,9 +29,7 @@ export function SkillMatch(props: SkillData) {
             {obtainedSkills.map((skill, index) => (
               <li key={index} className="">
                 <Badge className="py-1 text-lg" variant="default">
-                  {index !== obtainedSkills.length - 1
-                    ? `${skill},`
-                    : `${skill}`}
+                  {skill}
                 </Badge>{" "}
               </li>
             ))}
@@ -54,9 +41,7 @@ export function SkillMatch(props: SkillData) {
             {missingSkills.map((skill, index) => (
               <li key={index} className="">
                 <Badge className="py-1 text-lg" variant="destructive">
-                  {index !== missingSkills.length - 1
-                    ? `${skill},`
-                    : `${skill}`}
+                  {skill}
                 </Badge>
               </li>
             ))}
