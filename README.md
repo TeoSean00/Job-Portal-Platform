@@ -57,6 +57,8 @@ On localhost, the rewrite will be made to the `127.0.0.1:8000` port, which is wh
 In production, the FastAPI server is hosted as [Python serverless functions](https://vercel.com/docs/functions/serverless-functions/runtimes/python) on Vercel.
 
 Automated Doc with [Swagger UI](https://fastapi.tiangolo.com/features/) has been set up under `/docs` route.
+
+The frontend NextJs app is routed by default to the `127.0.0.1:3000` port.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Getting Started
@@ -98,6 +100,21 @@ pre-commit autoupdate
 
 ```
 
+#### Setting up Environment Variables
+Following the `.env.example` file create a `.env` file with the same fields and populate it with the appropriate fields. `Please contact us for our AWS RDS string and credentials`
+```
+# Clerk RBAC
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+
+# Database Connection String
+AWS_RDS_MYSQL_URL = 
+```
+
 Then, run the development server:
 ```bash
 npm run dev
@@ -108,12 +125,13 @@ To activate the created venv:
 pipenv shell
 ```
 
-The FastApi server will be running on http://127.0.0.1:8000 – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
+By default the FastApi server will be running on http://127.0.0.1:8000, while the NextJs frontend will be running on http://127.0.0.1:3000.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Running Unit and Integration Tests
 
-Run the command below to run all backend unit and integration tests, -v and -s are optional flags to show more details about the tests and to show print statements respectively. Ensure 'pipenv shell' is activated before running the command.
+Run the command below to run all backend unit and integration tests, -v and -s are optional flags to show more details about the tests and to show print statements respectively. Ensure `pipenv shell` is activated before running the command.
 ```
 pytest . -v -s
 ```
