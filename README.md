@@ -1,6 +1,35 @@
+<a name="readme-top"></a>
 ## Introduction
 
 This is a hybrid Next.js + Python app that uses Next.js as the frontend and FastAPI as the API backend.
+
+<summary><h4>Login Credentials</h4></summary>
+<table>
+<thead>
+    <tr>
+    <th>Role</th>
+    <th>Username</th>
+    <th>Password</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+    <td>Staff</td>
+    <td>staff</td>
+    <td>staff123</td>
+    </tr>
+    <tr>
+    <td>HR</td>
+    <td>admin</td>
+    <td>admin123</td>
+    </tr>
+    <tr>
+    <td>Manager</td>
+    <td>manager</td>
+    <td>manager123</td>
+    </tr>
+</tbody>
+</table>
 
 ## Table of Contents
 
@@ -28,6 +57,7 @@ On localhost, the rewrite will be made to the `127.0.0.1:8000` port, which is wh
 In production, the FastAPI server is hosted as [Python serverless functions](https://vercel.com/docs/functions/serverless-functions/runtimes/python) on Vercel.
 
 Automated Doc with [Swagger UI](https://fastapi.tiangolo.com/features/) has been set up under `/docs` route.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Getting Started
 
@@ -77,6 +107,7 @@ pipenv shell
 ```
 
 The FastApi server will be running on http://127.0.0.1:8000 – feel free to change the port in `package.json` (you'll also need to update it in `next.config.js`).
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Running Unit and Integration Tests
 
@@ -84,12 +115,14 @@ Run the command below to run all backend unit and integration tests, -v and -s a
 ```
 pytest . -v -s
 ```
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Fixing Typescript Linting error 
 
 1. Install ESLint extension for VSCode, other helpful extensions are Prettier, Tailwind CSS, and Error Lens.
 2. Run `npm run lint:fix` to check for and fix linting errors.
 3. If there are errors that cannot be fixed automatically, you will have to check the cli for the errors and fix them manually.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Staging Commits
 
@@ -98,6 +131,7 @@ pytest . -v -s
 2. Ease of use instead of running unit tests manually each time
 3. Security in case bad code is written - tests are broken and user is notified even before committing
 4. Standardization of code formatting and linting (for python files)
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Branching and opening pull requests
 
@@ -112,6 +146,7 @@ pytest . -v -s
 5. When opening or merging a PR, make sure to link the PR on linear.
 
 6. An auto-generated URL to the Linear issue should have been automatically added to the PR description. The Linear issue will be automatically updated accordingly with the new timeline and URL to the Github PR too.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Database Migrations
 
@@ -139,6 +174,7 @@ alembic downgrade -1
 # alternatively specify the revision hash initials to downgrade to a specific version 
 # or alembic downgrade base to reset to initial state
 ```
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Continous Integration
 
@@ -151,14 +187,17 @@ Within each workflow, we run an assortment of checks and tests to ensure that th
 - linting-fastapi
 - build-fastapi
 - unit-test-fastapi
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Continous Deployment
 
 We have CD which deploys to preview on every PR open and to production on every push to main. This is done via Vercel's Github integration.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Scheduled Telegram PR Reminders
 
 We have a scheduled telegram reminder that sends a message to the telegram group every 4 hours to remind users to review PRs. This is done via Github Actions and a Telegram bot the script for it can be found in the .github/workflows folder labeled `PR_notif.yaml` and `get-open-prs.js`.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Icons
 
@@ -171,3 +210,4 @@ We are using shadcn's [theme](https://ui.shadcn.com/themes) for convenience.
 Refer to `tailwind.config.ts` for list of classes (under `theme.extend.colors`) that can be used to style the components. e.g. `bg-primary`.
 
 Do not use the default tailwind classes (e.g. `bg-blue-500`).
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
