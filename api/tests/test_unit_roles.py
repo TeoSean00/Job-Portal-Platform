@@ -349,7 +349,8 @@ def test_unauthorized_update_role_listing():
     assert response.json() == {"detail": "Unauthorized user!"}
 
 
-def test_not_found_update_role_listing():
+@patch("api.routers.roles.db_services.get_role_listings")
+def test_not_found_update_role_listing(mock_func):
     """
     Endpoint Tested:
         PUT /role_listing
@@ -374,7 +375,7 @@ def test_not_found_update_role_listing():
 
     # Define headers
     headers = {"role": "hr", "updater-staff-id": "123456786"}
-
+    mock_func.return_value = None
     response = client.put(
         "/role/role_listing", json=role_details, headers=headers
     )
@@ -384,7 +385,8 @@ def test_not_found_update_role_listing():
     assert response.json() == {"detail": "Role listing not found"}
 
 
-def test_invalid_update_role_listing():
+@patch("api.routers.roles.db_services.get_role_listings")
+def test_invalid_update_role_listing(mock_func):
     """
     Endpoint Tested:
         PUT /role_listing
@@ -409,6 +411,7 @@ def test_invalid_update_role_listing():
 
     # Define headers
     headers = {"role": "hr", "updater-staff-id": "123456786"}
+    mock_func.return_value = {"Test": "Testing"}
 
     response = client.put(
         "/role/role_listing", json=role_details, headers=headers
