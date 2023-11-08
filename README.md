@@ -86,6 +86,11 @@ npm install
 pipenv install 
 ```
 
+To activate the created venv:
+```bash
+pipenv shell
+```
+
 Second, install pre-commit hooks if you are developing 
 ```
 pipenv install pre-commit
@@ -97,7 +102,6 @@ pre-commit run --all-files
 
 # if it's been a long time, update hooks to latest ver
 pre-commit autoupdate
-
 ```
 
 #### Setting up Environment Variables
@@ -118,11 +122,6 @@ AWS_RDS_MYSQL_URL =
 Then, run the development server:
 ```bash
 npm run dev
-```
-
-To activate the created venv:
-```bash
-pipenv shell
 ```
 
 By default the FastApi server will be running on http://127.0.0.1:8000, while the NextJs frontend will be running on http://127.0.0.1:3000.
