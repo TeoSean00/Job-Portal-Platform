@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
                   className="h-24 text-center"
                   colSpan={columns.length}
                 >
-                  No results.
+                  Loading ...
                 </TableCell>
               </TableRow>
             )}
