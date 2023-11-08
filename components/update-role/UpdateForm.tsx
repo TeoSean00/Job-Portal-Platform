@@ -121,7 +121,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
         })
         .then(() => {
           toast({
-            title: "Role Successfully Created!",
+            title: "Role Successfully Updated!",
             description: formattedDate,
             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
           });
@@ -131,7 +131,7 @@ const UpdateForm: React.FC<UpdateFormProps> = ({
           console.log(err);
           toast({
             variant: "destructive",
-            title: "Error creating role!",
+            title: "Error Updating Role!",
             description: err.message,
             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
           });
